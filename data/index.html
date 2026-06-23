@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAGnosis · FHIR Dataset Explorer</title>
+<style>
+  :root{
+    --bg:#0a0e16; --panel:#111726; --panel2:#0d1320; --border:#1e2940;
+    --text:#e6edf6; --muted:#8a9bb5; --faint:#5a6b85;
+    --accent:#2dd4bf; --accent2:#38bdf8;
+    --actor:#38bdf8; --clinical:#34d399; --med:#fbbf24; --finance:#f472b6; --meta:#a78bfa;
+    --shadow:0 8px 30px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    background:radial-gradient(1200px 700px at 80% -10%, #15203a 0%, var(--bg) 55%);
+    color:var(--text);font:14px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;overflow:hidden;
+  }
+  button{font:inherit;color:inherit;cursor:pointer}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:#243048;border-radius:6px}
+  ::-webkit-scrollbar-track{background:transparent}
+
+  /* ---------- shell ---------- */
+  #app{display:grid;grid-template-columns:264px 1fr;height:100vh}
+  #sidebar{background:linear-gradient(180deg,var(--panel) 0%,var(--panel2) 100%);
+    border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:0}
+  .brand{padding:18px 18px 12px;display:flex;align-items:center;gap:10px}
+  .logo{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));color:#04121a;font-weight:800;font-size:16px}
+  .brand h1{font-size:15px;margin:0;letter-spacing:.3px}
+  .brand .sub{font-size:11px;color:var(--muted);margin-top:1px}
+
+  .navsec{padding:6px 12px}
+  .navbtn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;
+    padding:9px 12px;border-radius:9px;color:var(--muted);font-weight:600}
+  .navbtn:hover{background:#172033;color:var(--text)}
+  .navbtn.active{background:linear-gradient(90deg,rgba(45,212,191,.16),rgba(56,189,248,.05));color:var(--text)}
+  .navbtn .ico{width:16px;text-align:center;opacity:.9}
+
+  .search{margin:8px 12px}
+  .search input{width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:9px;
+    padding:8px 10px;color:var(--text);outline:none}
+  .search input:focus{border-color:var(--accent)}
+
+  .typelist{overflow:auto;flex:1;padding:4px 8px 16px;min-height:0}
+  .grp-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);
+    padding:12px 10px 4px}
+  .titem{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:8px;cursor:pointer;color:var(--muted)}
+  .titem:hover{background:#172033;color:var(--text)}
+  .titem.active{background:#1a2740;color:var(--text)}
+  .dot{width:8px;height:8px;border-radius:50%;flex:none}
+  .titem .nm{flex:1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .titem .ct{font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums}
+
+  /* ---------- main ---------- */
+  #main{overflow:auto;min-height:0;position:relative}
+  .view{padding:26px 30px;max-width:1180px;margin:0 auto}
+  .view.full{max-width:none;padding:0;height:100%}
+
+  /* landing / loader */
+  #gate{position:absolute;inset:0;display:grid;place-items:center;z-index:30;
+    background:radial-gradient(900px 500px at 50% 0%, #15203a 0%, var(--bg) 60%)}
+  .gate-card{background:var(--panel);border:1px solid var(--border);border-radius:18px;
+    padding:34px 38px;max-width:560px;box-shadow:var(--shadow);text-align:center}
+  .gate-card h2{margin:6px 0 6px;font-size:22px}
+  .gate-card p{color:var(--muted);margin:0 0 8px}
+  .gate-card .hint{font-size:12px;color:var(--faint);margin-top:14px}
+  .cta{margin-top:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#04121a;
+    border:0;padding:12px 22px;border-radius:11px;font-weight:800;font-size:15px}
+  .cta:hover{filter:brightness(1.06)}
+  .ghost{background:none;border:1px solid var(--border);color:var(--text);padding:11px 18px;border-radius:11px;font-weight:600;margin-left:8px}
+  .ghost:hover{border-color:var(--accent)}
+  .progress{margin-top:18px;height:8px;background:#0a1020;border:1px solid var(--border);border-radius:6px;overflow:hidden;display:none}
+  .progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .15s}
+  #gateStatus{font-size:12px;color:var(--muted);margin-top:8px;min-height:16px}
+
+  /* cards / grid */
+  h2.title{font-size:20px;margin:0 0 2px;font-weight:700}
+  .crumb{color:var(--muted);font-size:12px;margin-bottom:18px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+  .stat{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px}
+  .stat .v{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
+  .stat .l{font-size:12px;color:var(--muted);margin-top:2px}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;
+    cursor:pointer;transition:transform .12s,border-color .12s}
+  .card:hover{transform:translateY(-2px);border-color:#33445f}
+  .card .top{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+  .card .nm{font-weight:700}
+  .card .big{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+  .card .meta{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;margin-top:4px}
+  .bar{height:5px;background:#0a1020;border-radius:4px;margin-top:10px;overflow:hidden}
+  .bar>i{display:block;height:100%;border-radius:4px}
+
+  /* detail */
+  .pill{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--border);
+    border-radius:999px;padding:4px 11px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer}
+  .pill:hover{border-color:var(--accent);color:var(--text)}
+  .pill .dot{width:7px;height:7px}
+  .section{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:18px}
+  .section h3{margin:0 0 12px;font-size:14px;letter-spacing:.02em}
+  .reflists{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .reflists .lab{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--faint);margin-bottom:8px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+
+  table.schema{width:100%;border-collapse:collapse;font-size:13px}
+  table.schema th{text-align:left;color:var(--faint);font-weight:600;font-size:11px;text-transform:uppercase;
+    letter-spacing:.08em;padding:6px 8px;border-bottom:1px solid var(--border)}
+  table.schema td{padding:7px 8px;border-bottom:1px solid #161f33;vertical-align:top}
+  table.schema tr:hover td{background:#141d30}
+  .path{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#bfe9e0}
+  .ftype{color:var(--accent2);font-size:11px;font-family:ui-monospace,monospace}
+  .ex{color:var(--muted);font-family:ui-monospace,monospace;font-size:12px;max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block}
+  .freqbar{display:inline-block;width:46px;height:6px;background:#0a1020;border-radius:3px;overflow:hidden;vertical-align:middle;margin-right:6px}
+  .freqbar>i{display:block;height:100%;background:var(--accent)}
+
+  /* record browser */
+  .recbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .recbar .count{color:var(--muted);font-size:12px}
+  .recwrap{display:grid;grid-template-columns:280px 1fr;gap:16px;align-items:start}
+  .reclist{background:var(--panel);border:1px solid var(--border);border-radius:12px;max-height:62vh;overflow:auto}
+  .recrow{padding:9px 12px;border-bottom:1px solid #161f33;cursor:pointer;font-size:12px}
+  .recrow:hover{background:#172033}
+  .recrow.active{background:#1a2740}
+  .recrow .rid{font-family:ui-monospace,monospace;color:var(--accent);font-size:11px}
+  .recrow .rt{color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .loadmore{width:100%;background:#141d30;border:0;border-top:1px solid var(--border);color:var(--accent);padding:10px;font-weight:600}
+  .loadmore:hover{background:#172033}
+  .jsonview{background:#070b13;border:1px solid var(--border);border-radius:12px;padding:16px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;max-height:62vh;overflow:auto;line-height:1.6}
+
+  /* json tree */
+  .jline{white-space:pre}
+  .jkey{color:#8fb6ff}
+  .jstr{color:#bfe9c8}
+  .jnum{color:#ffd28a}
+  .jbool{color:#f4a6c8}
+  .jnull{color:var(--faint)}
+  .jpunc{color:var(--faint)}
+  .jtog{cursor:pointer;color:var(--faint);user-select:none}
+  .jtog:hover{color:var(--text)}
+  .collapsed>.jchildren{display:none}
+  .jchildren{padding-left:18px;border-left:1px solid #131c2e;margin-left:3px}
+  .refchip{display:inline-flex;align-items:center;gap:5px;background:#10243a;border:1px solid #1f3a55;
+    border-radius:6px;padding:0 7px;color:#7fd6ff;cursor:pointer;font-size:11.5px}
+  .refchip:hover{background:#163350;border-color:var(--accent2)}
+  .refchip .dot{width:6px;height:6px}
+
+  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#16202f;
+    border:1px solid var(--border);padding:10px 16px;border-radius:10px;box-shadow:var(--shadow);
+    z-index:50;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}
+  .toast.show{opacity:1}
+  .toast.err{border-color:#5b2330;color:#ffb4b4}
+
+  /* graph */
+  #graphWrap{position:relative;height:100%}
+  #graph{display:block;width:100%;height:100%}
+  .glegend{position:absolute;top:14px;left:14px;background:rgba(13,19,32,.85);border:1px solid var(--border);
+    border-radius:10px;padding:10px 12px;font-size:12px;backdrop-filter:blur(6px)}
+  .glegend .row{display:flex;align-items:center;gap:8px;margin:3px 0;color:var(--muted)}
+  .gtip{position:absolute;top:14px;right:14px;background:rgba(13,19,32,.85);border:1px solid var(--border);
+    border-radius:10px;padding:8px 12px;font-size:11px;color:var(--faint);backdrop-filter:blur(6px)}
+  .empty{color:var(--muted);text-align:center;padding:50px}
+  .spin{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;
+    display:inline-block;animation:sp 1s linear infinite;vertical-align:middle}
+  @keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="logo">Rx</div>
+      <div><h1>RAGnosis</h1><div class="sub">FHIR Dataset Explorer</div></div>
+    </div>
+    <div class="navsec">
+      <button class="navbtn active" data-view="overview"><span class="ico">▦</span> Overview</button>
+      <button class="navbtn" data-view="graph"><span class="ico">⬡</span> Relationship Graph</button>
+    </div>
+    <div class="search"><input id="filter" placeholder="Filter resource types…" autocomplete="off"></div>
+    <div class="typelist" id="typelist"></div>
+  </aside>
+
+  <main id="main">
+    <div id="content"></div>
+  </main>
+</div>
+
+<div id="gate">
+  <div class="gate-card">
+    <div class="logo" style="margin:0 auto 14px;width:44px;height:44px;font-size:22px">Rx</div>
+    <h2>RAGnosis Dataset Explorer</h2>
+    <p>Explore the FHIR dataset and how its resources link together —<br>read straight from the <code>.ndjson</code> files, lazily.</p>
+    <div>
+      <button class="cta" id="pickBtn">Open dataset folder</button>
+      <button class="ghost" id="pickInputBtn">Choose files…</button>
+      <input type="file" id="dirInput" webkitdirectory directory multiple hidden>
+    </div>
+    <div class="progress" id="gateProg"><i></i></div>
+    <div id="gateStatus"></div>
+    <div class="hint">Select the <b>data</b> folder (contains <code>metadata.json</code> + <code>dataset/</code>).<br>
+      Nothing is uploaded — files are read locally, only the bytes needed.<br>
+      Folder picker needs Chrome/Edge; otherwise use “Choose files”.</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ============================ config ============================ */
+const CATEGORY = {
+  Patient:"actor", Practitioner:"actor", PractitionerRole:"actor", Organization:"actor",
+  Location:"actor", CareTeam:"actor", Device:"actor",
+  Encounter:"clinical", Condition:"clinical", Procedure:"clinical", Observation:"clinical",
+  DiagnosticReport:"clinical", AllergyIntolerance:"clinical", Immunization:"clinical",
+  CarePlan:"clinical", ImagingStudy:"clinical",
+  Medication:"med", MedicationRequest:"med", MedicationAdministration:"med", SupplyDelivery:"med",
+  Claim:"finance", ExplanationOfBenefit:"finance",
+  Provenance:"meta", DocumentReference:"meta",
+};
+const CAT_COLOR = {actor:"#38bdf8", clinical:"#34d399", med:"#fbbf24", finance:"#f472b6", meta:"#a78bfa"};
+const CAT_LABEL = {actor:"People & Orgs", clinical:"Clinical", med:"Medication", finance:"Financial", meta:"Documents & Provenance"};
+const CAT_ORDER = ["actor","clinical","med","finance","meta"];
+const HEAD_BYTES = 600 * 1024;     // bytes read per file to derive schema + graph
+const PAGE = 40;                    // records per page in the browser
+const LOOKUP_CAP = 300 * 1024 * 1024; // max bytes scanned when resolving a reference
+
+const catOf = t => CATEGORY[t] || "meta";
+const colorOf = t => CAT_COLOR[catOf(t)];
+const fmt = n => n>=1e9?(n/1e9).toFixed(1)+"B" : n>=1e6?(n/1e6).toFixed(1)+"M" : n>=1e3?(n/1e3).toFixed(1)+"K" : ""+n;
+const fmtBytes = b => b>=1e9?(b/1e9).toFixed(1)+" GB" : b>=1e6?(b/1e6).toFixed(0)+" MB" : (b/1e3).toFixed(0)+" KB";
+const esc = s => String(s).replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const $ = s => document.querySelector(s);
+
+/* ============================ state ============================ */
+const STATE = {
+  files:{},        // Type -> { getFile(): Promise<File>, size }
+  meta:{state:"", counts:{}},
+  graph:null,      // { types:[{type,count,bytes,scanned,fields,refs,samples}], incoming:{}, edges:[] }
+  view:"overview",
+  activeType:null,
+};
+
+/* ============================ data sources ============================
+   A Source abstracts where bytes come from (local File or HTTP URL) so the
+   rest of the app reads identically. Each exposes:
+     size            total byte length
+     head(bytes)     -> raw text of the first `bytes`
+     reader()        -> a fresh ReadableStreamDefaultReader from offset 0
+*/
+function baseType(name){ return name.replace(/\.ndjson$/,"").split(".")[0]; }
+
+function fileSource(getFile, size){
+  return {
+    size,
+    async head(bytes){ const f=await getFile(); return f.slice(0, Math.min(bytes,size)).text(); },
+    async reader(){ const f=await getFile(); return f.stream().getReader(); },
+  };
+}
+function httpSource(url, size){
+  return {
+    size,
+    async head(bytes){
+      const end=Math.min(bytes,size)-1;
+      const r=await fetch(url,{headers:{Range:`bytes=0-${end}`}}); return r.text();
+    },
+    async reader(){ const r=await fetch(url); return r.body.getReader(); },
+  };
+}
+async function httpSize(url){
+  const r=await fetch(url,{method:"HEAD"});
+  return parseInt(r.headers.get("Content-Length")||"0",10);
+}
+
+/* --- pickers (no server needed) --- */
+async function fromDirHandle(dir){
+  const files = {}; let metaText = null;
+  async function recurse(handle){
+    for await (const [name, h] of handle.entries()){
+      if(h.kind === "file"){
+        if(name === "metadata.json"){ metaText = await (await h.getFile()).text(); }
+        else if(name.endsWith(".ndjson")){
+          const f = await h.getFile();
+          files[baseType(name)] = fileSource(()=>h.getFile(), f.size);
+        }
+      } else if(h.kind === "directory"){ await recurse(h); }
+    }
+  }
+  await recurse(dir);
+  return {files, metaText};
+}
+function fromFileList(list){
+  const files = {}; let metaText = null; const pending = [];
+  for(const f of list){
+    const name = (f.webkitRelativePath || f.name).split("/").pop();
+    if(name === "metadata.json"){ pending.push(f.text().then(t=>metaText=t)); }
+    else if(name.endsWith(".ndjson")){ files[baseType(name)] = fileSource(()=>Promise.resolve(f), f.size); }
+  }
+  return Promise.all(pending).then(()=>({files, metaText}));
+}
+
+/* --- auto-discover over HTTP (when served) via the directory index --- */
+async function fromHttp(){
+  const idx = await fetch("dataset/");
+  if(!idx.ok) throw new Error("no http listing");
+  const html = await idx.text();
+  const names = [...new Set([...html.matchAll(/href="([^"?]+\.ndjson)"/g)]
+    .map(m=>decodeURIComponent(m[1].split("/").pop())))];
+  if(!names.length) throw new Error("no ndjson in listing");
+  const files = {};
+  await Promise.all(names.map(async name=>{
+    const url = "dataset/"+name;
+    files[baseType(name)] = httpSource(url, await httpSize(url));
+  }));
+  let metaText=null;
+  try{ const m=await fetch("metadata.json"); if(m.ok) metaText=await m.text(); }catch(e){}
+  return {files, metaText};
+}
+
+/* read first `bytes` of a source and return complete lines (drops trailing partial) */
+async function readHeadLines(src, bytes){
+  const text = await src.head(bytes);
+  const lines = text.split("\n");
+  if(src.size > bytes) lines.pop();         // last line likely incomplete
+  return lines.filter(l=>l.trim());
+}
+
+/* ============================ schema / graph build ============================ */
+function refTarget(ref){
+  if(typeof ref!=="string" || !ref || ref[0]==="#" || ref.startsWith("urn:")) return null;
+  let t=""; for(const ch of ref){ if(/[A-Za-z]/.test(ch)) t+=ch; else break; }
+  return (t && t[0]===t[0].toUpperCase()) ? t : null;
+}
+function walk(node, path, fields, refs, depth){
+  if(depth>6 || node==null) return;
+  if(Array.isArray(node)){ for(const v of node) walk(v,path,fields,refs,depth+1); return; }
+  if(typeof node==="object"){
+    if(typeof node.reference==="string"){ const t=refTarget(node.reference); if(t) refs[t]=(refs[t]||0)+1; }
+    for(const k in node){
+      const p = path?path+"."+k:k;
+      let f = fields[p]; if(!f){ f=fields[p]={c:0,types:new Set(),ex:null}; }
+      f.c++; const v=node[k]; const ty=Array.isArray(v)?"array":typeof v; f.types.add(ty==="object"&&v?"object":ty);
+      if(f.ex==null && (typeof v==="string"||typeof v==="number"||typeof v==="boolean")){
+        f.ex = typeof v==="string" && v.length>90 ? v.slice(0,90)+"…" : v;
+      }
+      walk(v,p,fields,refs,depth+1);
+    }
+  }
+}
+async function buildGraph(onProgress){
+  const types = []; const names = Object.keys(STATE.files).sort();
+  for(let i=0;i<names.length;i++){
+    const t = names[i];
+    onProgress(i/names.length, t);
+    const entry = STATE.files[t];
+    const lines = await readHeadLines(entry, HEAD_BYTES);
+    const fields={}, refs={}; const samples=[]; let scanned=0;
+    for(const ln of lines){
+      let rec; try{ rec=JSON.parse(ln); }catch(e){ continue; }
+      scanned++; walk(rec,"",fields,refs,0);
+      if(samples.length<60) samples.push(rec);
+    }
+    const count = STATE.meta.counts[t] ?? scanned;
+    const scale = scanned? count/scanned : 1;
+    const fieldList = Object.entries(fields).map(([path,d])=>({
+      path, freq: scanned? d.c/scanned:0, types:[...d.types], ex:d.ex
+    })).sort((a,b)=> b.freq-a.freq || a.path.localeCompare(b.path));
+    const edges = {}; for(const k in refs) edges[k]=Math.round(refs[k]*scale);
+    types.push({type:t, count, bytes:entry.size, scanned, fields:fieldList, refs:edges, samples});
+  }
+  onProgress(1,"");
+  // incoming refs + edge list
+  const incoming={}; const edgeList=[];
+  for(const n of types){
+    for(const tgt in n.refs){
+      if(!STATE.files[tgt]) continue;          // only edges to types we actually have
+      (incoming[tgt]=incoming[tgt]||{})[n.type]=n.refs[tgt];
+      edgeList.push({from:n.type,to:tgt,w:n.refs[tgt]});
+    }
+  }
+  return {types, byType:Object.fromEntries(types.map(t=>[t.type,t])), incoming, edges:edgeList};
+}
+
+/* ============================ lazy line reader (pagination) ============================ */
+class LineCursor{
+  constructor(src){ this.src=src; this.reader=null; this.dec=new TextDecoder(); this.buf=""; this.done=false; }
+  async read(n){
+    if(!this.reader) this.reader=await this.src.reader();
+    const out=[];
+    while(out.length<n && !this.done){
+      let nl;
+      while((nl=this.buf.indexOf("\n"))>=0 && out.length<n){
+        const line=this.buf.slice(0,nl); this.buf=this.buf.slice(nl+1);
+        if(line.trim()) out.push(line);
+      }
+      if(out.length>=n) break;
+      const {value,done}=await this.reader.read();
+      if(done){ this.done=true; if(this.buf.trim()) out.push(this.buf), this.buf=""; break; }
+      this.buf += this.dec.decode(value,{stream:true});
+    }
+    return out;
+  }
+}
+
+/* find a single record by id, streaming the target file with early exit */
+async function findRecord(type, id){
+  const entry = STATE.files[type]; if(!entry) return null;
+  const needle = '"id":"'+id+'"';
+  const reader = await entry.reader(); const dec=new TextDecoder(); let buf=""; let scanned=0;
+  try{
+    while(true){
+      const {value,done}=await reader.read();
+      if(done) break;
+      scanned += value.byteLength;
+      buf += dec.decode(value,{stream:true});
+      let nl;
+      while((nl=buf.indexOf("\n"))>=0){
+        const line=buf.slice(0,nl); buf=buf.slice(nl+1);
+        if(line.includes(needle)){
+          try{ const r=JSON.parse(line); if(r.id===id) return r; }catch(e){}
+        }
+      }
+      if(scanned>LOOKUP_CAP) return {__capped:true};
+    }
+    if(buf.includes(needle)){ try{ const r=JSON.parse(buf); if(r.id===id) return r; }catch(e){} }
+  } finally { reader.cancel().catch(()=>{}); }
+  return null;
+}
+
+/* ============================ UI: sidebar ============================ */
+function renderSidebar(filter=""){
+  const list = $("#typelist"); list.innerHTML="";
+  const f = filter.toLowerCase();
+  for(const cat of CAT_ORDER){
+    const items = STATE.graph.types
+      .filter(t=>catOf(t.type)===cat && t.type.toLowerCase().includes(f))
+      .sort((a,b)=>b.count-a.count);
+    if(!items.length) continue;
+    const lab=document.createElement("div"); lab.className="grp-label"; lab.textContent=CAT_LABEL[cat]; list.appendChild(lab);
+    for(const t of items){
+      const el=document.createElement("div");
+      el.className="titem"+(STATE.activeType===t.type?" active":"");
+      el.innerHTML=`<span class="dot" style="background:${colorOf(t.type)}"></span>
+        <span class="nm">${t.type}</span><span class="ct">${fmt(t.count)}</span>`;
+      el.onclick=()=>openType(t.type);
+      list.appendChild(el);
+    }
+  }
+  if(!list.children.length) list.innerHTML='<div class="empty">No matches</div>';
+}
+
+function setNav(view){
+  document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.view===view && !STATE.activeType));
+}
+
+/* ============================ UI: overview ============================ */
+function renderOverview(){
+  STATE.view="overview"; STATE.activeType=null; setNav("overview"); renderSidebar($("#filter").value);
+  const g=STATE.graph;
+  const totRec=g.types.reduce((a,t)=>a+t.count,0);
+  const totB=g.types.reduce((a,t)=>a+t.bytes,0);
+  const max=Math.max(...g.types.map(t=>t.count));
+  const cards=g.types.slice().sort((a,b)=>b.count-a.count).map(t=>`
+    <div class="card" data-t="${t.type}">
+      <div class="top"><span class="dot" style="background:${colorOf(t.type)}"></span><span class="nm">${t.type}</span></div>
+      <div class="big">${t.count.toLocaleString()}</div>
+      <div class="meta"><span>records</span><span>${fmtBytes(t.bytes)}</span></div>
+      <div class="bar"><i style="width:${Math.max(3,t.count/max*100)}%;background:${colorOf(t.type)}"></i></div>
+    </div>`).join("");
+  $("#content").innerHTML=`<div class="view">
+    <h2 class="title">Dataset Overview</h2>
+    <div class="crumb">${esc(STATE.meta.state||"FHIR")} · synthetic FHIR R4 · generated by Synthea</div>
+    <div class="stats">
+      <div class="stat"><div class="v">${g.types.length}</div><div class="l">resource types</div></div>
+      <div class="stat"><div class="v">${totRec.toLocaleString()}</div><div class="l">total records</div></div>
+      <div class="stat"><div class="v">${fmtBytes(totB)}</div><div class="l">on disk</div></div>
+      <div class="stat"><div class="v">${g.edges.length}</div><div class="l">reference links</div></div>
+    </div>
+    <div class="cards">${cards}</div>
+  </div>`;
+  $("#content").querySelectorAll(".card").forEach(c=>c.onclick=()=>openType(c.dataset.t));
+}
+
+/* ============================ UI: type detail ============================ */
+async function openType(type){
+  STATE.activeType=type; STATE.view="type"; setNav(""); renderSidebar($("#filter").value);
+  $("#main").scrollTop=0;
+  const n=STATE.graph.byType[type];
+  const out = Object.entries(n.refs).sort((a,b)=>b[1]-a[1]);
+  const inc = Object.entries(STATE.graph.incoming[type]||{}).sort((a,b)=>b[1]-a[1]);
+  const chip = (t,w)=> STATE.files[t]
+      ? `<span class="pill" data-go="${t}"><span class="dot" style="background:${colorOf(t)}"></span>${t} <b style="color:var(--text)">${fmt(w)}</b></span>`
+      : `<span class="pill" style="cursor:default;opacity:.6"><span class="dot" style="background:#445"></span>${t} <b>${fmt(w)}</b></span>`;
+
+  const rows = n.fields.slice(0,200).map(f=>`
+    <tr><td><span class="path">${esc(f.path)}</span></td>
+      <td><span class="freqbar"><i style="width:${Math.round(f.freq*100)}%"></i></span>${Math.round(f.freq*100)}%</td>
+      <td><span class="ftype">${f.types.join(" | ")}</span></td>
+      <td>${f.ex==null?"":`<span class="ex">${esc(f.ex)}</span>`}</td></tr>`).join("");
+
+  $("#content").innerHTML=`<div class="view">
+    <h2 class="title"><span class="dot" style="display:inline-block;width:11px;height:11px;border-radius:50%;background:${colorOf(type)}"></span> ${type}</h2>
+    <div class="crumb">${n.count.toLocaleString()} records · ${fmtBytes(n.bytes)} · ${CAT_LABEL[catOf(type)]} · schema sampled from ${n.scanned} records</div>
+
+    <div class="section">
+      <div class="reflists">
+        <div><div class="lab">References → (outgoing)</div><div class="chips">${out.length?out.map(([t,w])=>chip(t,w)).join(""):'<span style="color:var(--faint)">none</span>'}</div></div>
+        <div><div class="lab">Referenced by ← (incoming)</div><div class="chips">${inc.length?inc.map(([t,w])=>chip(t,w)).join(""):'<span style="color:var(--faint)">none</span>'}</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Schema <span style="color:var(--faint);font-weight:400">· ${n.fields.length} fields (top-level + nested)</span></h3>
+      <table class="schema"><thead><tr><th>Field path</th><th>Coverage</th><th>Type</th><th>Example</th></tr></thead>
+      <tbody>${rows}</tbody></table>
+    </div>
+
+    <div class="section">
+      <h3>Records</h3>
+      <div class="recbar">
+        <button class="pill" id="reload"><span class="spin" style="display:none"></span> Reload</button>
+        <span class="count" id="reccount"></span>
+      </div>
+      <div class="recwrap">
+        <div class="reclist" id="reclist"></div>
+        <div class="jsonview" id="recjson"><div class="empty">Select a record</div></div>
+      </div>
+    </div>
+  </div>`;
+  $("#content").querySelectorAll("[data-go]").forEach(p=>p.onclick=()=>openType(p.dataset.go));
+  startBrowser(type);
+}
+
+/* ---- record browser ---- */
+const BROWSER = {type:null, cursor:null, recs:[], done:false};
+async function startBrowser(type){
+  BROWSER.type=type; BROWSER.cursor=new LineCursor(STATE.files[type]); BROWSER.recs=[]; BROWSER.done=false;
+  $("#reload").onclick=()=>{ if(STATE.activeType===type) startBrowser(type); };
+  $("#reclist").innerHTML=""; $("#recjson").innerHTML='<div class="empty">Select a record</div>';
+  await loadMore(type, true);
+}
+async function loadMore(type, first){
+  const lines = await BROWSER.cursor.read(PAGE);
+  if(STATE.activeType!==type) return;
+  if(!lines.length) BROWSER.done=true;
+  for(const ln of lines){ try{ BROWSER.recs.push(JSON.parse(ln)); }catch(e){} }
+  renderRecList(type);
+  if(first && BROWSER.recs.length) selectRecord(0);
+}
+function recLabel(r){
+  if(r.resourceType==="Patient" && r.name){ const nm=r.name[0]||{}; return [(nm.given||[]).join(" "),(nm.family||"")].join(" ").trim()||r.id; }
+  if(r.code?.text) return r.code.text;
+  if(r.type?.[0]?.text) return r.type[0].text;
+  if(r.type?.text) return r.type.text;
+  if(r.category?.[0]?.text) return r.category[0].text;
+  if(r.description) return r.description;
+  if(r.status) return r.status;
+  return r.id||"(record)";
+}
+function renderRecList(type){
+  const el=$("#reclist");
+  el.innerHTML = BROWSER.recs.map((r,i)=>`
+    <div class="recrow${i===BROWSER.sel?" active":""}" data-i="${i}">
+      <div class="rid">${esc((r.id||"").slice(0,18))}</div>
+      <div class="rt">${esc(recLabel(r)).slice(0,46)}</div>
+    </div>`).join("") + (BROWSER.done?"":`<button class="loadmore" id="lm">Load ${PAGE} more…</button>`);
+  $("#reccount").textContent = `${BROWSER.recs.length}${BROWSER.done?"":"+"} of ${STATE.graph.byType[type].count.toLocaleString()} loaded`;
+  el.querySelectorAll(".recrow").forEach(r=>r.onclick=()=>selectRecord(+r.dataset.i));
+  const lm=$("#lm"); if(lm) lm.onclick=()=>loadMore(type,false);
+}
+function selectRecord(i){
+  BROWSER.sel=i; renderRecList(BROWSER.type);
+  const r=BROWSER.recs[i];
+  const view=$("#recjson"); view.innerHTML=""; view.appendChild(jsonTree(r,true));
+}
+
+/* ---- JSON tree with clickable references ---- */
+function refInfo(val){
+  if(typeof val!=="string") return null;
+  const m = val.match(/^([A-Z][A-Za-z]+)\/(.+)$/);
+  if(m) return {type:m[1], id:m[2], resolvable:!!STATE.files[m[1]]};
+  const c = val.match(/^([A-Z][A-Za-z]+)\?/);
+  if(c) return {type:c[1], id:null, resolvable:!!STATE.files[c[1]]};
+  return null;
+}
+function leaf(val,key){
+  if(key==="reference"){ const ri=refInfo(val); if(ri && STATE.files[ri.type]){
+    const sp=document.createElement("span"); sp.className="refchip";
+    sp.innerHTML=`<span class="dot" style="background:${colorOf(ri.type)}"></span>${esc(val)}`;
+    sp.title = ri.id? `Find ${ri.type}/${ri.id.slice(0,8)}…` : `Go to ${ri.type}`;
+    sp.onclick=()=> ri.id? jumpToRef(ri.type,ri.id) : openType(ri.type);
+    return sp;
+  }}
+  const s=document.createElement("span");
+  if(typeof val==="string"){ s.className="jstr"; s.textContent='"'+val+'"'; }
+  else if(typeof val==="number"){ s.className="jnum"; s.textContent=val; }
+  else if(typeof val==="boolean"){ s.className="jbool"; s.textContent=val; }
+  else if(val===null){ s.className="jnull"; s.textContent="null"; }
+  else s.textContent=String(val);
+  return s;
+}
+function jsonTree(val, open){
+  if(val===null || typeof val!=="object") { const w=document.createElement("span"); w.appendChild(leaf(val)); return w; }
+  const arr=Array.isArray(val); const entries=arr?val.map((v,i)=>[i,v]):Object.entries(val);
+  const box=document.createElement("div"); box.className="jline"+(open?"":" collapsed");
+  const head=document.createElement("span");
+  const tog=document.createElement("span"); tog.className="jtog"; tog.textContent=open?"▾ ":"▸ ";
+  head.appendChild(tog);
+  const op=document.createElement("span"); op.className="jpunc"; op.textContent=arr?"[":"{";
+  head.appendChild(op);
+  const cnt=document.createElement("span"); cnt.className="jnull"; cnt.textContent=` ${entries.length}`;
+  head.appendChild(cnt);
+  box.appendChild(head);
+  const kids=document.createElement("div"); kids.className="jchildren";
+  for(const [k,v] of entries){
+    const row=document.createElement("div"); row.className="jline";
+    if(!arr){ const ks=document.createElement("span"); ks.className="jkey"; ks.textContent='"'+k+'": '; row.appendChild(ks); }
+    if(v && typeof v==="object"){ row.appendChild(jsonTree(v, false)); }
+    else row.appendChild(leaf(v,String(k)));
+    kids.appendChild(row);
+  }
+  box.appendChild(kids);
+  const close=document.createElement("div"); close.className="jpunc"; close.textContent=arr?"]":"}"; box.appendChild(close);
+  tog.onclick=()=>{ box.classList.toggle("collapsed"); tog.textContent=box.classList.contains("collapsed")?"▸ ":"▾ "; };
+  head.style.cursor="pointer"; head.onclick=e=>{ if(e.target!==tog) tog.onclick(); };
+  return box;
+}
+
+async function jumpToRef(type,id){
+  toast(`<span class="spin"></span> Searching ${type} for ${id.slice(0,8)}…`);
+  const r=await findRecord(type,id);
+  if(r && r.__capped){ toast(`Not found within ${fmtBytes(LOOKUP_CAP)} of ${type}`, true); return; }
+  if(!r){ toast(`${type}/${id.slice(0,8)}… not found`, true); return; }
+  // open the type then show the found record at the top
+  await openType(type);
+  BROWSER.recs.unshift(r); renderRecList(type); selectRecord(0);
+  toast(`Loaded ${type}/${id.slice(0,8)}…`);
+}
+
+/* ============================ UI: relationship graph ============================ */
+let GRAPH_ANIM=null;
+function renderGraph(){
+  STATE.view="graph"; STATE.activeType=null; setNav("graph"); renderSidebar($("#filter").value);
+  $("#content").innerHTML=`<div class="view full"><div id="graphWrap">
+    <canvas id="graph"></canvas>
+    <div class="glegend" id="legend"></div>
+    <div class="gtip">drag nodes · hover to highlight · click to open</div>
+  </div></div>`;
+  $("#legend").innerHTML = CAT_ORDER.map(c=>`<div class="row"><span class="dot" style="background:${CAT_COLOR[c]}"></span>${CAT_LABEL[c]}</div>`).join("");
+  setupGraph();
+}
+function setupGraph(){
+  const cv=$("#graph"), ctx=cv.getContext("2d");
+  const wrap=$("#graphWrap");
+  const g=STATE.graph;
+  const maxW=Math.max(...g.edges.map(e=>e.w),1);
+  const maxC=Math.max(...g.types.map(t=>t.count),1);
+  // nodes
+  const N={}; const nodes=g.types.map((t,i)=>{
+    const a=i/g.types.length*Math.PI*2;
+    const n={id:t.type,count:t.count,r:8+Math.sqrt(t.count/maxC)*34,
+      x:Math.cos(a),y:Math.sin(a),vx:0,vy:0,col:colorOf(t.type)};
+    N[t.type]=n; return n;
+  });
+  const edges=g.edges.filter(e=>N[e.from]&&N[e.to]);
+  const adj={}; edges.forEach(e=>{ (adj[e.from]=adj[e.from]||new Set()).add(e.to); (adj[e.to]=adj[e.to]||new Set()).add(e.from); });
+
+  let W,H,DPR;
+  function resize(){
+    DPR=window.devicePixelRatio||1; W=wrap.clientWidth; H=wrap.clientHeight;
+    cv.width=W*DPR; cv.height=H*DPR; cv.style.width=W+"px"; cv.style.height=H+"px"; ctx.setTransform(DPR,0,0,DPR,0,0);
+    // seed positions to center on first run
+    if(!setupGraph._seeded){ nodes.forEach(n=>{ n.x=W/2+n.x*Math.min(W,H)*0.32; n.y=H/2+n.y*Math.min(W,H)*0.32; }); setupGraph._seeded=true; }
+  }
+  resize();
+  let alpha=1; let hover=null, dragging=null, mx=0,my=0;
+
+  function step(){
+    if(alpha>0.005){
+      // repulsion
+      for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
+        const a=nodes[i],b=nodes[j]; let dx=a.x-b.x,dy=a.y-b.y; let d2=dx*dx+dy*dy||0.01;
+        const f=(28000)/d2; const d=Math.sqrt(d2); dx/=d;dy/=d;
+        a.vx+=dx*f*alpha; a.vy+=dy*f*alpha; b.vx-=dx*f*alpha; b.vy-=dy*f*alpha;
+      }
+      // springs
+      for(const e of edges){
+        const a=N[e.from],b=N[e.to]; let dx=b.x-a.x,dy=b.y-a.y; const d=Math.sqrt(dx*dx+dy*dy)||0.01;
+        const target=120+(a.r+b.r); const f=(d-target)*0.012*alpha; dx/=d;dy/=d;
+        a.vx+=dx*f; a.vy+=dy*f; b.vx-=dx*f; b.vy-=dy*f;
+      }
+      // centering + integrate
+      for(const n of nodes){
+        n.vx+=(W/2-n.x)*0.0009*alpha; n.vy+=(H/2-n.y)*0.0009*alpha;
+        if(n===dragging){ n.x=mx; n.y=my; n.vx=n.vy=0; }
+        else{ n.vx*=0.86; n.vy*=0.86; n.x+=n.vx; n.y+=n.vy; }
+        n.x=Math.max(n.r+6,Math.min(W-n.r-6,n.x)); n.y=Math.max(n.r+6,Math.min(H-n.r-6,n.y));
+      }
+      alpha*=0.992;
+    }
+    draw();
+    GRAPH_ANIM=requestAnimationFrame(step);
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const hl=hover?adj[hover.id]:null;
+    // edges
+    for(const e of edges){
+      const a=N[e.from],b=N[e.to];
+      const on = hover && (e.from===hover.id||e.to===hover.id);
+      ctx.globalAlpha = hover? (on?0.9:0.06):0.28;
+      ctx.strokeStyle = on? a.col : "#33445f";
+      ctx.lineWidth = Math.max(0.6, Math.log10(e.w+1))*(on?1.6:1);
+      // curved edge
+      const mxp=(a.x+b.x)/2, myp=(a.y+b.y)/2; const dx=b.x-a.x,dy=b.y-a.y;
+      const cx=mxp-dy*0.12, cy=myp+dx*0.12;
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.quadraticCurveTo(cx,cy,b.x,b.y); ctx.stroke();
+      // arrowhead near target
+      if(!hover || on){
+        const t=0.92; const qx=(1-t)*(1-t)*a.x+2*(1-t)*t*cx+t*t*b.x;
+        const qy=(1-t)*(1-t)*a.y+2*(1-t)*t*cy+t*t*b.y;
+        const ang=Math.atan2(b.y-qy,b.x-qx); const ax=b.x-Math.cos(ang)*(b.r+2), ay=b.y-Math.sin(ang)*(b.r+2);
+        ctx.fillStyle=ctx.strokeStyle; ctx.globalAlpha=hover?(on?0.9:0.06):0.4;
+        ctx.beginPath(); ctx.moveTo(ax,ay);
+        ctx.lineTo(ax-Math.cos(ang-0.4)*7, ay-Math.sin(ang-0.4)*7);
+        ctx.lineTo(ax-Math.cos(ang+0.4)*7, ay-Math.sin(ang+0.4)*7);
+        ctx.fill();
+      }
+    }
+    // nodes
+    for(const n of nodes){
+      const dim = hover && n!==hover && !(hl&&hl.has(n.id));
+      ctx.globalAlpha = dim?0.25:1;
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=n.col; ctx.globalAlpha=dim?0.18:0.16; ctx.fill();
+      ctx.globalAlpha=dim?0.3:1; ctx.lineWidth=n===hover?3:2; ctx.strokeStyle=n.col; ctx.stroke();
+      // label
+      ctx.globalAlpha=dim?0.4:1; ctx.fillStyle="#e6edf6";
+      ctx.font=`${n.r>22?13:11}px ui-sans-serif,system-ui`; ctx.textAlign="center"; ctx.textBaseline="middle";
+      ctx.fillText(n.id, n.x, n.y);
+      ctx.fillStyle="#8a9bb5"; ctx.font="10px ui-sans-serif";
+      ctx.fillText(fmt(n.count), n.x, n.y+n.r+10);
+    }
+    ctx.globalAlpha=1;
+  }
+  function nodeAt(x,y){ for(let i=nodes.length-1;i>=0;i--){ const n=nodes[i]; if((x-n.x)**2+(y-n.y)**2<=n.r*n.r) return n; } return null; }
+  cv.onmousemove=e=>{ const r=cv.getBoundingClientRect(); mx=e.clientX-r.left; my=e.clientY-r.top;
+    if(dragging){ alpha=Math.max(alpha,0.3); } else { const h=nodeAt(mx,my); if(h!==hover){ hover=h; cv.style.cursor=h?"pointer":"default"; } } };
+  cv.onmousedown=e=>{ const r=cv.getBoundingClientRect(); const n=nodeAt(e.clientX-r.left,e.clientY-r.top); if(n){ dragging=n; n._dx=false; } };
+  window.addEventListener("mouseup",()=>{ dragging=null; });
+  cv.onclick=e=>{ const r=cv.getBoundingClientRect(); const n=nodeAt(e.clientX-r.left,e.clientY-r.top); if(n) openType(n.id); };
+  const ro=new ResizeObserver(()=>resize()); ro.observe(wrap);
+  if(GRAPH_ANIM) cancelAnimationFrame(GRAPH_ANIM);
+  setupGraph._seeded=false; resize(); step();
+}
+
+/* ============================ toast ============================ */
+let toastT;
+function toast(html, err){
+  const t=$("#toast"); t.innerHTML=html; t.className="toast show"+(err?" err":"");
+  clearTimeout(toastT); toastT=setTimeout(()=>t.className="toast",err?3500:1800);
+}
+
+/* ============================ boot ============================ */
+async function load(getDataPromise){
+  const prog=$("#gateProg"); prog.style.display="block";
+  const setP=(p,msg)=>{ prog.firstElementChild.style.width=Math.round(p*100)+"%"; $("#gateStatus").textContent=msg; };
+  try{
+    setP(0.02,"Reading folder…");
+    const {files,metaText}=await getDataPromise;
+    if(!Object.keys(files).length){ throw new Error("No .ndjson files found in that folder."); }
+    STATE.files=files;
+    if(metaText){ try{ const m=JSON.parse(metaText); STATE.meta.state=m.state||""; (m.datasets||[]).forEach(d=>STATE.meta.counts[d.name]=d.count);}catch(e){} }
+    STATE.graph = await buildGraph((p,t)=> setP(0.05+p*0.9, t?`Scanning ${t}…`:"Finalizing…"));
+    setP(1,"Done");
+    $("#gate").style.display="none";
+    renderOverview();
+  }catch(err){
+    $("#gateStatus").textContent="⚠ "+err.message; prog.style.display="none";
+    console.error(err);
+  }
+}
+$("#pickBtn").onclick=async()=>{
+  if(!window.showDirectoryPicker){ toast("Folder picker unsupported — use “Choose files”", true); return; }
+  let dir; try{ dir=await window.showDirectoryPicker(); }catch(e){ return; }
+  load(fromDirHandle(dir));
+};
+$("#pickInputBtn").onclick=()=>$("#dirInput").click();
+$("#dirInput").onchange=e=>{ if(e.target.files.length) load(fromFileList(e.target.files)); };
+document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>{ b.dataset.view==="overview"?renderOverview():renderGraph(); });
+$("#filter").oninput=e=>renderSidebar(e.target.value);
+
+/* auto-load the dataset/ folder when the page is served over HTTP (zero clicks). */
+(async function autostart(){
+  if(location.protocol==="file:") return;              // file:// can't list/range — show picker
+  try{
+    $("#gateStatus").textContent="Locating dataset…";
+    const data = await fromHttp();
+    load(Promise.resolve(data));
+  }catch(e){ /* not served from the data dir — leave the picker gate up */ }
+})();
+</script>
+</body>
+</html>

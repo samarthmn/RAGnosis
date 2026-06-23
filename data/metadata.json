@@ -1,0 +1,101 @@
+{
+  "state": "Massachusetts",
+  "datasets": [
+    {
+      "name": "AllergyIntolerance",
+      "count": 1118
+    },
+    {
+      "name": "CarePlan",
+      "count": 3881
+    },
+    {
+      "name": "CareTeam",
+      "count": 3881
+    },
+    {
+      "name": "Claim",
+      "count": 128235
+    },
+    {
+      "name": "Condition",
+      "count": 42912
+    },
+    {
+      "name": "Device",
+      "count": 7052
+    },
+    {
+      "name": "DiagnosticReport",
+      "count": 139551
+    },
+    {
+      "name": "DocumentReference",
+      "count": 68437
+    },
+    {
+      "name": "Encounter",
+      "count": 68437
+    },
+    {
+      "name": "ExplanationOfBenefit",
+      "count": 128235
+    },
+    {
+      "name": "ImagingStudy",
+      "count": 6057
+    },
+    {
+      "name": "Immunization",
+      "count": 16418
+    },
+    {
+      "name": "Location",
+      "count": 843
+    },
+    {
+      "name": "Medication",
+      "count": 21369
+    },
+    {
+      "name": "MedicationAdministration",
+      "count": 21369
+    },
+    {
+      "name": "MedicationRequest",
+      "count": 59798
+    },
+    {
+      "name": "Observation",
+      "count": 623864
+    },
+    {
+      "name": "Organization",
+      "count": 842
+    },
+    {
+      "name": "Patient",
+      "count": 1158
+    },
+    {
+      "name": "Practitioner",
+      "count": 842
+    },
+    {
+      "name": "PractitionerRole",
+      "count": 842
+    },
+    {
+      "name": "Procedure",
+      "count": 195631
+    },
+    {
+      "name": "Provenance",
+      "count": 1158
+    },
+    {
+      "name": "SupplyDelivery",
+      "count": 32309
+    }
+  ]
+}

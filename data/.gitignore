@@ -1,0 +1,3 @@
+# Synthea-generated FHIR data is too large for git — regenerate it locally.
+# See README.md → "Generating the dataset".
+/dataset/
