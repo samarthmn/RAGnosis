@@ -1,0 +1,29 @@
+// Multirun config: one JSON object per line. Each run executes the full
+// pipeline in order: chunk -> ingest -> evaluate (rebuilding the vector DB).
+// Lines starting with // or # and blank lines are ignored.
+//
+// Fields (all optional except "pipeline"):
+//   pipeline         "basic" | "advanced"   (required)
+//   name             label saved into config.json and printed
+//   stages           subset/order of ["chunk","ingest","evaluate"] (default: all)
+//   embedding_model  embedding used at ingest + query time
+//   chat_model       model that generates answers
+//   chunk_size       chunk size in chars (default: 1000)
+//   chunk_overlap    chunk overlap in chars (default: 200)
+//   limit            max questions, stratified across difficulties (default: all)
+//   k                top-k documents retrieved (default: 10)
+//   include_answers  run answer generation + judging (default: true)
+//
+// Only embedding_model and chat_model are overridable per run; preprocess/
+// rewrite/rerank/judge models are constants (see PREPROCESS_MODEL etc. in
+// app/common/models.py). Models not listed fall back to the pipeline default.
+// {"name":"1","pipeline":"advanced","embedding_model":"all-minilm:l6-v2","chat_model":"deepseek-r1:1.5b"}
+// {"name":"2","pipeline":"basic","embedding_model":"all-minilm:l6-v2","chat_model":"gemma4:e4b"}
+// {"name":"3","pipeline":"basic","embedding_model":"all-minilm:l6-v2","chat_model":"gpt-oss:20b"}
+// {"name":"4","pipeline":"basic","embedding_model":"qwen3-embedding:latest","chat_model":"deepseek-r1:1.5b"}
+// {"name":"5","pipeline":"basic","embedding_model":"qwen3-embedding:latest","chat_model":"gemma4:e4b"}
+// {"name":"6","pipeline":"basic","embedding_model":"qwen3-embedding:latest","chat_model":"gpt-oss:20b"}
+// {"name":"7","pipeline":"basic","embedding_model":"bge-large:latest","chat_model":"deepseek-r1:1.5b"}
+// {"name":"8","pipeline":"basic","embedding_model":"bge-large:latest","chat_model":"gemma4:e4b"}
+// {"name":"9","pipeline":"basic","embedding_model":"bge-large:latest","chat_model":"gpt-oss:20b"}
+// ---------

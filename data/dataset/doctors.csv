@@ -1,0 +1,121 @@
+doctor_id,full_name,gender,specialization,department_id,phone,email,years_experience,consultation_fee_inr
+DOC0001,Dr. Sara Kulkarni,Female,Laryngology,DEP004,+91-80-97226012,doctor0001@citycare.example,35,650
+DOC0002,Dr. Sara Mishra,Male,Stroke Care,DEP007,+91-80-31429110,doctor0002@citycare.example,28,2000
+DOC0003,Dr. Anika Iyer,Female,Reproductive Health,DEP006,+91-80-22448136,doctor0003@citycare.example,25,500
+DOC0004,Dr. Rahul Kapoor,Male,Cosmetic Dermatology,DEP002,+91-80-71662963,doctor0004@citycare.example,35,1500
+DOC0005,Dr. Kiran Patel,Male,Clinical Dermatology,DEP002,+91-80-58537831,doctor0005@citycare.example,13,1200
+DOC0006,Dr. Arjun Verma,Female,Male Health,DEP012,+91-80-41244663,doctor0006@citycare.example,7,500
+DOC0007,Dr. Anika Mishra,Male,Stroke Care,DEP007,+91-80-57683626,doctor0007@citycare.example,14,800
+DOC0008,Dr. Anika Saxena,Female,Imaging,DEP011,+91-80-32969840,doctor0008@citycare.example,35,1500
+DOC0009,Dr. Ira Khan,Male,Male Health,DEP012,+91-80-95899313,doctor0009@citycare.example,15,800
+DOC0010,Dr. Neha Verma,Female,Diagnostic Radiology,DEP011,+91-80-52339391,doctor0010@citycare.example,26,2000
+DOC0011,Dr. Arjun Gupta,Male,Internal Medicine,DEP005,+91-80-77005685,doctor0011@citycare.example,26,1500
+DOC0012,Dr. Pooja Iyer,Male,Diagnostic Radiology,DEP011,+91-80-85345555,doctor0012@citycare.example,35,650
+DOC0013,Dr. Sonia Das,Male,Family Medicine,DEP005,+91-80-28566572,doctor0013@citycare.example,33,650
+DOC0014,Dr. Sai Verma,Female,Sports Medicine,DEP008,+91-80-31472420,doctor0014@citycare.example,28,1500
+DOC0015,Dr. Arjun Joshi,Male,Addiction Medicine,DEP010,+91-80-81016525,doctor0015@citycare.example,17,1000
+DOC0016,Dr. Aarav Menon,Female,Pediatric Emergency,DEP009,+91-80-45812670,doctor0016@citycare.example,22,1200
+DOC0017,Dr. Riya Das,Female,Pediatric Dermatology,DEP002,+91-80-45351479,doctor0017@citycare.example,33,500
+DOC0018,Dr. Nora Rao,Male,Hormonal Disorders,DEP003,+91-80-91734598,doctor0018@citycare.example,13,1200
+DOC0019,Dr. Rohan Khan,Female,Hormonal Disorders,DEP003,+91-80-75579548,doctor0019@citycare.example,2,800
+DOC0020,Dr. Rohan Singh,Female,Cosmetic Dermatology,DEP002,+91-80-86149359,doctor0020@citycare.example,6,650
+DOC0021,Dr. Tara Patel,Female,Cosmetic Dermatology,DEP002,+91-80-73791320,doctor0021@citycare.example,11,1500
+DOC0022,Dr. Aditi Chopra,Male,Internal Medicine,DEP005,+91-80-36998038,doctor0022@citycare.example,20,1200
+DOC0023,Dr. Rohan Mishra,Male,Stroke Care,DEP007,+91-80-40158366,doctor0023@citycare.example,5,650
+DOC0024,Dr. Vivaan Malhotra,Female,Maternal Care,DEP006,+91-80-10965138,doctor0024@citycare.example,5,650
+DOC0025,Dr. Vihaan Mehta,Female,Kidney Stones,DEP012,+91-80-54349361,doctor0025@citycare.example,5,2000
+DOC0026,Dr. Ira Nair,Male,Neonatology,DEP009,+91-80-27758595,doctor0026@citycare.example,31,1200
+DOC0027,Dr. Kabir Das,Female,Otology,DEP004,+91-80-98447167,doctor0027@citycare.example,28,500
+DOC0028,Dr. Dev Das,Male,Maternal Care,DEP006,+91-80-97705310,doctor0028@citycare.example,7,500
+DOC0029,Dr. Meera Trivedi,Male,Interventional Cardiology,DEP001,+91-80-35714784,doctor0029@citycare.example,13,650
+DOC0030,Dr. Nikhil Iyer,Male,Neonatology,DEP009,+91-80-72092888,doctor0030@citycare.example,16,800
+DOC0031,Dr. Nikhil Pillai,Female,Cosmetic Dermatology,DEP002,+91-80-82556484,doctor0031@citycare.example,1,1500
+DOC0032,Dr. Ira Khan,Male,Pediatric Dermatology,DEP002,+91-80-38688676,doctor0032@citycare.example,26,1000
+DOC0033,Dr. Anaya Joshi,Female,Clinical Cardiology,DEP001,+91-80-71070189,doctor0033@citycare.example,19,800
+DOC0034,Dr. Anil Menon,Male,Stroke Care,DEP007,+91-80-49823450,doctor0034@citycare.example,14,650
+DOC0035,Dr. Sonia Trivedi,Female,Heart Failure,DEP001,+91-80-17672593,doctor0035@citycare.example,4,800
+DOC0036,Dr. Kabir Kulkarni,Female,Adult Psychiatry,DEP010,+91-80-20752378,doctor0036@citycare.example,12,1200
+DOC0037,Dr. Ansh Patel,Female,Pediatric Dermatology,DEP002,+91-80-86460539,doctor0037@citycare.example,16,500
+DOC0038,Dr. Ansh Verma,Female,Child Psychiatry,DEP010,+91-80-88339168,doctor0038@citycare.example,34,1500
+DOC0039,Dr. Prisha Gupta,Male,Obstetrics,DEP006,+91-80-63121477,doctor0039@citycare.example,9,800
+DOC0040,Dr. Saanvi Mishra,Male,Diagnostic Radiology,DEP011,+91-80-71510041,doctor0040@citycare.example,7,500
+DOC0041,Dr. Varun Gupta,Male,Cosmetic Dermatology,DEP002,+91-80-19233013,doctor0041@citycare.example,16,800
+DOC0042,Dr. Riya Khan,Male,Maternal Care,DEP006,+91-80-50603163,doctor0042@citycare.example,34,1500
+DOC0043,Dr. Anil Singh,Female,Interventional Cardiology,DEP001,+91-80-25492573,doctor0043@citycare.example,7,800
+DOC0044,Dr. Anil Iyer,Male,Male Health,DEP012,+91-80-38270233,doctor0044@citycare.example,22,1200
+DOC0045,Dr. Prisha Kulkarni,Male,Rhinology,DEP004,+91-80-16818112,doctor0045@citycare.example,6,2000
+DOC0046,Dr. Dev Nair,Female,Diagnostic Radiology,DEP011,+91-80-27558317,doctor0046@citycare.example,17,800
+DOC0047,Dr. Nikhil Pillai,Male,Hormonal Disorders,DEP003,+91-80-25015458,doctor0047@citycare.example,5,500
+DOC0048,Dr. Ishaan Pillai,Female,Male Health,DEP012,+91-80-84158663,doctor0048@citycare.example,10,1200
+DOC0049,Dr. Krishna Verma,Male,Epilepsy,DEP007,+91-80-15354599,doctor0049@citycare.example,23,2000
+DOC0050,Dr. Ira Menon,Female,Rhinology,DEP004,+91-80-85146293,doctor0050@citycare.example,27,2000
+DOC0051,Dr. Ishaan Mehta,Female,Adult Psychiatry,DEP010,+91-80-13326769,doctor0051@citycare.example,12,1000
+DOC0052,Dr. Priya Das,Female,Male Health,DEP012,+91-80-24508349,doctor0052@citycare.example,25,650
+DOC0053,Dr. Kabir Mehta,Female,Clinical Cardiology,DEP001,+91-80-50962024,doctor0053@citycare.example,15,800
+DOC0054,Dr. Vivaan Menon,Female,Rhinology,DEP004,+91-80-47393469,doctor0054@citycare.example,5,800
+DOC0055,Dr. Rahul Shetty,Male,Preventive Care,DEP005,+91-80-81969657,doctor0055@citycare.example,22,2000
+DOC0056,Dr. Ayaan Nair,Female,Heart Failure,DEP001,+91-80-15134794,doctor0056@citycare.example,7,800
+DOC0057,Dr. Dev Kapoor,Male,Child Psychiatry,DEP010,+91-80-78642041,doctor0057@citycare.example,8,1200
+DOC0058,Dr. Leela Gupta,Male,Stroke Care,DEP007,+91-80-68526649,doctor0058@citycare.example,1,1500
+DOC0059,Dr. Varun Menon,Female,Child Wellness,DEP009,+91-80-19391725,doctor0059@citycare.example,22,1000
+DOC0060,Dr. Neha Menon,Female,Addiction Medicine,DEP010,+91-80-78064830,doctor0060@citycare.example,20,800
+DOC0061,Dr. Asha Reddy,Male,Imaging,DEP011,+91-80-84411983,doctor0061@citycare.example,9,800
+DOC0062,Dr. Asha Menon,Male,Laryngology,DEP004,+91-80-33357554,doctor0062@citycare.example,20,1500
+DOC0063,Dr. Anil Sharma,Male,Epilepsy,DEP007,+91-80-67698610,doctor0063@citycare.example,21,650
+DOC0064,Dr. Nikhil Mishra,Female,Spine Care,DEP008,+91-80-32775593,doctor0064@citycare.example,6,1000
+DOC0065,Dr. Nora Menon,Male,Internal Medicine,DEP005,+91-80-41523529,doctor0065@citycare.example,20,2000
+DOC0066,Dr. Diya Iyer,Female,Otology,DEP004,+91-80-73771720,doctor0066@citycare.example,5,650
+DOC0067,Dr. Asha Shetty,Female,Spine Care,DEP008,+91-80-61536717,doctor0067@citycare.example,32,1500
+DOC0068,Dr. Ira Iyer,Female,Stroke Care,DEP007,+91-80-67062156,doctor0068@citycare.example,15,2000
+DOC0069,Dr. Aditi Mishra,Female,Hormonal Disorders,DEP003,+91-80-26288475,doctor0069@citycare.example,30,650
+DOC0070,Dr. Pooja Menon,Male,Thyroid Disorders,DEP003,+91-80-77750178,doctor0070@citycare.example,28,1200
+DOC0071,Dr. Nikhil Khan,Male,Child Wellness,DEP009,+91-80-43183955,doctor0071@citycare.example,18,800
+DOC0072,Dr. Tara Shetty,Female,Child Wellness,DEP009,+91-80-20399639,doctor0072@citycare.example,19,1000
+DOC0073,Dr. Anika Reddy,Male,Laryngology,DEP004,+91-80-28572252,doctor0073@citycare.example,10,500
+DOC0074,Dr. Kiran Saxena,Female,Laryngology,DEP004,+91-80-18620650,doctor0074@citycare.example,27,650
+DOC0075,Dr. Priya Pillai,Male,Epilepsy,DEP007,+91-80-37760841,doctor0075@citycare.example,27,500
+DOC0076,Dr. Sonia Saxena,Female,Movement Disorders,DEP007,+91-80-74019136,doctor0076@citycare.example,1,1000
+DOC0077,Dr. Saanvi Joshi,Male,Maternal Care,DEP006,+91-80-83300637,doctor0077@citycare.example,15,1500
+DOC0078,Dr. Sara Nair,Male,Joint Replacement,DEP008,+91-80-62191530,doctor0078@citycare.example,22,500
+DOC0079,Dr. Meera Trivedi,Female,Interventional Radiology,DEP011,+91-80-93517915,doctor0079@citycare.example,35,650
+DOC0080,Dr. Meera Malhotra,Female,Interventional Cardiology,DEP001,+91-80-67527432,doctor0080@citycare.example,9,1500
+DOC0081,Dr. Aadhya Verma,Male,Joint Replacement,DEP008,+91-80-38408562,doctor0081@citycare.example,30,800
+DOC0082,Dr. Priya Joshi,Male,Reproductive Health,DEP006,+91-80-20993268,doctor0082@citycare.example,31,800
+DOC0083,Dr. Varun Verma,Male,Interventional Cardiology,DEP001,+91-80-19209801,doctor0083@citycare.example,3,1500
+DOC0084,Dr. Ira Gupta,Female,Heart Failure,DEP001,+91-80-42016960,doctor0084@citycare.example,9,650
+DOC0085,Dr. Ayaan Malhotra,Female,Joint Replacement,DEP008,+91-80-44392446,doctor0085@citycare.example,24,1500
+DOC0086,Dr. Ansh Chopra,Female,Diabetes,DEP003,+91-80-24508768,doctor0086@citycare.example,2,800
+DOC0087,Dr. Leela Menon,Male,Family Medicine,DEP005,+91-80-36619372,doctor0087@citycare.example,5,1500
+DOC0088,Dr. Ira Rao,Male,Addiction Medicine,DEP010,+91-80-26247735,doctor0088@citycare.example,3,1200
+DOC0089,Dr. Varun Das,Male,Obstetrics,DEP006,+91-80-96911784,doctor0089@citycare.example,22,1200
+DOC0090,Dr. Asha Bose,Female,Clinical Cardiology,DEP001,+91-80-95306788,doctor0090@citycare.example,30,800
+DOC0091,Dr. Ishaan Das,Female,Urologic Oncology,DEP012,+91-80-97302916,doctor0091@citycare.example,18,1200
+DOC0092,Dr. Varun Bose,Male,Child Psychiatry,DEP010,+91-80-89520597,doctor0092@citycare.example,18,2000
+DOC0093,Dr. Ira Patel,Male,Reproductive Health,DEP006,+91-80-72372114,doctor0093@citycare.example,25,650
+DOC0094,Dr. Vivaan Bose,Male,Obstetrics,DEP006,+91-80-38470244,doctor0094@citycare.example,23,1000
+DOC0095,Dr. Priya Nair,Male,Preventive Care,DEP005,+91-80-79340535,doctor0095@citycare.example,13,500
+DOC0096,Dr. Ira Trivedi,Male,Pediatric Dermatology,DEP002,+91-80-42255732,doctor0096@citycare.example,31,1200
+DOC0097,Dr. Tara Mishra,Female,Diagnostic Radiology,DEP011,+91-80-39742165,doctor0097@citycare.example,26,800
+DOC0098,Dr. Ira Singh,Male,Male Health,DEP012,+91-80-81259135,doctor0098@citycare.example,23,1200
+DOC0099,Dr. Anil Reddy,Male,Movement Disorders,DEP007,+91-80-46361787,doctor0099@citycare.example,20,1000
+DOC0100,Dr. Sara Rao,Other,Internal Medicine,DEP005,+91-80-26046365,doctor0100@citycare.example,35,800
+DOC0101,Dr. Aadhya Gupta,Female,Urologic Oncology,DEP012,+91-80-47111151,doctor0101@citycare.example,34,1000
+DOC0102,Dr. Riya Rao,Female,Child Psychiatry,DEP010,+91-80-58436637,doctor0102@citycare.example,12,650
+DOC0103,Dr. Aarav Saxena,Female,Family Medicine,DEP005,+91-80-17318358,doctor0103@citycare.example,19,500
+DOC0104,Dr. Krishna Shetty,Male,Kidney Stones,DEP012,+91-80-11646234,doctor0104@citycare.example,19,2000
+DOC0105,Dr. Kabir Mishra,Male,Sports Medicine,DEP008,+91-80-43887075,doctor0105@citycare.example,31,500
+DOC0106,Dr. Arjun Joshi,Male,Cosmetic Dermatology,DEP002,+91-80-94482772,doctor0106@citycare.example,4,1200
+DOC0107,Dr. Ishaan Malhotra,Male,Diabetes,DEP003,+91-80-25898299,doctor0107@citycare.example,27,650
+DOC0108,Dr. Ansh Chopra,Female,Addiction Medicine,DEP010,+91-80-70467027,doctor0108@citycare.example,29,1000
+DOC0109,Dr. Sonia Das,Male,Preventive Care,DEP005,+91-80-18083974,doctor0109@citycare.example,7,1200
+DOC0110,Dr. Myra Nair,Female,Otology,DEP004,+91-80-33328859,doctor0110@citycare.example,5,650
+DOC0111,Dr. Aarav Das,Male,Hormonal Disorders,DEP003,+91-80-73070585,doctor0111@citycare.example,19,1200
+DOC0112,Dr. Sara Singh,Male,Heart Failure,DEP001,+91-80-70939053,doctor0112@citycare.example,5,2000
+DOC0113,Dr. Sara Nair,Female,Interventional Radiology,DEP011,+91-80-83089925,doctor0113@citycare.example,15,500
+DOC0114,Dr. Ishaan Nair,Female,Diagnostic Radiology,DEP011,+91-80-32269779,doctor0114@citycare.example,20,500
+DOC0115,Dr. Leela Singh,Male,Adult Psychiatry,DEP010,+91-80-50814428,doctor0115@citycare.example,26,1000
+DOC0116,Dr. Nora Pillai,Male,Family Medicine,DEP005,+91-80-90267122,doctor0116@citycare.example,3,500
+DOC0117,Dr. Neha Chopra,Male,Stroke Care,DEP007,+91-80-40725714,doctor0117@citycare.example,2,500
+DOC0118,Dr. Anika Malhotra,Female,Diagnostic Radiology,DEP011,+91-80-79654147,doctor0118@citycare.example,29,1000
+DOC0119,Dr. Aadhya Malhotra,Male,Preventive Care,DEP005,+91-80-75998319,doctor0119@citycare.example,6,2000
+DOC0120,Dr. Rahul Das,Male,Joint Replacement,DEP008,+91-80-24039158,doctor0120@citycare.example,11,1500

@@ -1,0 +1,584 @@
+{
+  "version": 3,
+  "counts": {
+    "easy": 10,
+    "medium": 10,
+    "hard": 10,
+    "total": 30
+  },
+  "category_counts": {
+    "direct_fact": 4,
+    "relationship": 5,
+    "temporal": 4,
+    "numerical": 5,
+    "comparative": 4,
+    "spanning": 5,
+    "holistic": 3
+  },
+  "questions": [
+    {
+      "id": "e001",
+      "difficulty": "easy",
+      "category": "direct_fact",
+      "question": "Where is Tara Bose based, and which insurance provider is listed for her?",
+      "keywords": [
+        "Tara Bose",
+        "Chennai",
+        "National Health Plan"
+      ],
+      "reference_answer": "Tara Bose is based in Chennai, and her listed insurance provider is National Health Plan.",
+      "expected_source_tables": [
+        "patients"
+      ]
+    },
+    {
+      "id": "e002",
+      "difficulty": "easy",
+      "category": "relationship",
+      "question": "What does Dr. Asha Bose specialize in, and which department is she part of?",
+      "keywords": [
+        "Dr. Asha Bose",
+        "Clinical Cardiology",
+        "Cardiology"
+      ],
+      "reference_answer": "Dr. Asha Bose specializes in Clinical Cardiology and is part of the Cardiology department.",
+      "expected_source_tables": [
+        "doctors",
+        "departments"
+      ]
+    },
+    {
+      "id": "e003",
+      "difficulty": "easy",
+      "category": "direct_fact",
+      "question": "If I need Radiology, which floor and phone extension should I use?",
+      "keywords": [
+        "Radiology",
+        "floor 1",
+        "2011"
+      ],
+      "reference_answer": "Radiology is on floor 1, and the phone extension is 2011.",
+      "expected_source_tables": [
+        "departments"
+      ]
+    },
+    {
+      "id": "e004",
+      "difficulty": "easy",
+      "category": "temporal",
+      "question": "When was Nikhil Rao's completed lab review for fever and cough scheduled?",
+      "keywords": [
+        "Nikhil Rao",
+        "Lab Review",
+        "Fever and cough",
+        "March 31, 2025",
+        "12:30"
+      ],
+      "reference_answer": "Nikhil Rao's completed lab review for fever and cough was scheduled for March 31, 2025 at 12:30.",
+      "expected_source_tables": [
+        "patients",
+        "appointments"
+      ]
+    },
+    {
+      "id": "e005",
+      "difficulty": "easy",
+      "category": "relationship",
+      "question": "Who saw Anaya Gupta for the back-pain annual check-up?",
+      "keywords": [
+        "Anaya Gupta",
+        "Back pain",
+        "Annual Check-up",
+        "Dr. Tara Mishra",
+        "Diagnostic Radiology"
+      ],
+      "reference_answer": "Anaya Gupta was seen by Dr. Tara Mishra for the back-pain annual check-up. Dr. Tara Mishra specializes in Diagnostic Radiology.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "doctors"
+      ]
+    },
+    {
+      "id": "e006",
+      "difficulty": "easy",
+      "category": "direct_fact",
+      "question": "What blood type and city are listed for Diya Menon?",
+      "keywords": [
+        "Diya Menon",
+        "B-",
+        "Mumbai"
+      ],
+      "reference_answer": "Diya Menon is listed with blood type B- and city Mumbai.",
+      "expected_source_tables": [
+        "patients"
+      ]
+    },
+    {
+      "id": "e007",
+      "difficulty": "easy",
+      "category": "temporal",
+      "question": "For Aarav Malhotra's headache follow-up, what follow-up date was given?",
+      "keywords": [
+        "Aarav Malhotra",
+        "Headache",
+        "January 14, 2026",
+        "January 28, 2026"
+      ],
+      "reference_answer": "Aarav Malhotra's headache follow-up visit was on January 14, 2026, and the follow-up date was January 28, 2026.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "medical_records"
+      ]
+    },
+    {
+      "id": "e008",
+      "difficulty": "easy",
+      "category": "direct_fact",
+      "question": "What medication instructions are listed for Diya Menon's joint-pain telehealth visit?",
+      "keywords": [
+        "Diya Menon",
+        "Joint pain",
+        "Telehealth",
+        "Paracetamol",
+        "500 mg",
+        "Before meals",
+        "7 days"
+      ],
+      "reference_answer": "For Diya Menon's joint-pain telehealth visit, the prescription was Paracetamol 500 mg, taken before meals for 7 days.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "medical_records",
+        "prescriptions"
+      ]
+    },
+    {
+      "id": "e009",
+      "difficulty": "easy",
+      "category": "numerical",
+      "question": "How much was Tara Bose's bill for the anxiety lab review, and was it paid?",
+      "keywords": [
+        "Tara Bose",
+        "Anxiety symptoms",
+        "INR 950",
+        "Pending",
+        "UPI"
+      ],
+      "reference_answer": "Tara Bose's anxiety lab review bill was INR 950. It was marked Pending, with UPI as the payment method.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "billing"
+      ]
+    },
+    {
+      "id": "e010",
+      "difficulty": "easy",
+      "category": "relationship",
+      "question": "Which doctor and department handled Sai Menon's routine telehealth visit on March 3, 2026?",
+      "keywords": [
+        "Sai Menon",
+        "March 3, 2026",
+        "Dr. Meera Malhotra",
+        "Cardiology",
+        "Interventional Cardiology"
+      ],
+      "reference_answer": "Sai Menon's routine telehealth visit on March 3, 2026 was handled by Dr. Meera Malhotra from Cardiology. Her specialization is Interventional Cardiology.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "doctors",
+        "departments"
+      ]
+    },
+    {
+      "id": "m001",
+      "difficulty": "medium",
+      "category": "numerical",
+      "question": "How many appointments does Riya Singh have, and how many were completed?",
+      "keywords": [
+        "Riya Singh",
+        "7 appointments",
+        "4 completed",
+        "2 scheduled",
+        "1 cancelled"
+      ],
+      "reference_answer": "Riya Singh has 7 appointments: 4 completed, 2 scheduled, and 1 cancelled.",
+      "expected_source_tables": [
+        "patients",
+        "appointments"
+      ]
+    },
+    {
+      "id": "m002",
+      "difficulty": "medium",
+      "category": "numerical",
+      "question": "How busy is Dr. Nora Pillai in the appointment schedule, and what is the status breakdown?",
+      "keywords": [
+        "Dr. Nora Pillai",
+        "28 appointments",
+        "13 completed",
+        "8 scheduled",
+        "4 no-show",
+        "3 cancelled"
+      ],
+      "reference_answer": "Dr. Nora Pillai has 28 appointments: 13 completed, 8 scheduled, 4 no-shows, and 3 cancelled.",
+      "expected_source_tables": [
+        "doctors",
+        "appointments"
+      ]
+    },
+    {
+      "id": "m003",
+      "difficulty": "medium",
+      "category": "comparative",
+      "question": "Between Dr. Sara Mishra and Dr. Asha Bose, who charges more for a consultation, and by how much?",
+      "keywords": [
+        "Dr. Sara Mishra",
+        "Dr. Asha Bose",
+        "INR 2,000",
+        "INR 800",
+        "INR 1,200"
+      ],
+      "reference_answer": "Dr. Sara Mishra charges more. Her consultation fee is INR 2,000 compared with Dr. Asha Bose's INR 800, a difference of INR 1,200.",
+      "expected_source_tables": [
+        "doctors"
+      ]
+    },
+    {
+      "id": "m004",
+      "difficulty": "medium",
+      "category": "relationship",
+      "question": "For Diya Menon's joint-pain telehealth visit, what diagnosis and treatment plan were given?",
+      "keywords": [
+        "Diya Menon",
+        "Joint pain",
+        "Telehealth",
+        "Arthralgia",
+        "Specialist referral"
+      ],
+      "reference_answer": "For Diya Menon's joint-pain telehealth visit, the diagnosis was Arthralgia, and the treatment plan was Specialist referral.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "medical_records"
+      ]
+    },
+    {
+      "id": "m005",
+      "difficulty": "medium",
+      "category": "temporal",
+      "question": "Ansh Gupta had a routine telehealth visit in February 2025. When was the follow-up due?",
+      "keywords": [
+        "Ansh Gupta",
+        "February 17, 2025",
+        "Routine check-up",
+        "April 18, 2025"
+      ],
+      "reference_answer": "Ansh Gupta's routine telehealth visit was on February 17, 2025, and the follow-up was due on April 18, 2025.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "medical_records"
+      ]
+    },
+    {
+      "id": "m006",
+      "difficulty": "medium",
+      "category": "numerical",
+      "question": "How many bills are still pending?",
+      "keywords": [
+        "Pending",
+        "78",
+        "bills"
+      ],
+      "reference_answer": "There are 78 bills marked Pending.",
+      "expected_source_tables": [
+        "billing"
+      ]
+    },
+    {
+      "id": "m007",
+      "difficulty": "medium",
+      "category": "comparative",
+      "question": "Which department has more doctors, Neurology or Cardiology?",
+      "keywords": [
+        "Neurology",
+        "12 doctors",
+        "Cardiology",
+        "11 doctors"
+      ],
+      "reference_answer": "Neurology has more doctors: 12 doctors compared with 11 doctors in Cardiology.",
+      "expected_source_tables": [
+        "doctors",
+        "departments"
+      ]
+    },
+    {
+      "id": "m008",
+      "difficulty": "medium",
+      "category": "relationship",
+      "question": "For Nikhil Rao's fever-and-cough lab review, what diagnosis and treatment plan were given?",
+      "keywords": [
+        "Nikhil Rao",
+        "Fever and cough",
+        "Acute upper respiratory infection",
+        "Specialist referral"
+      ],
+      "reference_answer": "For Nikhil Rao's fever-and-cough lab review, the diagnosis was Acute upper respiratory infection and the treatment plan was Specialist referral.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "medical_records"
+      ]
+    },
+    {
+      "id": "m009",
+      "difficulty": "medium",
+      "category": "numerical",
+      "question": "How many patients are listed as being in Kolkata?",
+      "keywords": [
+        "Kolkata",
+        "119",
+        "patients"
+      ],
+      "reference_answer": "There are 119 patients listed in Kolkata.",
+      "expected_source_tables": [
+        "patients"
+      ]
+    },
+    {
+      "id": "m010",
+      "difficulty": "medium",
+      "category": "temporal",
+      "question": "For Tara Bose's anxiety lab review, when was the appointment created and when did it happen?",
+      "keywords": [
+        "Tara Bose",
+        "Anxiety symptoms",
+        "created",
+        "April 30, 2025",
+        "May 13, 2025",
+        "14:00"
+      ],
+      "reference_answer": "Tara Bose's anxiety lab review was created on April 30, 2025, and the appointment happened on May 13, 2025 at 14:00.",
+      "expected_source_tables": [
+        "patients",
+        "appointments"
+      ]
+    },
+    {
+      "id": "h001",
+      "difficulty": "hard",
+      "category": "spanning",
+      "question": "For Tara Bose's anxiety lab review in May 2025, can you pull together the doctor, diagnosis, follow-up date, medication, and bill status?",
+      "keywords": [
+        "Tara Bose",
+        "Dr. Asha Bose",
+        "Generalized anxiety disorder",
+        "June 12, 2025",
+        "Metformin 500 mg",
+        "INR 950",
+        "Pending"
+      ],
+      "reference_answer": "Tara Bose's May 2025 anxiety lab review was with Dr. Asha Bose. The diagnosis was Generalized anxiety disorder, the follow-up date was June 12, 2025, the medication was Metformin 500 mg as needed for 7 days, and the INR 950 bill was Pending.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "doctors",
+        "medical_records",
+        "prescriptions",
+        "billing"
+      ]
+    },
+    {
+      "id": "h002",
+      "difficulty": "hard",
+      "category": "spanning",
+      "question": "Sai Menon had a routine telehealth visit on March 3, 2026. What specialty was the doctor in, what diagnosis was made, and what medication and bill amount followed?",
+      "keywords": [
+        "Sai Menon",
+        "Dr. Meera Malhotra",
+        "Interventional Cardiology",
+        "General medical examination",
+        "Amlodipine 5 mg",
+        "INR 3,450"
+      ],
+      "reference_answer": "Sai Menon's March 3, 2026 routine telehealth visit was with Dr. Meera Malhotra, whose specialty is Interventional Cardiology. The diagnosis was General medical examination, the medication was Amlodipine 5 mg after meals for 30 days, and the bill amount was INR 3,450.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "doctors",
+        "medical_records",
+        "prescriptions",
+        "billing"
+      ]
+    },
+    {
+      "id": "h003",
+      "difficulty": "hard",
+      "category": "comparative",
+      "question": "Kabir Das had two completed visits that included medication. How did the medication-refill vaccination visit differ from the routine annual check-up?",
+      "keywords": [
+        "Kabir Das",
+        "March 4, 2025",
+        "Repeat prescription management",
+        "Metformin 500 mg",
+        "February 16, 2026",
+        "General medical examination",
+        "Atorvastatin 10 mg"
+      ],
+      "reference_answer": "Kabir Das's March 4, 2025 vaccination visit for medication refill had the diagnosis Repeat prescription management and Metformin 500 mg as needed for 60 days. His February 16, 2026 routine annual check-up had the diagnosis General medical examination and Atorvastatin 10 mg twice daily for 10 days.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "medical_records",
+        "prescriptions"
+      ]
+    },
+    {
+      "id": "h004",
+      "difficulty": "hard",
+      "category": "spanning",
+      "question": "Aarav Malhotra had a headache follow-up that required another follow-up. What should be noted about the doctor, diagnosis, medication, next date, and payment?",
+      "keywords": [
+        "Aarav Malhotra",
+        "Dr. Asha Shetty",
+        "Migraine without aura",
+        "Levothyroxine 50 mcg",
+        "January 28, 2026",
+        "Partially Paid"
+      ],
+      "reference_answer": "Aarav Malhotra's headache follow-up was with Dr. Asha Shetty. The diagnosis was Migraine without aura, the medication was Levothyroxine 50 mcg once daily for 10 days, the next follow-up date was January 28, 2026, and the INR 2,050 bill was Partially Paid.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "doctors",
+        "medical_records",
+        "prescriptions",
+        "billing"
+      ]
+    },
+    {
+      "id": "h005",
+      "difficulty": "hard",
+      "category": "spanning",
+      "question": "For Nikhil Rao's fever-and-cough lab review, summarize the clinical result, prescription, and billing outcome in one answer.",
+      "keywords": [
+        "Nikhil Rao",
+        "Acute upper respiratory infection",
+        "Vitamin D3 1000 IU",
+        "twice daily",
+        "INR 2,450",
+        "Pending",
+        "no insurance"
+      ],
+      "reference_answer": "Nikhil Rao's fever-and-cough lab review resulted in a diagnosis of Acute upper respiratory infection. He was prescribed Vitamin D3 1000 IU twice daily for 3 days, and the INR 2,450 bill was Pending with no insurance claimed.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "medical_records",
+        "prescriptions",
+        "billing"
+      ]
+    },
+    {
+      "id": "h006",
+      "difficulty": "hard",
+      "category": "comparative",
+      "question": "Diya Menon had two completed visits. Which one generated a bill, and what diagnosis, treatment plan, and medication were tied to that billed visit?",
+      "keywords": [
+        "Diya Menon",
+        "joint-pain telehealth",
+        "INR 1,200",
+        "Arthralgia",
+        "Specialist referral",
+        "Paracetamol 500 mg"
+      ],
+      "reference_answer": "Diya Menon's billed visit was the joint-pain telehealth visit on December 12, 2025. It had a bill of INR 1,200, a diagnosis of Arthralgia, a treatment plan of Specialist referral, and Paracetamol 500 mg before meals for 7 days.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "medical_records",
+        "prescriptions",
+        "billing"
+      ]
+    },
+    {
+      "id": "h007",
+      "difficulty": "hard",
+      "category": "holistic",
+      "question": "Which doctor has the largest appointment load overall, and what does the status mix look like?",
+      "keywords": [
+        "Dr. Ira Singh",
+        "29 appointments",
+        "9 completed",
+        "8 scheduled",
+        "6 cancelled",
+        "6 no-show"
+      ],
+      "reference_answer": "Dr. Ira Singh has the largest appointment load, with 29 appointments overall: 9 completed, 8 scheduled, 6 cancelled, and 6 no-show appointments.",
+      "expected_source_tables": [
+        "doctors",
+        "appointments"
+      ]
+    },
+    {
+      "id": "h008",
+      "difficulty": "hard",
+      "category": "holistic",
+      "question": "Looking only at billed visits, which patient profile has the highest total billed amount, and how many bills make up that total?",
+      "keywords": [
+        "Ira Mehta",
+        "Coimbatore",
+        "4 bills",
+        "INR 10,950"
+      ],
+      "reference_answer": "The highest billed patient profile is Ira Mehta from Coimbatore, with 4 bills totaling INR 10,950.",
+      "expected_source_tables": [
+        "patients",
+        "billing"
+      ]
+    },
+    {
+      "id": "h009",
+      "difficulty": "hard",
+      "category": "holistic",
+      "question": "Which appointment type appears most often, and how far ahead is it compared with Lab Review visits?",
+      "keywords": [
+        "Consultation",
+        "334",
+        "Lab Review",
+        "307",
+        "27 more"
+      ],
+      "reference_answer": "Consultation is the most common appointment type with 334 appointments. Lab Review appears 307 times, so Consultation is ahead by 27 appointments.",
+      "expected_source_tables": [
+        "appointments"
+      ]
+    },
+    {
+      "id": "h010",
+      "difficulty": "hard",
+      "category": "spanning",
+      "question": "The largest bill amount is shared by multiple visits. Which of those tied visits also had a prescription, and what was prescribed?",
+      "keywords": [
+        "INR 4,700",
+        "Rohan Pillai",
+        "Fever and cough",
+        "Vitamin D3 1000 IU",
+        "twice daily",
+        "30 days"
+      ],
+      "reference_answer": "Among the visits tied at the largest bill amount of INR 4,700, Rohan Pillai's fever-and-cough annual check-up had a prescription. He was prescribed Vitamin D3 1000 IU twice daily for 30 days.",
+      "expected_source_tables": [
+        "patients",
+        "appointments",
+        "medical_records",
+        "prescriptions",
+        "billing"
+      ]
+    }
+  ]
+}

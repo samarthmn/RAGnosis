@@ -1,1 +1,9 @@
 .DS_Store
+.env
+.venv
+__pycache__
+vector_db/
+graph_output/
+enriched_documents.jsonl
+chunks.jsonl
+multirun.log

@@ -1,0 +1,701 @@
+record_id,appointment_id,patient_id,doctor_id,visit_date,diagnosis,treatment_plan,follow_up_required,follow_up_date
+REC000001,APT000374,PAT00619,DOC0055,2026-02-15,Otitis media,Routine monitoring,No,
+REC000002,APT001223,PAT01101,DOC0029,2025-05-16,"Chest pain, unspecified",Medication and rest,Yes,2025-06-15
+REC000003,APT000463,PAT00372,DOC0047,2025-04-23,Immunization encounter,Diet and exercise plan,No,
+REC000004,APT000210,PAT00148,DOC0044,2025-07-09,Abnormal laboratory finding,Minor procedure advised,Yes,2025-09-07
+REC000005,APT000140,PAT00034,DOC0009,2026-04-27,Otitis media,Diet and exercise plan,No,
+REC000006,APT001995,PAT00557,DOC0103,2025-04-13,Supervision of normal pregnancy,Routine monitoring,No,
+REC000007,APT000840,PAT01179,DOC0036,2025-01-01,Arthralgia,Medication and rest,No,
+REC000008,APT000287,PAT00817,DOC0034,2025-02-25,Otitis media,Specialist referral,Yes,2025-04-26
+REC000009,APT000655,PAT01001,DOC0102,2025-08-26,Lower back pain,Specialist referral,No,
+REC000010,APT000657,PAT00711,DOC0053,2025-06-28,Immunization encounter,Diet and exercise plan,No,
+REC000011,APT000754,PAT01066,DOC0088,2025-10-13,Abnormal laboratory finding,Follow-up consultation,Yes,2025-11-12
+REC000012,APT001024,PAT00752,DOC0045,2026-01-25,Repeat prescription management,Specialist referral,Yes,2026-03-11
+REC000013,APT000178,PAT00581,DOC0101,2026-05-30,Otitis media,Medication and rest,No,
+REC000014,APT002182,PAT00441,DOC0036,2025-08-23,Supervision of normal pregnancy,Counseling sessions,No,
+REC000015,APT001469,PAT00656,DOC0097,2025-12-26,Abnormal laboratory finding,Minor procedure advised,Yes,2026-02-24
+REC000016,APT000832,PAT01156,DOC0046,2025-04-09,Generalized anxiety disorder,Medication and rest,Yes,2025-04-16
+REC000017,APT000438,PAT00848,DOC0106,2025-06-05,Generalized anxiety disorder,Follow-up consultation,No,
+REC000018,APT000417,PAT00083,DOC0078,2025-09-30,Otitis media,Routine monitoring,No,
+REC000019,APT000011,PAT00797,DOC0017,2025-04-23,Type 2 diabetes mellitus,Minor procedure advised,Yes,2025-06-22
+REC000020,APT000283,PAT00198,DOC0029,2025-04-26,Immunization encounter,Physical therapy,No,
+REC000021,APT000632,PAT00128,DOC0068,2026-03-03,Supervision of normal pregnancy,Routine monitoring,No,
+REC000022,APT001447,PAT00303,DOC0072,2026-03-12,Essential hypertension,Follow-up consultation,No,
+REC000023,APT001736,PAT00465,DOC0110,2025-02-04,Essential hypertension,Specialist referral,No,
+REC000024,APT001471,PAT01133,DOC0072,2025-05-03,Abnormal laboratory finding,Specialist referral,No,
+REC000025,APT000455,PAT00256,DOC0012,2025-06-29,Repeat prescription management,Specialist referral,No,
+REC000026,APT000977,PAT01143,DOC0110,2025-12-23,Arthralgia,Counseling sessions,No,
+REC000027,APT000638,PAT00166,DOC0075,2026-01-12,Essential hypertension,Minor procedure advised,No,
+REC000028,APT000464,PAT00765,DOC0117,2025-09-29,Repeat prescription management,Follow-up consultation,No,
+REC000029,APT000089,PAT00888,DOC0026,2026-02-16,Lower back pain,Counseling sessions,No,
+REC000030,APT002047,PAT00639,DOC0025,2025-01-23,Otitis media,Lifestyle modification,Yes,2025-03-09
+REC000031,APT001482,PAT00420,DOC0024,2025-07-01,Immunization encounter,Medication and rest,No,
+REC000032,APT001964,PAT00925,DOC0087,2025-01-27,Essential hypertension,Follow-up consultation,No,
+REC000033,APT000538,PAT00600,DOC0081,2026-03-13,Migraine without aura,Routine monitoring,Yes,2026-03-20
+REC000034,APT001796,PAT00749,DOC0028,2025-04-10,Generalized anxiety disorder,Counseling sessions,No,
+REC000035,APT001935,PAT01064,DOC0019,2025-05-12,Dermatitis,Medication and rest,Yes,2025-05-19
+REC000036,APT000226,PAT00266,DOC0078,2026-02-12,"Chest pain, unspecified",Routine monitoring,Yes,2026-04-13
+REC000037,APT002000,PAT00238,DOC0030,2026-01-17,Arthralgia,Counseling sessions,No,
+REC000038,APT001770,PAT00964,DOC0087,2025-01-08,Dermatitis,Specialist referral,Yes,2025-02-07
+REC000039,APT001063,PAT00478,DOC0074,2026-03-27,Arthralgia,Diet and exercise plan,No,
+REC000040,APT001411,PAT00680,DOC0031,2025-08-09,Repeat prescription management,Specialist referral,No,
+REC000041,APT000348,PAT00818,DOC0061,2025-09-07,Generalized anxiety disorder,Diet and exercise plan,No,
+REC000042,APT001916,PAT00899,DOC0049,2025-09-27,Generalized anxiety disorder,Lifestyle modification,Yes,2025-10-27
+REC000043,APT001671,PAT00345,DOC0029,2025-10-03,Repeat prescription management,Minor procedure advised,No,
+REC000044,APT001141,PAT00760,DOC0039,2025-03-30,Dermatitis,Medication and rest,No,
+REC000045,APT000609,PAT00691,DOC0026,2025-01-23,Type 2 diabetes mellitus,Lifestyle modification,No,
+REC000046,APT001152,PAT00297,DOC0036,2025-04-05,Migraine without aura,Counseling sessions,No,
+REC000047,APT000032,PAT01131,DOC0016,2025-06-25,Supervision of normal pregnancy,Routine monitoring,No,
+REC000048,APT000641,PAT01049,DOC0099,2026-02-20,General medical examination,Follow-up consultation,No,
+REC000049,APT001453,PAT00435,DOC0092,2026-04-18,General medical examination,Further diagnostic tests,No,
+REC000050,APT001510,PAT01007,DOC0088,2025-06-01,Arthralgia,Physical therapy,Yes,2025-07-01
+REC000051,APT001777,PAT00812,DOC0051,2025-09-02,Lower back pain,Follow-up consultation,No,
+REC000052,APT001761,PAT01094,DOC0070,2025-01-13,Lower back pain,Specialist referral,No,
+REC000053,APT001787,PAT00580,DOC0098,2025-12-05,Type 2 diabetes mellitus,Minor procedure advised,No,
+REC000054,APT000254,PAT00904,DOC0041,2025-10-03,Arthralgia,Medication and rest,No,
+REC000055,APT001713,PAT00068,DOC0068,2025-05-17,Generalized anxiety disorder,Diet and exercise plan,No,
+REC000056,APT001843,PAT00141,DOC0099,2026-06-09,Acute upper respiratory infection,Specialist referral,Yes,2026-07-09
+REC000057,APT001298,PAT00558,DOC0073,2026-03-13,Immunization encounter,Follow-up consultation,No,
+REC000058,APT000659,PAT00735,DOC0083,2026-04-23,Arthralgia,Diet and exercise plan,Yes,2026-06-07
+REC000059,APT001958,PAT00287,DOC0050,2025-10-09,Type 2 diabetes mellitus,Medication and rest,No,
+REC000060,APT001039,PAT00304,DOC0076,2025-02-01,Otitis media,Further diagnostic tests,Yes,2025-03-03
+REC000061,APT001589,PAT00381,DOC0114,2026-03-29,Abnormal laboratory finding,Specialist referral,No,
+REC000062,APT000040,PAT00941,DOC0024,2025-06-30,Otitis media,Minor procedure advised,Yes,2025-08-14
+REC000063,APT001267,PAT00717,DOC0005,2026-04-26,Arthralgia,Further diagnostic tests,No,
+REC000064,APT001992,PAT00088,DOC0011,2025-10-29,Abnormal laboratory finding,Counseling sessions,No,
+REC000065,APT001366,PAT00289,DOC0092,2026-03-23,General medical examination,Medication and rest,Yes,2026-04-22
+REC000066,APT001576,PAT00049,DOC0002,2025-11-05,Generalized anxiety disorder,Medication and rest,Yes,2025-12-05
+REC000067,APT001865,PAT00301,DOC0114,2026-01-26,Generalized anxiety disorder,Physical therapy,No,
+REC000068,APT000819,PAT00431,DOC0092,2025-04-24,General medical examination,Diet and exercise plan,No,
+REC000069,APT001708,PAT01061,DOC0082,2025-03-09,Migraine without aura,Counseling sessions,No,
+REC000070,APT001314,PAT00946,DOC0043,2026-02-07,Essential hypertension,Further diagnostic tests,No,
+REC000071,APT001181,PAT00479,DOC0041,2025-10-02,Acute upper respiratory infection,Routine monitoring,No,
+REC000072,APT001303,PAT00508,DOC0039,2025-12-05,Otitis media,Lifestyle modification,No,
+REC000073,APT000506,PAT00897,DOC0115,2026-01-06,Lower back pain,Specialist referral,No,
+REC000074,APT000137,PAT01012,DOC0064,2025-02-17,General medical examination,Routine monitoring,Yes,2025-04-18
+REC000075,APT000125,PAT01061,DOC0066,2025-06-06,General medical examination,Physical therapy,No,
+REC000076,APT000059,PAT00450,DOC0090,2025-03-31,Acute upper respiratory infection,Specialist referral,No,
+REC000077,APT000966,PAT00210,DOC0029,2026-06-01,Lower back pain,Medication and rest,No,
+REC000078,APT000370,PAT00610,DOC0082,2025-02-06,Otitis media,Specialist referral,No,
+REC000079,APT000240,PAT00026,DOC0016,2025-11-11,Abnormal laboratory finding,Minor procedure advised,Yes,2025-12-11
+REC000080,APT000685,PAT00238,DOC0072,2025-02-10,Type 2 diabetes mellitus,Physical therapy,No,
+REC000081,APT001840,PAT00522,DOC0061,2026-03-18,Acute upper respiratory infection,Medication and rest,Yes,2026-03-25
+REC000082,APT001901,PAT00906,DOC0001,2025-12-11,Arthralgia,Counseling sessions,Yes,2025-12-25
+REC000083,APT002160,PAT01097,DOC0005,2025-12-31,Lower back pain,Follow-up consultation,No,
+REC000084,APT000143,PAT00022,DOC0018,2025-04-18,Essential hypertension,Follow-up consultation,No,
+REC000085,APT001289,PAT00058,DOC0059,2025-12-14,Lower back pain,Lifestyle modification,No,
+REC000086,APT002051,PAT00699,DOC0115,2025-08-04,General medical examination,Physical therapy,No,
+REC000087,APT001242,PAT00555,DOC0051,2026-01-31,Migraine without aura,Minor procedure advised,Yes,2026-03-02
+REC000088,APT000323,PAT00514,DOC0088,2025-05-04,Type 2 diabetes mellitus,Further diagnostic tests,No,
+REC000089,APT001197,PAT00941,DOC0069,2025-09-18,"Chest pain, unspecified",Counseling sessions,No,
+REC000090,APT000650,PAT00177,DOC0093,2025-08-29,Dermatitis,Diet and exercise plan,No,
+REC000091,APT000722,PAT00894,DOC0093,2026-04-02,Migraine without aura,Specialist referral,No,
+REC000092,APT001500,PAT01197,DOC0070,2025-12-26,Acute upper respiratory infection,Medication and rest,No,
+REC000093,APT000983,PAT00476,DOC0010,2025-08-31,Repeat prescription management,Diet and exercise plan,Yes,2025-10-15
+REC000094,APT000073,PAT00023,DOC0097,2025-11-13,"Chest pain, unspecified",Further diagnostic tests,No,
+REC000095,APT001724,PAT00510,DOC0067,2026-01-14,Migraine without aura,Specialist referral,Yes,2026-01-28
+REC000096,APT001769,PAT00826,DOC0005,2025-10-30,Type 2 diabetes mellitus,Routine monitoring,Yes,2025-11-29
+REC000097,APT001441,PAT00926,DOC0116,2025-03-25,Arthralgia,Routine monitoring,No,
+REC000098,APT001600,PAT00923,DOC0008,2026-05-01,Otitis media,Routine monitoring,Yes,2026-06-30
+REC000099,APT000858,PAT01104,DOC0083,2026-01-16,Otitis media,Minor procedure advised,No,
+REC000100,APT000300,PAT01120,DOC0092,2025-04-21,Generalized anxiety disorder,Specialist referral,No,
+REC000101,APT000483,PAT00464,DOC0108,2025-06-05,Dermatitis,Physical therapy,No,
+REC000102,APT000591,PAT00220,DOC0032,2025-03-18,General medical examination,Minor procedure advised,Yes,2025-03-25
+REC000103,APT001247,PAT00244,DOC0035,2025-07-05,Arthralgia,Physical therapy,Yes,2025-07-19
+REC000104,APT000028,PAT00562,DOC0090,2025-05-13,Generalized anxiety disorder,Counseling sessions,Yes,2025-06-12
+REC000105,APT001424,PAT00474,DOC0063,2026-06-07,Essential hypertension,Specialist referral,No,
+REC000106,APT001006,PAT01187,DOC0072,2026-06-16,Type 2 diabetes mellitus,Medication and rest,Yes,2026-07-31
+REC000107,APT001968,PAT00206,DOC0037,2025-02-16,Otitis media,Physical therapy,No,
+REC000108,APT000314,PAT00321,DOC0009,2025-12-25,"Chest pain, unspecified",Routine monitoring,Yes,2026-02-08
+REC000109,APT001561,PAT00422,DOC0057,2025-12-15,Supervision of normal pregnancy,Diet and exercise plan,No,
+REC000110,APT001888,PAT00910,DOC0015,2025-11-29,Otitis media,Counseling sessions,No,
+REC000111,APT001645,PAT00428,DOC0113,2025-08-29,Lower back pain,Further diagnostic tests,No,
+REC000112,APT000712,PAT00451,DOC0022,2026-01-28,Type 2 diabetes mellitus,Specialist referral,No,
+REC000113,APT001698,PAT00538,DOC0022,2026-02-19,Acute upper respiratory infection,Physical therapy,Yes,2026-04-05
+REC000114,APT000817,PAT00246,DOC0086,2025-09-12,Essential hypertension,Counseling sessions,No,
+REC000115,APT002112,PAT01035,DOC0119,2026-02-28,"Chest pain, unspecified",Diet and exercise plan,No,
+REC000116,APT000699,PAT01052,DOC0030,2025-11-17,Generalized anxiety disorder,Medication and rest,No,
+REC000117,APT000982,PAT00279,DOC0120,2025-01-07,Type 2 diabetes mellitus,Follow-up consultation,No,
+REC000118,APT001168,PAT00237,DOC0053,2025-04-01,Essential hypertension,Follow-up consultation,No,
+REC000119,APT001598,PAT00297,DOC0061,2025-07-24,Arthralgia,Counseling sessions,No,
+REC000120,APT001284,PAT00379,DOC0008,2026-05-04,Acute upper respiratory infection,Counseling sessions,No,
+REC000121,APT000401,PAT00082,DOC0047,2026-02-14,Repeat prescription management,Follow-up consultation,No,
+REC000122,APT001634,PAT00272,DOC0024,2026-02-10,Otitis media,Routine monitoring,No,
+REC000123,APT001099,PAT00060,DOC0074,2026-04-07,Essential hypertension,Physical therapy,No,
+REC000124,APT000930,PAT00272,DOC0120,2025-11-18,Essential hypertension,Minor procedure advised,No,
+REC000125,APT000917,PAT01151,DOC0062,2026-03-13,Repeat prescription management,Diet and exercise plan,No,
+REC000126,APT001073,PAT00786,DOC0070,2025-09-12,Acute upper respiratory infection,Diet and exercise plan,Yes,2025-11-11
+REC000127,APT000326,PAT00636,DOC0043,2025-04-07,Supervision of normal pregnancy,Counseling sessions,Yes,2025-05-22
+REC000128,APT002017,PAT01022,DOC0111,2025-07-04,Supervision of normal pregnancy,Medication and rest,No,
+REC000129,APT000511,PAT00449,DOC0032,2025-08-20,Type 2 diabetes mellitus,Specialist referral,Yes,2025-10-04
+REC000130,APT001233,PAT00606,DOC0019,2025-09-19,"Chest pain, unspecified",Specialist referral,No,
+REC000131,APT002012,PAT01113,DOC0055,2025-01-16,Otitis media,Counseling sessions,No,
+REC000132,APT001339,PAT00157,DOC0102,2025-07-10,General medical examination,Medication and rest,No,
+REC000133,APT000231,PAT00902,DOC0084,2026-04-10,Immunization encounter,Further diagnostic tests,No,
+REC000134,APT002108,PAT00019,DOC0004,2026-06-01,Migraine without aura,Specialist referral,Yes,2026-07-16
+REC000135,APT001204,PAT00367,DOC0103,2025-01-09,Lower back pain,Diet and exercise plan,No,
+REC000136,APT001220,PAT00764,DOC0092,2025-07-18,Supervision of normal pregnancy,Follow-up consultation,Yes,2025-08-17
+REC000137,APT001794,PAT01172,DOC0008,2026-01-18,Dermatitis,Diet and exercise plan,No,
+REC000138,APT000330,PAT00363,DOC0112,2025-05-15,Abnormal laboratory finding,Lifestyle modification,Yes,2025-06-14
+REC000139,APT001776,PAT00796,DOC0067,2026-02-15,Arthralgia,Counseling sessions,Yes,2026-03-17
+REC000140,APT001348,PAT01029,DOC0108,2026-06-16,Acute upper respiratory infection,Medication and rest,Yes,2026-06-30
+REC000141,APT001347,PAT01106,DOC0105,2025-07-20,Dermatitis,Follow-up consultation,No,
+REC000142,APT002053,PAT00883,DOC0057,2025-08-14,Repeat prescription management,Medication and rest,Yes,2025-08-21
+REC000143,APT000397,PAT00945,DOC0059,2025-09-08,Repeat prescription management,Routine monitoring,No,
+REC000144,APT001177,PAT00020,DOC0077,2025-02-04,General medical examination,Medication and rest,No,
+REC000145,APT000648,PAT00764,DOC0010,2025-10-14,Dermatitis,Diet and exercise plan,No,
+REC000146,APT001885,PAT00456,DOC0067,2025-10-08,Acute upper respiratory infection,Diet and exercise plan,No,
+REC000147,APT001972,PAT00082,DOC0032,2025-10-26,Abnormal laboratory finding,Minor procedure advised,No,
+REC000148,APT001111,PAT00755,DOC0034,2026-06-11,Type 2 diabetes mellitus,Routine monitoring,Yes,2026-06-25
+REC000149,APT000309,PAT00608,DOC0016,2026-03-22,Supervision of normal pregnancy,Routine monitoring,No,
+REC000150,APT000378,PAT00372,DOC0087,2025-10-19,Migraine without aura,Physical therapy,No,
+REC000151,APT001112,PAT00477,DOC0065,2025-11-29,Repeat prescription management,Diet and exercise plan,No,
+REC000152,APT001040,PAT01042,DOC0006,2026-02-23,Essential hypertension,Specialist referral,No,
+REC000153,APT001208,PAT01002,DOC0093,2025-01-05,Migraine without aura,Physical therapy,No,
+REC000154,APT001464,PAT01120,DOC0001,2025-05-19,Acute upper respiratory infection,Further diagnostic tests,No,
+REC000155,APT000597,PAT00126,DOC0057,2025-07-09,Type 2 diabetes mellitus,Specialist referral,Yes,2025-07-23
+REC000156,APT000061,PAT00286,DOC0038,2026-04-17,Essential hypertension,Medication and rest,No,
+REC000157,APT001007,PAT00202,DOC0018,2026-01-09,Supervision of normal pregnancy,Medication and rest,No,
+REC000158,APT001856,PAT00681,DOC0067,2025-10-15,Essential hypertension,Counseling sessions,Yes,2025-11-14
+REC000159,APT001329,PAT00712,DOC0097,2025-11-19,Type 2 diabetes mellitus,Lifestyle modification,Yes,2026-01-18
+REC000160,APT000560,PAT00036,DOC0080,2025-06-23,Acute upper respiratory infection,Physical therapy,Yes,2025-06-30
+REC000161,APT001904,PAT00998,DOC0104,2026-04-06,Otitis media,Follow-up consultation,No,
+REC000162,APT002132,PAT01015,DOC0062,2026-02-12,Migraine without aura,Diet and exercise plan,No,
+REC000163,APT000537,PAT01090,DOC0067,2026-02-08,Lower back pain,Lifestyle modification,No,
+REC000164,APT001465,PAT00428,DOC0055,2025-05-18,"Chest pain, unspecified",Follow-up consultation,Yes,2025-07-17
+REC000165,APT001413,PAT00896,DOC0042,2025-06-24,Supervision of normal pregnancy,Follow-up consultation,No,
+REC000166,APT001297,PAT00501,DOC0046,2025-11-19,Essential hypertension,Specialist referral,No,
+REC000167,APT000765,PAT01194,DOC0011,2025-02-10,Repeat prescription management,Lifestyle modification,No,
+REC000168,APT001989,PAT00887,DOC0058,2025-12-23,Lower back pain,Lifestyle modification,Yes,2026-02-21
+REC000169,APT000450,PAT00387,DOC0099,2025-06-01,Type 2 diabetes mellitus,Diet and exercise plan,No,
+REC000170,APT000393,PAT01169,DOC0094,2026-02-23,Generalized anxiety disorder,Physical therapy,No,
+REC000171,APT000592,PAT00179,DOC0111,2025-03-19,Otitis media,Counseling sessions,No,
+REC000172,APT000769,PAT00822,DOC0054,2025-08-29,Essential hypertension,Specialist referral,No,
+REC000173,APT002021,PAT00059,DOC0050,2025-06-28,Acute upper respiratory infection,Lifestyle modification,No,
+REC000174,APT000204,PAT00976,DOC0042,2025-08-26,Arthralgia,Routine monitoring,No,
+REC000175,APT000811,PAT00685,DOC0022,2025-07-09,Immunization encounter,Counseling sessions,No,
+REC000176,APT000798,PAT00086,DOC0005,2026-04-09,Generalized anxiety disorder,Lifestyle modification,No,
+REC000177,APT001081,PAT00001,DOC0044,2025-07-11,Arthralgia,Specialist referral,No,
+REC000178,APT001767,PAT00799,DOC0049,2025-04-13,Supervision of normal pregnancy,Counseling sessions,No,
+REC000179,APT000473,PAT00071,DOC0096,2026-01-30,Type 2 diabetes mellitus,Medication and rest,No,
+REC000180,APT001753,PAT00990,DOC0089,2025-09-02,General medical examination,Counseling sessions,No,
+REC000181,APT001175,PAT00109,DOC0058,2026-03-31,Migraine without aura,Follow-up consultation,No,
+REC000182,APT000555,PAT00085,DOC0085,2026-05-31,Otitis media,Specialist referral,No,
+REC000183,APT000594,PAT00285,DOC0026,2025-03-25,Otitis media,Specialist referral,No,
+REC000184,APT000006,PAT00513,DOC0029,2026-04-27,Dermatitis,Further diagnostic tests,No,
+REC000185,APT000793,PAT00189,DOC0046,2025-06-30,Supervision of normal pregnancy,Follow-up consultation,No,
+REC000186,APT000315,PAT00873,DOC0075,2025-11-10,Arthralgia,Further diagnostic tests,Yes,2025-12-10
+REC000187,APT002193,PAT00944,DOC0056,2026-05-11,Lower back pain,Specialist referral,No,
+REC000188,APT001246,PAT00491,DOC0002,2026-04-10,Essential hypertension,Follow-up consultation,No,
+REC000189,APT001154,PAT00751,DOC0035,2025-05-16,"Chest pain, unspecified",Diet and exercise plan,No,
+REC000190,APT000282,PAT00599,DOC0086,2026-05-12,Generalized anxiety disorder,Follow-up consultation,Yes,2026-07-11
+REC000191,APT000802,PAT00080,DOC0110,2025-04-20,"Chest pain, unspecified",Further diagnostic tests,Yes,2025-05-20
+REC000192,APT000466,PAT01076,DOC0022,2025-06-11,Lower back pain,Physical therapy,No,
+REC000193,APT001655,PAT00817,DOC0001,2025-09-26,Generalized anxiety disorder,Physical therapy,No,
+REC000194,APT000292,PAT00595,DOC0103,2025-06-15,Migraine without aura,Follow-up consultation,Yes,2025-06-29
+REC000195,APT001010,PAT00125,DOC0103,2025-02-11,Dermatitis,Further diagnostic tests,No,
+REC000196,APT001824,PAT01037,DOC0055,2025-02-05,Acute upper respiratory infection,Specialist referral,No,
+REC000197,APT000790,PAT01124,DOC0082,2025-03-12,Abnormal laboratory finding,Medication and rest,No,
+REC000198,APT001367,PAT00131,DOC0006,2025-10-19,Supervision of normal pregnancy,Routine monitoring,No,
+REC000199,APT000616,PAT00575,DOC0072,2025-12-15,Arthralgia,Physical therapy,No,
+REC000200,APT000319,PAT00294,DOC0022,2026-05-02,General medical examination,Minor procedure advised,No,
+REC000201,APT001592,PAT00615,DOC0006,2026-04-05,Dermatitis,Further diagnostic tests,No,
+REC000202,APT001102,PAT00711,DOC0030,2025-02-24,Type 2 diabetes mellitus,Routine monitoring,Yes,2025-03-03
+REC000203,APT001437,PAT00568,DOC0095,2026-06-11,Generalized anxiety disorder,Lifestyle modification,Yes,2026-07-11
+REC000204,APT001169,PAT00437,DOC0116,2025-03-14,Lower back pain,Minor procedure advised,Yes,2025-03-21
+REC000205,APT001751,PAT00264,DOC0100,2025-08-19,Arthralgia,Specialist referral,No,
+REC000206,APT002033,PAT00700,DOC0056,2025-04-12,Type 2 diabetes mellitus,Counseling sessions,Yes,2025-05-12
+REC000207,APT000707,PAT00222,DOC0061,2026-03-24,General medical examination,Counseling sessions,No,
+REC000208,APT002027,PAT00363,DOC0116,2025-05-03,Generalized anxiety disorder,Minor procedure advised,Yes,2025-05-17
+REC000209,APT000072,PAT00688,DOC0004,2025-09-03,Supervision of normal pregnancy,Lifestyle modification,No,
+REC000210,APT000665,PAT01034,DOC0103,2025-04-21,Arthralgia,Counseling sessions,No,
+REC000211,APT001066,PAT00173,DOC0120,2025-06-11,Repeat prescription management,Minor procedure advised,No,
+REC000212,APT000839,PAT01003,DOC0105,2025-08-10,General medical examination,Further diagnostic tests,No,
+REC000213,APT001030,PAT00175,DOC0056,2026-03-13,Essential hypertension,Counseling sessions,No,
+REC000214,APT001454,PAT00422,DOC0049,2026-02-16,General medical examination,Routine monitoring,No,
+REC000215,APT002046,PAT01050,DOC0048,2026-03-01,General medical examination,Physical therapy,Yes,2026-03-08
+REC000216,APT002068,PAT01066,DOC0055,2025-07-25,General medical examination,Follow-up consultation,No,
+REC000217,APT001577,PAT00469,DOC0006,2025-05-31,Arthralgia,Routine monitoring,No,
+REC000218,APT002011,PAT00002,DOC0107,2026-03-06,Otitis media,Further diagnostic tests,Yes,2026-03-13
+REC000219,APT001307,PAT01150,DOC0022,2025-05-30,Generalized anxiety disorder,Physical therapy,No,
+REC000220,APT000055,PAT00980,DOC0105,2025-03-10,Otitis media,Counseling sessions,No,
+REC000221,APT001905,PAT00257,DOC0069,2026-02-19,Essential hypertension,Physical therapy,No,
+REC000222,APT001613,PAT00909,DOC0056,2025-09-05,Generalized anxiety disorder,Lifestyle modification,No,
+REC000223,APT001483,PAT00594,DOC0002,2025-09-29,Migraine without aura,Specialist referral,No,
+REC000224,APT001497,PAT00914,DOC0103,2026-05-01,Generalized anxiety disorder,Routine monitoring,No,
+REC000225,APT000624,PAT00296,DOC0038,2025-01-26,General medical examination,Counseling sessions,No,
+REC000226,APT000013,PAT00578,DOC0063,2025-03-26,Generalized anxiety disorder,Lifestyle modification,No,
+REC000227,APT001922,PAT01078,DOC0067,2026-04-23,General medical examination,Physical therapy,Yes,2026-04-30
+REC000228,APT000737,PAT00766,DOC0004,2025-11-19,Repeat prescription management,Lifestyle modification,No,
+REC000229,APT001462,PAT00072,DOC0115,2025-04-18,"Chest pain, unspecified",Physical therapy,No,
+REC000230,APT000598,PAT01111,DOC0074,2025-07-13,Essential hypertension,Diet and exercise plan,Yes,2025-07-27
+REC000231,APT001316,PAT00739,DOC0071,2025-11-02,Otitis media,Diet and exercise plan,No,
+REC000232,APT000619,PAT00545,DOC0009,2026-04-06,Repeat prescription management,Specialist referral,Yes,2026-05-06
+REC000233,APT001917,PAT01122,DOC0042,2025-01-03,Lower back pain,Minor procedure advised,No,
+REC000234,APT001647,PAT01032,DOC0101,2026-01-03,Repeat prescription management,Physical therapy,Yes,2026-02-02
+REC000235,APT001808,PAT00001,DOC0009,2026-03-10,Repeat prescription management,Minor procedure advised,No,
+REC000236,APT001838,PAT00730,DOC0116,2025-11-23,Dermatitis,Diet and exercise plan,No,
+REC000237,APT001537,PAT00485,DOC0001,2026-01-10,Otitis media,Further diagnostic tests,No,
+REC000238,APT000486,PAT00841,DOC0018,2025-05-28,Repeat prescription management,Lifestyle modification,No,
+REC000239,APT000406,PAT01069,DOC0037,2025-01-27,Generalized anxiety disorder,Minor procedure advised,No,
+REC000240,APT001940,PAT00259,DOC0028,2025-11-08,Dermatitis,Diet and exercise plan,No,
+REC000241,APT000452,PAT00414,DOC0039,2025-06-17,Essential hypertension,Follow-up consultation,No,
+REC000242,APT001597,PAT00759,DOC0100,2025-08-29,Lower back pain,Medication and rest,No,
+REC000243,APT000174,PAT00252,DOC0056,2026-04-11,General medical examination,Minor procedure advised,No,
+REC000244,APT001044,PAT01017,DOC0004,2025-07-29,Lower back pain,Lifestyle modification,No,
+REC000245,APT000883,PAT00406,DOC0064,2025-08-10,"Chest pain, unspecified",Specialist referral,Yes,2025-10-09
+REC000246,APT000610,PAT00467,DOC0025,2026-05-14,Migraine without aura,Diet and exercise plan,No,
+REC000247,APT000751,PAT00989,DOC0101,2025-03-09,Arthralgia,Lifestyle modification,No,
+REC000248,APT000188,PAT00683,DOC0077,2025-04-10,Otitis media,Counseling sessions,No,
+REC000249,APT000132,PAT01087,DOC0046,2026-02-12,Type 2 diabetes mellitus,Follow-up consultation,No,
+REC000250,APT000711,PAT01169,DOC0097,2025-10-01,Type 2 diabetes mellitus,Minor procedure advised,Yes,2025-10-15
+REC000251,APT001956,PAT00048,DOC0064,2025-08-02,Migraine without aura,Follow-up consultation,Yes,2025-08-09
+REC000252,APT001594,PAT01124,DOC0118,2026-02-15,Otitis media,Minor procedure advised,Yes,2026-03-17
+REC000253,APT001562,PAT00968,DOC0119,2025-06-20,Immunization encounter,Lifestyle modification,No,
+REC000254,APT000276,PAT01051,DOC0087,2025-03-17,Migraine without aura,Medication and rest,No,
+REC000255,APT000243,PAT00369,DOC0034,2025-10-10,Type 2 diabetes mellitus,Medication and rest,No,
+REC000256,APT001763,PAT00485,DOC0044,2026-03-04,Acute upper respiratory infection,Lifestyle modification,Yes,2026-05-03
+REC000257,APT001231,PAT00387,DOC0092,2025-08-19,Acute upper respiratory infection,Specialist referral,No,
+REC000258,APT000456,PAT00734,DOC0096,2025-11-21,Essential hypertension,Further diagnostic tests,Yes,2025-12-21
+REC000259,APT000365,PAT00970,DOC0092,2025-12-10,Repeat prescription management,Follow-up consultation,No,
+REC000260,APT001371,PAT00345,DOC0091,2025-01-03,Lower back pain,Further diagnostic tests,Yes,2025-02-02
+REC000261,APT000434,PAT01143,DOC0072,2025-07-24,Abnormal laboratory finding,Diet and exercise plan,Yes,2025-09-22
+REC000262,APT002175,PAT01114,DOC0109,2025-04-21,Essential hypertension,Counseling sessions,No,
+REC000263,APT001300,PAT00955,DOC0093,2025-01-09,Lower back pain,Physical therapy,No,
+REC000264,APT000353,PAT00411,DOC0114,2025-06-26,General medical examination,Lifestyle modification,Yes,2025-08-25
+REC000265,APT001401,PAT00485,DOC0002,2025-06-02,Arthralgia,Minor procedure advised,Yes,2025-06-09
+REC000266,APT000527,PAT00193,DOC0068,2025-09-21,Supervision of normal pregnancy,Further diagnostic tests,No,
+REC000267,APT000053,PAT00588,DOC0045,2025-04-17,"Chest pain, unspecified",Physical therapy,No,
+REC000268,APT000255,PAT00742,DOC0030,2026-04-12,Otitis media,Lifestyle modification,No,
+REC000269,APT001448,PAT00642,DOC0096,2026-06-01,Otitis media,Specialist referral,Yes,2026-07-01
+REC000270,APT002042,PAT00123,DOC0020,2025-05-16,"Chest pain, unspecified",Physical therapy,Yes,2025-05-30
+REC000271,APT002198,PAT00927,DOC0098,2026-02-11,"Chest pain, unspecified",Diet and exercise plan,Yes,2026-03-13
+REC000272,APT001774,PAT01181,DOC0049,2025-01-03,Acute upper respiratory infection,Physical therapy,No,
+REC000273,APT000156,PAT01041,DOC0043,2025-02-24,Lower back pain,Diet and exercise plan,Yes,2025-03-03
+REC000274,APT001503,PAT00863,DOC0017,2025-08-08,Acute upper respiratory infection,Physical therapy,Yes,2025-08-15
+REC000275,APT000902,PAT01127,DOC0095,2026-06-26,Acute upper respiratory infection,Routine monitoring,Yes,2026-07-26
+REC000276,APT001224,PAT00152,DOC0061,2025-11-02,Abnormal laboratory finding,Counseling sessions,Yes,2025-12-17
+REC000277,APT001414,PAT00168,DOC0018,2025-10-22,Essential hypertension,Lifestyle modification,No,
+REC000278,APT001409,PAT00774,DOC0019,2025-05-10,Arthralgia,Lifestyle modification,No,
+REC000279,APT000671,PAT01005,DOC0004,2026-01-25,Repeat prescription management,Specialist referral,Yes,2026-03-26
+REC000280,APT001296,PAT00413,DOC0050,2025-12-22,Dermatitis,Follow-up consultation,No,
+REC000281,APT000759,PAT00886,DOC0020,2026-03-01,Lower back pain,Routine monitoring,No,
+REC000282,APT001226,PAT00793,DOC0051,2025-06-16,Repeat prescription management,Diet and exercise plan,No,
+REC000283,APT000170,PAT00303,DOC0053,2025-08-14,Immunization encounter,Counseling sessions,No,
+REC000284,APT000842,PAT00093,DOC0094,2025-07-03,Essential hypertension,Specialist referral,No,
+REC000285,APT000444,PAT00684,DOC0082,2025-03-10,Supervision of normal pregnancy,Diet and exercise plan,Yes,2025-04-09
+REC000286,APT000379,PAT00266,DOC0036,2025-10-01,General medical examination,Lifestyle modification,No,
+REC000287,APT001772,PAT00131,DOC0038,2026-02-04,Otitis media,Further diagnostic tests,No,
+REC000288,APT001323,PAT00653,DOC0008,2025-06-08,Acute upper respiratory infection,Follow-up consultation,No,
+REC000289,APT001932,PAT00669,DOC0118,2025-05-22,Otitis media,Specialist referral,Yes,2025-06-05
+REC000290,APT002060,PAT00045,DOC0079,2026-03-28,"Chest pain, unspecified",Follow-up consultation,No,
+REC000291,APT000742,PAT01050,DOC0071,2026-05-04,General medical examination,Diet and exercise plan,No,
+REC000292,APT001133,PAT01070,DOC0050,2026-04-18,General medical examination,Specialist referral,Yes,2026-04-25
+REC000293,APT000907,PAT00935,DOC0012,2026-06-19,Supervision of normal pregnancy,Lifestyle modification,No,
+REC000294,APT001157,PAT00701,DOC0053,2025-10-09,Type 2 diabetes mellitus,Lifestyle modification,No,
+REC000295,APT000968,PAT00589,DOC0106,2025-09-25,Essential hypertension,Lifestyle modification,Yes,2025-11-09
+REC000296,APT001394,PAT01033,DOC0109,2025-11-06,Immunization encounter,Specialist referral,No,
+REC000297,APT000278,PAT00401,DOC0034,2026-04-27,Abnormal laboratory finding,Specialist referral,No,
+REC000298,APT001661,PAT00113,DOC0061,2026-03-23,Dermatitis,Follow-up consultation,No,
+REC000299,APT001945,PAT01000,DOC0098,2026-02-04,Repeat prescription management,Medication and rest,Yes,2026-02-11
+REC000300,APT001193,PAT00495,DOC0062,2026-05-28,Otitis media,Minor procedure advised,No,
+REC000301,APT002079,PAT01055,DOC0083,2025-08-11,Immunization encounter,Further diagnostic tests,No,
+REC000302,APT001325,PAT00327,DOC0026,2025-07-25,Generalized anxiety disorder,Further diagnostic tests,Yes,2025-08-24
+REC000303,APT000581,PAT01161,DOC0045,2025-12-14,General medical examination,Lifestyle modification,No,
+REC000304,APT001621,PAT00092,DOC0070,2025-01-11,Generalized anxiety disorder,Minor procedure advised,No,
+REC000305,APT001130,PAT00212,DOC0020,2025-04-26,Migraine without aura,Minor procedure advised,Yes,2025-06-10
+REC000306,APT002180,PAT00689,DOC0010,2026-03-23,Dermatitis,Lifestyle modification,Yes,2026-04-06
+REC000307,APT001524,PAT00188,DOC0089,2026-06-04,"Chest pain, unspecified",Counseling sessions,No,
+REC000308,APT001131,PAT01059,DOC0111,2026-06-12,Type 2 diabetes mellitus,Specialist referral,No,
+REC000309,APT000545,PAT00595,DOC0001,2025-09-04,Migraine without aura,Follow-up consultation,Yes,2025-10-19
+REC000310,APT001499,PAT00954,DOC0078,2025-11-04,Dermatitis,Specialist referral,No,
+REC000311,APT000454,PAT00428,DOC0049,2025-02-20,Migraine without aura,Minor procedure advised,Yes,2025-02-27
+REC000312,APT001252,PAT01125,DOC0058,2025-04-05,Type 2 diabetes mellitus,Counseling sessions,Yes,2025-05-05
+REC000313,APT000987,PAT00904,DOC0093,2025-10-27,Otitis media,Lifestyle modification,No,
+REC000314,APT000960,PAT01110,DOC0023,2025-12-17,Dermatitis,Medication and rest,No,
+REC000315,APT001518,PAT00501,DOC0058,2025-03-26,Lower back pain,Follow-up consultation,Yes,2025-04-25
+REC000316,APT000476,PAT00573,DOC0084,2026-06-11,Arthralgia,Diet and exercise plan,Yes,2026-06-25
+REC000317,APT001149,PAT01171,DOC0048,2025-05-23,Lower back pain,Further diagnostic tests,No,
+REC000318,APT000297,PAT00640,DOC0101,2025-11-28,Dermatitis,Counseling sessions,Yes,2026-01-27
+REC000319,APT001159,PAT00120,DOC0012,2026-05-13,Otitis media,Further diagnostic tests,Yes,2026-05-27
+REC000320,APT000818,PAT00148,DOC0088,2026-02-09,Dermatitis,Medication and rest,Yes,2026-02-16
+REC000321,APT002056,PAT00873,DOC0021,2025-06-18,Otitis media,Counseling sessions,No,
+REC000322,APT001685,PAT00692,DOC0116,2025-02-07,Immunization encounter,Minor procedure advised,No,
+REC000323,APT001317,PAT00174,DOC0010,2025-08-17,Arthralgia,Follow-up consultation,No,
+REC000324,APT000206,PAT00905,DOC0098,2026-01-19,Lower back pain,Further diagnostic tests,No,
+REC000325,APT000256,PAT00840,DOC0047,2025-03-23,Arthralgia,Physical therapy,No,
+REC000326,APT002067,PAT00912,DOC0002,2026-02-09,"Chest pain, unspecified",Counseling sessions,No,
+REC000327,APT001486,PAT00348,DOC0008,2025-06-05,Generalized anxiety disorder,Follow-up consultation,Yes,2025-06-19
+REC000328,APT001744,PAT00630,DOC0063,2025-09-21,Lower back pain,Lifestyle modification,No,
+REC000329,APT001874,PAT01076,DOC0003,2025-06-09,Migraine without aura,Diet and exercise plan,No,
+REC000330,APT001319,PAT00376,DOC0034,2026-02-21,Acute upper respiratory infection,Diet and exercise plan,Yes,2026-02-28
+REC000331,APT001946,PAT00125,DOC0080,2026-03-03,General medical examination,Minor procedure advised,No,
+REC000332,APT000247,PAT01047,DOC0010,2025-08-31,Generalized anxiety disorder,Medication and rest,No,
+REC000333,APT000949,PAT01120,DOC0112,2025-01-17,Arthralgia,Further diagnostic tests,No,
+REC000334,APT000060,PAT01144,DOC0061,2025-05-17,Arthralgia,Minor procedure advised,No,
+REC000335,APT001463,PAT00614,DOC0053,2025-09-29,General medical examination,Medication and rest,No,
+REC000336,APT001701,PAT00131,DOC0079,2025-12-15,Acute upper respiratory infection,Medication and rest,No,
+REC000337,APT001911,PAT00927,DOC0079,2025-03-15,"Chest pain, unspecified",Minor procedure advised,No,
+REC000338,APT000859,PAT00236,DOC0102,2026-06-01,Dermatitis,Further diagnostic tests,Yes,2026-06-15
+REC000339,APT001143,PAT01151,DOC0098,2025-07-19,Supervision of normal pregnancy,Medication and rest,No,
+REC000340,APT001959,PAT00403,DOC0076,2025-11-01,Type 2 diabetes mellitus,Diet and exercise plan,No,
+REC000341,APT000663,PAT00765,DOC0071,2026-02-09,Generalized anxiety disorder,Counseling sessions,No,
+REC000342,APT000113,PAT00356,DOC0052,2025-11-22,Essential hypertension,Counseling sessions,No,
+REC000343,APT000584,PAT00518,DOC0025,2026-06-10,Immunization encounter,Follow-up consultation,No,
+REC000344,APT000660,PAT00298,DOC0077,2025-12-16,Abnormal laboratory finding,Medication and rest,No,
+REC000345,APT001663,PAT00185,DOC0057,2026-03-12,"Chest pain, unspecified",Follow-up consultation,No,
+REC000346,APT001390,PAT00911,DOC0095,2025-11-02,Immunization encounter,Lifestyle modification,Yes,2025-12-02
+REC000347,APT001104,PAT00276,DOC0098,2025-11-20,Acute upper respiratory infection,Minor procedure advised,No,
+REC000348,APT000921,PAT00793,DOC0065,2025-07-26,"Chest pain, unspecified",Follow-up consultation,No,
+REC000349,APT000943,PAT00126,DOC0052,2026-05-24,Supervision of normal pregnancy,Diet and exercise plan,No,
+REC000350,APT000250,PAT00596,DOC0120,2025-06-03,Generalized anxiety disorder,Specialist referral,No,
+REC000351,APT001324,PAT00575,DOC0055,2026-02-05,Immunization encounter,Routine monitoring,No,
+REC000352,APT000533,PAT00343,DOC0116,2025-04-13,Generalized anxiety disorder,Lifestyle modification,Yes,2025-04-20
+REC000353,APT002124,PAT00855,DOC0055,2025-04-01,Migraine without aura,Diet and exercise plan,No,
+REC000354,APT001488,PAT00021,DOC0044,2026-04-22,Acute upper respiratory infection,Diet and exercise plan,No,
+REC000355,APT000931,PAT01116,DOC0119,2025-03-23,Essential hypertension,Further diagnostic tests,No,
+REC000356,APT001665,PAT00410,DOC0092,2025-04-12,Dermatitis,Minor procedure advised,Yes,2025-06-11
+REC000357,APT000569,PAT00745,DOC0116,2026-04-20,"Chest pain, unspecified",Minor procedure advised,No,
+REC000358,APT001251,PAT01088,DOC0106,2025-12-31,Arthralgia,Minor procedure advised,No,
+REC000359,APT002162,PAT00938,DOC0026,2025-10-15,Generalized anxiety disorder,Specialist referral,No,
+REC000360,APT001287,PAT00930,DOC0052,2025-02-07,General medical examination,Specialist referral,No,
+REC000361,APT001360,PAT00157,DOC0048,2025-10-31,Supervision of normal pregnancy,Follow-up consultation,No,
+REC000362,APT000346,PAT00864,DOC0061,2025-12-09,Type 2 diabetes mellitus,Physical therapy,No,
+REC000363,APT001313,PAT00112,DOC0106,2025-01-29,General medical examination,Specialist referral,Yes,2025-02-12
+REC000364,APT002127,PAT00008,DOC0112,2025-12-22,Abnormal laboratory finding,Medication and rest,No,
+REC000365,APT000822,PAT00498,DOC0063,2026-05-16,Acute upper respiratory infection,Further diagnostic tests,No,
+REC000366,APT001186,PAT00750,DOC0083,2025-01-29,Acute upper respiratory infection,Medication and rest,Yes,2025-03-30
+REC000367,APT000710,PAT00692,DOC0080,2025-10-11,Essential hypertension,Physical therapy,Yes,2025-10-18
+REC000368,APT000448,PAT00799,DOC0003,2025-01-09,Migraine without aura,Specialist referral,No,
+REC000369,APT002073,PAT01152,DOC0048,2026-03-06,General medical examination,Counseling sessions,Yes,2026-04-05
+REC000370,APT000770,PAT00318,DOC0005,2025-03-23,Type 2 diabetes mellitus,Routine monitoring,No,
+REC000371,APT000050,PAT00231,DOC0063,2025-06-23,General medical examination,Counseling sessions,No,
+REC000372,APT001530,PAT00815,DOC0015,2025-02-02,Generalized anxiety disorder,Follow-up consultation,Yes,2025-04-03
+REC000373,APT001696,PAT00328,DOC0063,2025-05-03,Otitis media,Minor procedure advised,Yes,2025-05-17
+REC000374,APT001976,PAT00177,DOC0102,2026-05-23,Arthralgia,Diet and exercise plan,Yes,2026-06-06
+REC000375,APT000432,PAT00114,DOC0053,2025-12-29,Repeat prescription management,Minor procedure advised,Yes,2026-01-28
+REC000376,APT001566,PAT00465,DOC0006,2026-04-04,Arthralgia,Diet and exercise plan,No,
+REC000377,APT000806,PAT00652,DOC0114,2025-05-07,Generalized anxiety disorder,Physical therapy,No,
+REC000378,APT001639,PAT00217,DOC0009,2025-12-29,Lower back pain,Further diagnostic tests,No,
+REC000379,APT001583,PAT00480,DOC0076,2026-01-17,Lower back pain,Follow-up consultation,No,
+REC000380,APT002065,PAT00275,DOC0012,2025-10-27,Repeat prescription management,Routine monitoring,No,
+REC000381,APT002050,PAT00529,DOC0014,2026-05-18,Migraine without aura,Lifestyle modification,Yes,2026-07-17
+REC000382,APT000908,PAT01165,DOC0032,2025-05-31,Dermatitis,Counseling sessions,No,
+REC000383,APT001523,PAT00120,DOC0071,2025-05-22,Repeat prescription management,Medication and rest,No,
+REC000384,APT000805,PAT00191,DOC0112,2025-05-21,General medical examination,Physical therapy,No,
+REC000385,APT001850,PAT00559,DOC0044,2025-06-06,Essential hypertension,Counseling sessions,No,
+REC000386,APT001657,PAT00173,DOC0074,2025-08-13,Repeat prescription management,Physical therapy,Yes,2025-10-12
+REC000387,APT000415,PAT00675,DOC0065,2025-03-10,Repeat prescription management,Diet and exercise plan,No,
+REC000388,APT001656,PAT00137,DOC0062,2025-10-19,Otitis media,Counseling sessions,Yes,2025-12-03
+REC000389,APT000687,PAT01087,DOC0002,2025-11-07,Arthralgia,Follow-up consultation,Yes,2025-11-14
+REC000390,APT001622,PAT00160,DOC0116,2026-01-16,Generalized anxiety disorder,Physical therapy,No,
+REC000391,APT000451,PAT00081,DOC0100,2025-05-11,Lower back pain,Counseling sessions,Yes,2025-06-25
+REC000392,APT000666,PAT00832,DOC0039,2025-08-03,Acute upper respiratory infection,Routine monitoring,Yes,2025-10-02
+REC000393,APT001646,PAT00340,DOC0044,2026-04-24,Dermatitis,Minor procedure advised,No,
+REC000394,APT001514,PAT01188,DOC0110,2025-04-05,Abnormal laboratory finding,Minor procedure advised,No,
+REC000395,APT000941,PAT00236,DOC0109,2026-06-12,Migraine without aura,Specialist referral,No,
+REC000396,APT001277,PAT00215,DOC0106,2025-08-30,"Chest pain, unspecified",Specialist referral,No,
+REC000397,APT001358,PAT00420,DOC0093,2025-04-20,Acute upper respiratory infection,Further diagnostic tests,No,
+REC000398,APT000333,PAT00126,DOC0009,2025-07-17,General medical examination,Further diagnostic tests,No,
+REC000399,APT000919,PAT00493,DOC0076,2025-11-15,Abnormal laboratory finding,Minor procedure advised,No,
+REC000400,APT000804,PAT00632,DOC0095,2025-11-04,Acute upper respiratory infection,Further diagnostic tests,No,
+REC000401,APT000788,PAT00266,DOC0120,2025-09-22,"Chest pain, unspecified",Further diagnostic tests,Yes,2025-11-21
+REC000402,APT000727,PAT00342,DOC0067,2025-03-10,Generalized anxiety disorder,Minor procedure advised,No,
+REC000403,APT001037,PAT00471,DOC0013,2026-04-06,Repeat prescription management,Minor procedure advised,Yes,2026-04-13
+REC000404,APT001635,PAT00476,DOC0093,2026-02-15,Abnormal laboratory finding,Physical therapy,Yes,2026-03-01
+REC000405,APT000185,PAT01145,DOC0004,2026-03-08,Generalized anxiety disorder,Physical therapy,No,
+REC000406,APT002120,PAT00027,DOC0012,2025-03-01,Generalized anxiety disorder,Minor procedure advised,Yes,2025-04-15
+REC000407,APT001779,PAT00023,DOC0111,2025-08-10,Type 2 diabetes mellitus,Diet and exercise plan,No,
+REC000408,APT000388,PAT00721,DOC0097,2025-08-11,Lower back pain,Minor procedure advised,No,
+REC000409,APT001607,PAT01198,DOC0110,2025-07-03,Arthralgia,Routine monitoring,No,
+REC000410,APT000313,PAT00409,DOC0089,2025-04-07,General medical examination,Specialist referral,No,
+REC000411,APT001997,PAT00293,DOC0071,2025-06-01,Supervision of normal pregnancy,Specialist referral,No,
+REC000412,APT001580,PAT00566,DOC0117,2026-05-26,Repeat prescription management,Counseling sessions,No,
+REC000413,APT001171,PAT00738,DOC0057,2025-09-20,Abnormal laboratory finding,Medication and rest,No,
+REC000414,APT000213,PAT01108,DOC0043,2025-01-24,Arthralgia,Specialist referral,No,
+REC000415,APT000440,PAT00643,DOC0110,2026-01-05,Type 2 diabetes mellitus,Diet and exercise plan,No,
+REC000416,APT001203,PAT00868,DOC0040,2025-06-21,Essential hypertension,Physical therapy,No,
+REC000417,APT000457,PAT00979,DOC0033,2026-06-05,Acute upper respiratory infection,Routine monitoring,No,
+REC000418,APT001346,PAT00657,DOC0088,2025-09-24,Arthralgia,Routine monitoring,No,
+REC000419,APT002037,PAT00679,DOC0049,2025-10-24,Abnormal laboratory finding,Diet and exercise plan,No,
+REC000420,APT001122,PAT00138,DOC0108,2026-03-12,Dermatitis,Counseling sessions,No,
+REC000421,APT000381,PAT01109,DOC0050,2026-05-03,Lower back pain,Further diagnostic tests,No,
+REC000422,APT000100,PAT00341,DOC0077,2026-01-22,Essential hypertension,Diet and exercise plan,Yes,2026-02-05
+REC000423,APT001215,PAT00262,DOC0081,2025-08-23,Acute upper respiratory infection,Physical therapy,No,
+REC000424,APT000958,PAT00487,DOC0048,2025-02-23,"Chest pain, unspecified",Diet and exercise plan,Yes,2025-04-09
+REC000425,APT000997,PAT00441,DOC0026,2026-03-30,Abnormal laboratory finding,Diet and exercise plan,No,
+REC000426,APT000266,PAT00573,DOC0099,2025-04-10,Immunization encounter,Further diagnostic tests,No,
+REC000427,APT001459,PAT00088,DOC0085,2025-05-18,Immunization encounter,Follow-up consultation,No,
+REC000428,APT001443,PAT01017,DOC0098,2025-06-13,General medical examination,Routine monitoring,No,
+REC000429,APT000097,PAT01185,DOC0079,2025-05-29,Acute upper respiratory infection,Counseling sessions,No,
+REC000430,APT000841,PAT00337,DOC0004,2025-04-10,Essential hypertension,Lifestyle modification,No,
+REC000431,APT001118,PAT00125,DOC0103,2025-03-10,Abnormal laboratory finding,Lifestyle modification,No,
+REC000432,APT000360,PAT00892,DOC0012,2025-12-14,Migraine without aura,Routine monitoring,No,
+REC000433,APT001555,PAT01035,DOC0050,2025-02-24,Type 2 diabetes mellitus,Specialist referral,No,
+REC000434,APT001192,PAT00151,DOC0070,2026-02-01,Dermatitis,Further diagnostic tests,No,
+REC000435,APT000259,PAT00837,DOC0054,2026-06-02,"Chest pain, unspecified",Counseling sessions,No,
+REC000436,APT001187,PAT00443,DOC0039,2025-01-13,Acute upper respiratory infection,Lifestyle modification,No,
+REC000437,APT001370,PAT00041,DOC0008,2025-08-13,Migraine without aura,Lifestyle modification,No,
+REC000438,APT000265,PAT00312,DOC0115,2025-01-08,Migraine without aura,Follow-up consultation,No,
+REC000439,APT000964,PAT01092,DOC0098,2025-12-12,Arthralgia,Specialist referral,No,
+REC000440,APT001302,PAT00594,DOC0118,2026-06-22,Lower back pain,Diet and exercise plan,No,
+REC000441,APT000552,PAT00809,DOC0106,2025-07-26,Essential hypertension,Follow-up consultation,Yes,2025-08-25
+REC000442,APT000051,PAT00684,DOC0016,2026-01-05,Generalized anxiety disorder,Diet and exercise plan,No,
+REC000443,APT000180,PAT00792,DOC0055,2026-02-13,Arthralgia,Lifestyle modification,No,
+REC000444,APT001735,PAT00956,DOC0120,2026-02-13,Repeat prescription management,Specialist referral,No,
+REC000445,APT000724,PAT01060,DOC0077,2026-06-28,Migraine without aura,Lifestyle modification,No,
+REC000446,APT000541,PAT00356,DOC0083,2025-11-18,Acute upper respiratory infection,Specialist referral,No,
+REC000447,APT002086,PAT00658,DOC0111,2025-01-29,Lower back pain,Minor procedure advised,No,
+REC000448,APT000761,PAT00499,DOC0079,2025-06-18,Generalized anxiety disorder,Specialist referral,No,
+REC000449,APT001820,PAT00005,DOC0108,2026-03-17,Abnormal laboratory finding,Medication and rest,Yes,2026-03-24
+REC000450,APT000371,PAT00510,DOC0023,2025-03-28,Otitis media,Physical therapy,No,
+REC000451,APT000482,PAT01088,DOC0022,2026-01-19,"Chest pain, unspecified",Minor procedure advised,No,
+REC000452,APT001970,PAT00171,DOC0099,2025-01-26,"Chest pain, unspecified",Lifestyle modification,Yes,2025-02-02
+REC000453,APT000141,PAT00709,DOC0052,2025-03-23,Generalized anxiety disorder,Physical therapy,No,
+REC000454,APT001322,PAT00998,DOC0057,2025-10-20,Dermatitis,Diet and exercise plan,Yes,2025-10-27
+REC000455,APT002009,PAT00911,DOC0033,2025-09-03,Lower back pain,Counseling sessions,No,
+REC000456,APT001581,PAT01199,DOC0101,2026-03-11,Immunization encounter,Further diagnostic tests,No,
+REC000457,APT000356,PAT00498,DOC0098,2025-04-09,Lower back pain,Further diagnostic tests,Yes,2025-05-09
+REC000458,APT000437,PAT01102,DOC0048,2026-03-25,Immunization encounter,Routine monitoring,Yes,2026-05-24
+REC000459,APT001041,PAT00681,DOC0011,2025-02-18,Supervision of normal pregnancy,Physical therapy,No,
+REC000460,APT000138,PAT00670,DOC0076,2026-01-28,Dermatitis,Follow-up consultation,No,
+REC000461,APT001509,PAT00562,DOC0056,2025-07-11,Type 2 diabetes mellitus,Specialist referral,Yes,2025-08-25
+REC000462,APT001291,PAT00674,DOC0040,2025-07-12,Type 2 diabetes mellitus,Minor procedure advised,No,
+REC000463,APT002014,PAT00652,DOC0019,2026-03-31,Arthralgia,Minor procedure advised,Yes,2026-05-30
+REC000464,APT000071,PAT00112,DOC0103,2026-01-16,Dermatitis,Specialist referral,No,
+REC000465,APT001229,PAT01049,DOC0103,2026-02-08,Acute upper respiratory infection,Medication and rest,No,
+REC000466,APT001479,PAT00205,DOC0073,2025-08-09,Lower back pain,Medication and rest,Yes,2025-10-08
+REC000467,APT000016,PAT00470,DOC0016,2025-05-16,Dermatitis,Medication and rest,No,
+REC000468,APT001257,PAT00571,DOC0117,2025-03-05,Abnormal laboratory finding,Routine monitoring,Yes,2025-03-19
+REC000469,APT001714,PAT00359,DOC0119,2026-03-08,Dermatitis,Medication and rest,No,
+REC000470,APT001428,PAT00129,DOC0041,2025-07-05,Otitis media,Physical therapy,Yes,2025-08-04
+REC000471,APT000704,PAT00992,DOC0092,2025-10-05,Type 2 diabetes mellitus,Physical therapy,No,
+REC000472,APT000886,PAT00018,DOC0002,2025-07-09,Repeat prescription management,Minor procedure advised,No,
+REC000473,APT001387,PAT00801,DOC0049,2026-01-13,Repeat prescription management,Specialist referral,No,
+REC000474,APT000833,PAT00689,DOC0046,2026-04-28,Immunization encounter,Counseling sessions,No,
+REC000475,APT001821,PAT00391,DOC0104,2026-06-05,Arthralgia,Diet and exercise plan,Yes,2026-07-05
+REC000476,APT000871,PAT00605,DOC0093,2025-06-24,Dermatitis,Routine monitoring,No,
+REC000477,APT001179,PAT01040,DOC0050,2025-04-08,Lower back pain,Medication and rest,No,
+REC000478,APT000585,PAT00490,DOC0090,2025-11-10,Migraine without aura,Physical therapy,No,
+REC000479,APT001058,PAT01108,DOC0109,2025-06-25,Migraine without aura,Further diagnostic tests,No,
+REC000480,APT000973,PAT01075,DOC0013,2025-09-01,Abnormal laboratory finding,Medication and rest,No,
+REC000481,APT000428,PAT00317,DOC0042,2025-06-10,Repeat prescription management,Specialist referral,No,
+REC000482,APT001563,PAT00116,DOC0092,2025-08-21,Migraine without aura,Routine monitoring,No,
+REC000483,APT001668,PAT00569,DOC0113,2026-03-15,Lower back pain,Specialist referral,No,
+REC000484,APT001933,PAT00315,DOC0004,2026-02-18,Acute upper respiratory infection,Further diagnostic tests,No,
+REC000485,APT000627,PAT00108,DOC0112,2025-12-01,Type 2 diabetes mellitus,Further diagnostic tests,No,
+REC000486,APT000203,PAT00827,DOC0009,2025-02-16,Essential hypertension,Physical therapy,Yes,2025-03-18
+REC000487,APT001105,PAT00205,DOC0012,2026-01-17,Acute upper respiratory infection,Routine monitoring,No,
+REC000488,APT001851,PAT01079,DOC0002,2025-11-02,Immunization encounter,Follow-up consultation,No,
+REC000489,APT000046,PAT00910,DOC0105,2025-06-17,Immunization encounter,Follow-up consultation,Yes,2025-06-24
+REC000490,APT001507,PAT00405,DOC0101,2025-11-30,Supervision of normal pregnancy,Further diagnostic tests,No,
+REC000491,APT001359,PAT00460,DOC0091,2025-06-10,Type 2 diabetes mellitus,Minor procedure advised,No,
+REC000492,APT001227,PAT00029,DOC0065,2025-02-27,Supervision of normal pregnancy,Specialist referral,No,
+REC000493,APT001791,PAT00832,DOC0003,2025-05-15,Repeat prescription management,Further diagnostic tests,No,
+REC000494,APT000158,PAT01011,DOC0067,2026-03-20,"Chest pain, unspecified",Diet and exercise plan,No,
+REC000495,APT000623,PAT01033,DOC0037,2025-09-12,Otitis media,Medication and rest,No,
+REC000496,APT002081,PAT00917,DOC0015,2026-05-14,Acute upper respiratory infection,Diet and exercise plan,Yes,2026-05-21
+REC000497,APT000848,PAT00920,DOC0055,2025-06-26,Lower back pain,Physical therapy,No,
+REC000498,APT001829,PAT00335,DOC0018,2025-07-17,Dermatitis,Physical therapy,No,
+REC000499,APT001248,PAT01116,DOC0075,2025-07-20,Migraine without aura,Counseling sessions,Yes,2025-09-03
+REC000500,APT001793,PAT00185,DOC0055,2026-05-24,Migraine without aura,Diet and exercise plan,No,
+REC000501,APT001729,PAT01166,DOC0075,2026-02-22,Arthralgia,Further diagnostic tests,No,
+REC000502,APT000567,PAT00856,DOC0059,2026-04-09,Immunization encounter,Specialist referral,Yes,2026-04-23
+REC000503,APT000548,PAT00570,DOC0108,2025-07-14,Generalized anxiety disorder,Routine monitoring,Yes,2025-08-28
+REC000504,APT000677,PAT00318,DOC0108,2025-03-20,Immunization encounter,Diet and exercise plan,Yes,2025-05-19
+REC000505,APT002102,PAT00833,DOC0038,2025-02-11,Essential hypertension,Counseling sessions,No,
+REC000506,APT001108,PAT00837,DOC0102,2025-09-27,General medical examination,Minor procedure advised,No,
+REC000507,APT001361,PAT00855,DOC0069,2026-05-27,Arthralgia,Routine monitoring,No,
+REC000508,APT000312,PAT00651,DOC0054,2025-07-03,General medical examination,Specialist referral,No,
+REC000509,APT001433,PAT01179,DOC0033,2026-01-21,Arthralgia,Minor procedure advised,Yes,2026-03-07
+REC000510,APT001213,PAT00680,DOC0113,2025-11-15,Supervision of normal pregnancy,Medication and rest,No,
+REC000511,APT000280,PAT00428,DOC0091,2025-07-02,Otitis media,Diet and exercise plan,No,
+REC000512,APT001082,PAT00194,DOC0052,2025-12-07,Lower back pain,Follow-up consultation,Yes,2026-02-05
+REC000513,APT000615,PAT00855,DOC0032,2025-08-03,Arthralgia,Minor procedure advised,Yes,2025-10-02
+REC000514,APT000043,PAT00025,DOC0078,2025-04-13,Acute upper respiratory infection,Counseling sessions,Yes,2025-05-28
+REC000515,APT000643,PAT00471,DOC0073,2025-09-16,Dermatitis,Diet and exercise plan,No,
+REC000516,APT001515,PAT00413,DOC0120,2026-04-13,Migraine without aura,Follow-up consultation,Yes,2026-04-27
+REC000517,APT001271,PAT00537,DOC0069,2025-09-22,Essential hypertension,Routine monitoring,No,
+REC000518,APT000647,PAT00327,DOC0013,2025-02-24,"Chest pain, unspecified",Lifestyle modification,No,
+REC000519,APT001198,PAT00307,DOC0029,2025-08-15,Abnormal laboratory finding,Follow-up consultation,No,
+REC000520,APT000414,PAT01074,DOC0115,2025-08-22,"Chest pain, unspecified",Physical therapy,Yes,2025-09-21
+REC000521,APT000017,PAT00409,DOC0012,2025-02-22,Supervision of normal pregnancy,Lifestyle modification,No,
+REC000522,APT000260,PAT00342,DOC0016,2026-03-05,Otitis media,Routine monitoring,No,
+REC000523,APT001326,PAT00276,DOC0043,2026-02-15,Essential hypertension,Minor procedure advised,No,
+REC000524,APT000191,PAT00412,DOC0015,2025-03-10,Generalized anxiety disorder,Physical therapy,Yes,2025-05-09
+REC000525,APT002157,PAT00642,DOC0031,2025-06-07,Immunization encounter,Diet and exercise plan,No,
+REC000526,APT002076,PAT00123,DOC0070,2025-02-19,Dermatitis,Follow-up consultation,No,
+REC000527,APT001458,PAT00381,DOC0046,2025-12-22,Migraine without aura,Routine monitoring,No,
+REC000528,APT001880,PAT01048,DOC0085,2026-03-24,Arthralgia,Counseling sessions,No,
+REC000529,APT001841,PAT00692,DOC0067,2026-03-01,"Chest pain, unspecified",Diet and exercise plan,No,
+REC000530,APT001826,PAT00527,DOC0115,2026-01-26,General medical examination,Diet and exercise plan,No,
+REC000531,APT000083,PAT00944,DOC0034,2026-04-30,"Chest pain, unspecified",Medication and rest,No,
+REC000532,APT000556,PAT00313,DOC0044,2025-09-14,Immunization encounter,Medication and rest,No,
+REC000533,APT000349,PAT00615,DOC0006,2025-08-28,Migraine without aura,Diet and exercise plan,No,
+REC000534,APT001114,PAT00404,DOC0109,2025-03-20,Essential hypertension,Follow-up consultation,No,
+REC000535,APT001379,PAT00625,DOC0100,2025-04-22,Essential hypertension,Physical therapy,No,
+REC000536,APT001718,PAT00320,DOC0029,2026-04-15,Acute upper respiratory infection,Routine monitoring,No,
+REC000537,APT000994,PAT01152,DOC0081,2025-09-30,Migraine without aura,Minor procedure advised,Yes,2025-11-14
+REC000538,APT000430,PAT00539,DOC0061,2025-11-07,Dermatitis,Counseling sessions,No,
+REC000539,APT000030,PAT00821,DOC0078,2025-10-06,Acute upper respiratory infection,Specialist referral,Yes,2025-11-05
+REC000540,APT000816,PAT00831,DOC0076,2025-07-15,Generalized anxiety disorder,Further diagnostic tests,No,
+REC000541,APT000725,PAT00185,DOC0091,2025-06-12,Dermatitis,Follow-up consultation,Yes,2025-06-19
+REC000542,APT001532,PAT00939,DOC0012,2025-01-31,Essential hypertension,Follow-up consultation,No,
+REC000543,APT001232,PAT00343,DOC0059,2025-07-14,Migraine without aura,Specialist referral,Yes,2025-08-28
+REC000544,APT001526,PAT00144,DOC0064,2025-09-26,Immunization encounter,Physical therapy,No,
+REC000545,APT001748,PAT01196,DOC0077,2025-03-14,Essential hypertension,Lifestyle modification,No,
+REC000546,APT000248,PAT00147,DOC0083,2026-03-13,Acute upper respiratory infection,Physical therapy,No,
+REC000547,APT001764,PAT00540,DOC0109,2025-01-22,Immunization encounter,Follow-up consultation,No,
+REC000548,APT000731,PAT00558,DOC0066,2025-01-22,Type 2 diabetes mellitus,Counseling sessions,No,
+REC000549,APT001867,PAT00971,DOC0016,2026-04-07,Arthralgia,Medication and rest,Yes,2026-04-14
+REC000550,APT000229,PAT00710,DOC0116,2026-02-25,General medical examination,Diet and exercise plan,Yes,2026-03-04
+REC000551,APT000045,PAT00020,DOC0102,2025-04-19,Essential hypertension,Routine monitoring,No,
+REC000552,APT001572,PAT00660,DOC0008,2025-04-29,Abnormal laboratory finding,Counseling sessions,No,
+REC000553,APT001720,PAT00271,DOC0118,2025-10-28,Lower back pain,Follow-up consultation,Yes,2025-11-27
+REC000554,APT001664,PAT00841,DOC0015,2025-01-13,Otitis media,Physical therapy,No,
+REC000555,APT001990,PAT00299,DOC0110,2025-07-08,Immunization encounter,Lifestyle modification,No,
+REC000556,APT001586,PAT00734,DOC0009,2026-03-29,Immunization encounter,Routine monitoring,No,
+REC000557,APT001074,PAT00311,DOC0009,2026-03-31,Supervision of normal pregnancy,Minor procedure advised,No,
+REC000558,APT001442,PAT00613,DOC0118,2025-09-26,Repeat prescription management,Further diagnostic tests,No,
+REC000559,APT000976,PAT00270,DOC0097,2026-05-05,Lower back pain,Diet and exercise plan,Yes,2026-06-04
+REC000560,APT000472,PAT01183,DOC0114,2025-10-01,Migraine without aura,Minor procedure advised,No,
+REC000561,APT000134,PAT00023,DOC0092,2025-12-03,Generalized anxiety disorder,Specialist referral,No,
+REC000562,APT000177,PAT00627,DOC0001,2026-03-17,Acute upper respiratory infection,Lifestyle modification,No,
+REC000563,APT001967,PAT00557,DOC0028,2026-05-03,"Chest pain, unspecified",Routine monitoring,Yes,2026-06-02
+REC000564,APT001308,PAT00977,DOC0093,2025-08-12,Essential hypertension,Counseling sessions,No,
+REC000565,APT000090,PAT00976,DOC0015,2025-10-13,Supervision of normal pregnancy,Lifestyle modification,No,
+REC000566,APT000971,PAT00808,DOC0040,2025-04-01,Immunization encounter,Minor procedure advised,No,
+REC000567,APT000565,PAT00527,DOC0113,2025-06-14,Migraine without aura,Diet and exercise plan,No,
+REC000568,APT000384,PAT00598,DOC0097,2025-11-19,Acute upper respiratory infection,Physical therapy,No,
+REC000569,APT000979,PAT00612,DOC0111,2025-06-21,Otitis media,Diet and exercise plan,No,
+REC000570,APT001842,PAT00784,DOC0046,2025-09-19,Type 2 diabetes mellitus,Further diagnostic tests,Yes,2025-10-03
+REC000571,APT000146,PAT00259,DOC0041,2025-06-01,"Chest pain, unspecified",Diet and exercise plan,No,
+REC000572,APT001717,PAT00333,DOC0085,2026-01-18,Generalized anxiety disorder,Diet and exercise plan,No,
+REC000573,APT000661,PAT00168,DOC0106,2026-03-06,Supervision of normal pregnancy,Medication and rest,No,
+REC000574,APT000773,PAT00801,DOC0025,2025-12-20,Acute upper respiratory infection,Follow-up consultation,No,
+REC000575,APT000855,PAT01120,DOC0011,2025-11-26,"Chest pain, unspecified",Counseling sessions,No,
+REC000576,APT000718,PAT00906,DOC0078,2025-07-30,Otitis media,Follow-up consultation,No,
+REC000577,APT000933,PAT00651,DOC0017,2026-04-24,Migraine without aura,Counseling sessions,No,
+REC000578,APT000631,PAT00732,DOC0044,2025-03-25,Repeat prescription management,Minor procedure advised,No,
+REC000579,APT001604,PAT00760,DOC0084,2026-05-17,Immunization encounter,Specialist referral,Yes,2026-07-01
+REC000580,APT002148,PAT00432,DOC0106,2025-05-02,Type 2 diabetes mellitus,Minor procedure advised,Yes,2025-05-16
+REC000581,APT000433,PAT00428,DOC0085,2025-09-20,Acute upper respiratory infection,Lifestyle modification,No,
+REC000582,APT000192,PAT00419,DOC0014,2026-05-01,Migraine without aura,Further diagnostic tests,Yes,2026-06-15
+REC000583,APT000418,PAT00272,DOC0067,2025-11-07,Essential hypertension,Routine monitoring,Yes,2025-11-21
+REC000584,APT000879,PAT00697,DOC0005,2025-10-24,Essential hypertension,Medication and rest,No,
+REC000585,APT001219,PAT00269,DOC0017,2026-03-26,Abnormal laboratory finding,Medication and rest,No,
+REC000586,APT000967,PAT01063,DOC0034,2026-01-31,Generalized anxiety disorder,Lifestyle modification,No,
+REC000587,APT001354,PAT00586,DOC0015,2025-03-15,Essential hypertension,Specialist referral,No,
+REC000588,APT001891,PAT00475,DOC0105,2026-03-10,Abnormal laboratory finding,Counseling sessions,No,
+REC000589,APT001199,PAT00066,DOC0074,2025-02-10,Lower back pain,Lifestyle modification,No,
+REC000590,APT000845,PAT00351,DOC0048,2025-02-05,General medical examination,Counseling sessions,No,
+REC000591,APT001640,PAT00430,DOC0093,2025-05-23,Dermatitis,Follow-up consultation,No,
+REC000592,APT001573,PAT00984,DOC0119,2025-01-10,Lower back pain,Physical therapy,No,
+REC000593,APT000559,PAT00294,DOC0071,2025-11-22,"Chest pain, unspecified",Lifestyle modification,No,
+REC000594,APT000133,PAT00503,DOC0010,2025-08-09,Type 2 diabetes mellitus,Diet and exercise plan,No,
+REC000595,APT000678,PAT00362,DOC0099,2026-01-21,Type 2 diabetes mellitus,Diet and exercise plan,No,
+REC000596,APT000589,PAT00701,DOC0017,2025-12-21,Immunization encounter,Diet and exercise plan,No,
+REC000597,APT000676,PAT00926,DOC0038,2025-06-16,Generalized anxiety disorder,Physical therapy,Yes,2025-08-15
+REC000598,APT001200,PAT01108,DOC0072,2026-02-28,Acute upper respiratory infection,Routine monitoring,No,
+REC000599,APT000612,PAT01013,DOC0103,2025-08-10,Acute upper respiratory infection,Specialist referral,No,
+REC000600,APT000726,PAT00306,DOC0038,2025-05-26,Abnormal laboratory finding,Counseling sessions,Yes,2025-06-02
+REC000601,APT000993,PAT00363,DOC0101,2025-07-05,Immunization encounter,Follow-up consultation,Yes,2025-07-19
+REC000602,APT001941,PAT00011,DOC0023,2025-09-28,Essential hypertension,Lifestyle modification,No,
+REC000603,APT001914,PAT01126,DOC0050,2025-09-10,Migraine without aura,Counseling sessions,Yes,2025-09-17
+REC000604,APT001147,PAT00931,DOC0115,2026-01-22,Type 2 diabetes mellitus,Follow-up consultation,No,
+REC000605,APT001474,PAT00921,DOC0002,2025-09-15,Otitis media,Medication and rest,No,
+REC000606,APT000239,PAT00080,DOC0079,2025-10-08,"Chest pain, unspecified",Medication and rest,No,
+REC000607,APT001490,PAT00389,DOC0097,2025-02-05,Type 2 diabetes mellitus,Medication and rest,Yes,2025-03-22
+REC000608,APT001638,PAT01092,DOC0116,2025-10-03,Dermatitis,Counseling sessions,No,
+REC000609,APT000729,PAT00158,DOC0009,2025-04-14,Supervision of normal pregnancy,Routine monitoring,No,
+REC000610,APT001623,PAT01173,DOC0117,2025-02-05,Arthralgia,Medication and rest,No,
+REC000611,APT001047,PAT00545,DOC0052,2026-03-01,Dermatitis,Minor procedure advised,No,
+REC000612,APT000512,PAT00990,DOC0108,2026-03-26,Migraine without aura,Follow-up consultation,No,
+REC000613,APT000405,PAT00678,DOC0101,2026-04-07,Generalized anxiety disorder,Diet and exercise plan,Yes,2026-06-06
+REC000614,APT001743,PAT01172,DOC0043,2026-05-07,Abnormal laboratory finding,Lifestyle modification,No,
+REC000615,APT001535,PAT00530,DOC0040,2026-01-26,"Chest pain, unspecified",Further diagnostic tests,No,
+REC000616,APT001415,PAT00116,DOC0001,2025-09-13,"Chest pain, unspecified",Follow-up consultation,Yes,2025-10-13
+REC000617,APT002178,PAT01077,DOC0016,2026-06-08,Type 2 diabetes mellitus,Follow-up consultation,Yes,2026-08-07
+REC000618,APT001356,PAT00316,DOC0083,2026-02-23,"Chest pain, unspecified",Counseling sessions,No,
+REC000619,APT002186,PAT00131,DOC0015,2025-12-06,Otitis media,Physical therapy,No,
+REC000620,APT000343,PAT00592,DOC0027,2025-12-17,Supervision of normal pregnancy,Physical therapy,No,
+REC000621,APT001896,PAT00624,DOC0083,2025-06-17,Type 2 diabetes mellitus,Counseling sessions,No,
+REC000622,APT001214,PAT00977,DOC0021,2025-01-02,Supervision of normal pregnancy,Diet and exercise plan,Yes,2025-02-01
+REC000623,APT000582,PAT00807,DOC0118,2025-06-03,"Chest pain, unspecified",Minor procedure advised,No,
+REC000624,APT000866,PAT00833,DOC0027,2025-09-04,Generalized anxiety disorder,Specialist referral,No,
+REC000625,APT000412,PAT00133,DOC0044,2025-08-19,Essential hypertension,Medication and rest,Yes,2025-10-03
+REC000626,APT001918,PAT00556,DOC0100,2025-10-23,Immunization encounter,Further diagnostic tests,No,
+REC000627,APT000302,PAT00196,DOC0072,2025-06-23,Generalized anxiety disorder,Minor procedure advised,Yes,2025-08-22
+REC000628,APT002188,PAT00174,DOC0114,2025-02-09,Immunization encounter,Lifestyle modification,Yes,2025-03-11
+REC000629,APT000640,PAT00670,DOC0115,2025-09-24,"Chest pain, unspecified",Diet and exercise plan,Yes,2025-10-08
+REC000630,APT000530,PAT01097,DOC0028,2025-12-20,Generalized anxiety disorder,Follow-up consultation,Yes,2026-01-03
+REC000631,APT000122,PAT00860,DOC0049,2025-11-18,Type 2 diabetes mellitus,Routine monitoring,Yes,2025-11-25
+REC000632,APT001837,PAT00289,DOC0054,2025-03-27,Type 2 diabetes mellitus,Follow-up consultation,Yes,2025-04-03
+REC000633,APT002032,PAT00174,DOC0078,2025-03-05,"Chest pain, unspecified",Routine monitoring,No,
+REC000634,APT001553,PAT00402,DOC0085,2025-10-13,Essential hypertension,Routine monitoring,Yes,2025-11-27
+REC000635,APT000975,PAT00364,DOC0059,2026-01-28,Supervision of normal pregnancy,Physical therapy,No,
+REC000636,APT001734,PAT00825,DOC0002,2025-01-31,Dermatitis,Specialist referral,No,
+REC000637,APT000900,PAT00432,DOC0068,2025-09-28,General medical examination,Physical therapy,No,
+REC000638,APT001101,PAT00378,DOC0099,2026-03-05,Acute upper respiratory infection,Counseling sessions,No,
+REC000639,APT000550,PAT01001,DOC0009,2025-07-07,Otitis media,Follow-up consultation,No,
+REC000640,APT000187,PAT00013,DOC0060,2026-06-15,General medical examination,Counseling sessions,No,
+REC000641,APT001815,PAT00849,DOC0114,2026-06-03,Migraine without aura,Minor procedure advised,Yes,2026-07-03
+REC000642,APT001629,PAT01103,DOC0083,2025-08-25,Abnormal laboratory finding,Medication and rest,Yes,2025-09-08
+REC000643,APT000789,PAT00874,DOC0027,2025-06-17,Repeat prescription management,Medication and rest,No,
+REC000644,APT000757,PAT01036,DOC0047,2026-02-27,Generalized anxiety disorder,Physical therapy,No,
+REC000645,APT000520,PAT00441,DOC0085,2026-04-08,Lower back pain,Specialist referral,No,
+REC000646,APT002190,PAT00696,DOC0104,2025-03-07,Abnormal laboratory finding,Minor procedure advised,No,
+REC000647,APT000427,PAT00626,DOC0041,2026-06-28,"Chest pain, unspecified",Medication and rest,Yes,2026-08-12
+REC000648,APT002113,PAT00426,DOC0012,2026-05-22,Migraine without aura,Further diagnostic tests,No,
+REC000649,APT001272,PAT00269,DOC0019,2025-08-03,Type 2 diabetes mellitus,Further diagnostic tests,No,
+REC000650,APT001403,PAT00729,DOC0083,2025-07-28,Migraine without aura,Specialist referral,No,
+REC000651,APT000543,PAT00440,DOC0013,2026-04-14,Otitis media,Follow-up consultation,Yes,2026-05-29
+REC000652,APT001237,PAT00275,DOC0093,2025-10-16,Arthralgia,Lifestyle modification,No,
+REC000653,APT001132,PAT00240,DOC0002,2025-07-09,Arthralgia,Minor procedure advised,Yes,2025-09-07
+REC000654,APT000205,PAT00861,DOC0119,2025-03-07,General medical examination,Specialist referral,No,
+REC000655,APT000446,PAT00568,DOC0060,2026-04-08,General medical examination,Lifestyle modification,No,
+REC000656,APT000436,PAT00998,DOC0032,2025-10-14,General medical examination,Further diagnostic tests,Yes,2025-10-28
+REC000657,APT000110,PAT00850,DOC0087,2025-09-05,Acute upper respiratory infection,Lifestyle modification,Yes,2025-09-19
+REC000658,APT000216,PAT00067,DOC0044,2026-03-08,Lower back pain,Further diagnostic tests,No,
+REC000659,APT001683,PAT01182,DOC0108,2025-04-23,Lower back pain,Further diagnostic tests,No,
+REC000660,APT000890,PAT00253,DOC0112,2026-06-23,Supervision of normal pregnancy,Lifestyle modification,No,
+REC000661,APT001410,PAT00979,DOC0018,2025-11-19,Type 2 diabetes mellitus,Counseling sessions,Yes,2026-01-18
+REC000662,APT000714,PAT00340,DOC0115,2025-06-27,General medical examination,Minor procedure advised,No,
+REC000663,APT001666,PAT00942,DOC0023,2026-04-21,Supervision of normal pregnancy,Further diagnostic tests,No,
+REC000664,APT001512,PAT00598,DOC0096,2026-02-17,Generalized anxiety disorder,Follow-up consultation,No,
+REC000665,APT000777,PAT00415,DOC0093,2025-07-04,Repeat prescription management,Specialist referral,No,
+REC000666,APT000928,PAT00788,DOC0119,2025-02-18,Repeat prescription management,Counseling sessions,No,
+REC000667,APT001421,PAT00931,DOC0040,2025-10-03,Repeat prescription management,Routine monitoring,No,
+REC000668,APT001206,PAT00706,DOC0108,2025-06-15,Type 2 diabetes mellitus,Diet and exercise plan,No,
+REC000669,APT002010,PAT01010,DOC0101,2026-01-17,Supervision of normal pregnancy,Physical therapy,No,
+REC000670,APT000219,PAT00086,DOC0014,2025-02-06,"Chest pain, unspecified",Diet and exercise plan,Yes,2025-03-08
+REC000671,APT001238,PAT01089,DOC0031,2025-08-19,Essential hypertension,Routine monitoring,No,
+REC000672,APT001552,PAT00038,DOC0045,2025-04-11,Type 2 diabetes mellitus,Minor procedure advised,Yes,2025-04-18
+REC000673,APT000423,PAT00362,DOC0043,2026-06-04,"Chest pain, unspecified",Diet and exercise plan,Yes,2026-08-03
+REC000674,APT001295,PAT01017,DOC0052,2025-11-01,Arthralgia,Specialist referral,Yes,2025-11-15
+REC000675,APT000723,PAT00751,DOC0117,2025-09-24,Type 2 diabetes mellitus,Physical therapy,No,
+REC000676,APT001565,PAT00787,DOC0033,2026-05-08,Supervision of normal pregnancy,Medication and rest,No,
+REC000677,APT000152,PAT00745,DOC0050,2026-04-09,Essential hypertension,Diet and exercise plan,No,
+REC000678,APT001672,PAT00797,DOC0074,2025-09-19,Type 2 diabetes mellitus,Physical therapy,Yes,2025-09-26
+REC000679,APT001706,PAT00004,DOC0026,2026-04-05,Immunization encounter,Minor procedure advised,No,
+REC000680,APT000985,PAT00872,DOC0072,2025-07-06,Dermatitis,Physical therapy,Yes,2025-09-04
+REC000681,APT000372,PAT00563,DOC0045,2026-04-15,Acute upper respiratory infection,Specialist referral,No,
+REC000682,APT002089,PAT00291,DOC0013,2026-04-25,Supervision of normal pregnancy,Routine monitoring,No,
+REC000683,APT001163,PAT00177,DOC0041,2025-07-10,Otitis media,Routine monitoring,Yes,2025-09-08
+REC000684,APT001595,PAT00447,DOC0115,2026-06-26,Generalized anxiety disorder,Lifestyle modification,No,
+REC000685,APT001662,PAT00725,DOC0002,2025-01-16,Immunization encounter,Specialist referral,No,
+REC000686,APT000359,PAT00816,DOC0118,2025-03-21,Immunization encounter,Further diagnostic tests,No,
+REC000687,APT000606,PAT00952,DOC0058,2025-06-06,Migraine without aura,Lifestyle modification,Yes,2025-06-13
+REC000688,APT000829,PAT00580,DOC0033,2025-09-08,Supervision of normal pregnancy,Minor procedure advised,No,
+REC000689,APT001669,PAT00904,DOC0003,2025-03-30,Type 2 diabetes mellitus,Physical therapy,Yes,2025-04-13
+REC000690,APT001694,PAT00422,DOC0024,2025-03-04,Repeat prescription management,Routine monitoring,No,
+REC000691,APT001352,PAT00350,DOC0021,2026-01-03,Migraine without aura,Lifestyle modification,Yes,2026-01-10
+REC000692,APT001173,PAT01123,DOC0029,2025-09-15,Supervision of normal pregnancy,Further diagnostic tests,Yes,2025-10-30
+REC000693,APT001269,PAT00410,DOC0049,2025-02-09,Immunization encounter,Physical therapy,No,
+REC000694,APT002024,PAT00793,DOC0029,2025-02-17,Arthralgia,Medication and rest,No,
+REC000695,APT002088,PAT00506,DOC0047,2025-09-03,Dermatitis,Minor procedure advised,Yes,2025-09-10
+REC000696,APT000870,PAT00132,DOC0052,2025-10-02,"Chest pain, unspecified",Specialist referral,No,
+REC000697,APT000385,PAT00721,DOC0073,2026-03-18,Repeat prescription management,Counseling sessions,No,
+REC000698,APT000246,PAT00724,DOC0070,2025-02-15,General medical examination,Medication and rest,No,
+REC000699,APT000918,PAT01171,DOC0044,2025-05-04,Repeat prescription management,Follow-up consultation,No,
+REC000700,APT002155,PAT00549,DOC0065,2025-07-23,"Chest pain, unspecified",Counseling sessions,Yes,2025-09-06

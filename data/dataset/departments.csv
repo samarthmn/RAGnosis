@@ -1,0 +1,13 @@
+department_id,department_name,floor,phone_extension
+DEP001,Cardiology,2,2001
+DEP002,Dermatology,1,2002
+DEP003,Endocrinology,5,2003
+DEP004,ENT,4,2004
+DEP005,General Medicine,4,2005
+DEP006,Gynecology,3,2006
+DEP007,Neurology,2,2007
+DEP008,Orthopedics,2,2008
+DEP009,Pediatrics,7,2009
+DEP010,Psychiatry,1,2010
+DEP011,Radiology,1,2011
+DEP012,Urology,2,2012

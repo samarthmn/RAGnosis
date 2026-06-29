@@ -3,99 +3,99 @@
   "datasets": [
     {
       "name": "AllergyIntolerance",
-      "count": 1118
+      "count": 16
     },
     {
       "name": "CarePlan",
-      "count": 3881
+      "count": 26
     },
     {
       "name": "CareTeam",
-      "count": 3881
+      "count": 26
     },
     {
       "name": "Claim",
-      "count": 128235
+      "count": 1163
     },
     {
       "name": "Condition",
-      "count": 42912
+      "count": 212
     },
     {
       "name": "Device",
-      "count": 7052
+      "count": 40
     },
     {
       "name": "DiagnosticReport",
-      "count": 139551
+      "count": 884
     },
     {
       "name": "DocumentReference",
-      "count": 68437
+      "count": 337
     },
     {
       "name": "Encounter",
-      "count": 68437
+      "count": 337
     },
     {
       "name": "ExplanationOfBenefit",
-      "count": 128235
+      "count": 1163
     },
     {
       "name": "ImagingStudy",
-      "count": 6057
+      "count": 97
     },
     {
       "name": "Immunization",
-      "count": 16418
+      "count": 98
     },
     {
       "name": "Location",
-      "count": 843
+      "count": 29
     },
     {
       "name": "Medication",
-      "count": 21369
+      "count": 636
     },
     {
       "name": "MedicationAdministration",
-      "count": 21369
+      "count": 636
     },
     {
       "name": "MedicationRequest",
-      "count": 59798
+      "count": 826
     },
     {
       "name": "Observation",
-      "count": 623864
+      "count": 5811
     },
     {
       "name": "Organization",
-      "count": 842
+      "count": 28
     },
     {
       "name": "Patient",
-      "count": 1158
+      "count": 7
     },
     {
       "name": "Practitioner",
-      "count": 842
+      "count": 28
     },
     {
       "name": "PractitionerRole",
-      "count": 842
+      "count": 28
     },
     {
       "name": "Procedure",
-      "count": 195631
+      "count": 1606
     },
     {
       "name": "Provenance",
-      "count": 1158
+      "count": 7
     },
     {
       "name": "SupplyDelivery",
-      "count": 32309
+      "count": 156
     }
   ]
 }
