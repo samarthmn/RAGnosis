@@ -1,0 +1,19 @@
+{
+  "name": "1",
+  "stages": [
+    "chunk",
+    "ingest",
+    "evaluate"
+  ],
+  "pipeline": "basic",
+  "embedding_model": "all-minilm:l6-v2",
+  "chat_model": "deepseek-r1:1.5b",
+  "preprocess_model": "gemma4:e4b",
+  "rewrite_model": "gemma4:e4b",
+  "rerank_model": "BAAI/bge-reranker-v2-m3",
+  "judge_model": "deepseek-r1:1.5b",
+  "k": 10,
+  "limit": null,
+  "questions": 30,
+  "db_dir": "vector_db/basic"
+}

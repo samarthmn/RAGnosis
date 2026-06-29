@@ -5,7 +5,7 @@ departments, appointments, medical records, prescriptions and billing). Two pipe
 are provided and can be compared head-to-head with built-in retrieval and answer evals:
 
 - **basic** — recursive character chunking → embed → similarity search → answer.
-- **advanced** — recursive chunking → embed → query rewrite + dual retrieval + LLM re-rank → answer.
+- **advanced** — recursive chunking → embed → query rewrite + dual retrieval + cross-encoder re-rank → answer.
 
 The pipeline code lives under `app/`. The raw CSV dataset and the evaluation question
 bank live under `data/`. Vector stores and eval results are generated under `app/`.
@@ -71,16 +71,38 @@ uv run python -m app.common.ingest basic --embedding_model="all-minilm:l6-v2"
 
 ### Override keys
 
-Only the embedding and chat models are overridable from the CLI. The preprocess,
-rewrite, re-rank and judge models are constants (`PREPROCESS_MODEL`, `REWRITE_MODEL`,
-`RERANK_MODEL`, `JUDGE_MODEL` in `app/common/models.py`).
+The embedding model, chat model, and advanced re-ranker are overridable from the CLI.
+The preprocess, rewrite and judge models are constants (`PREPROCESS_MODEL`,
+`REWRITE_MODEL`, `JUDGE_MODEL` in `app/common/models.py`).
 
 | Key | Alias | Used by | Applies to |
 | --- | --- | --- | --- |
 | `embedding_model` | `embedding` | ingest | embedding the chunks |
 | `chat_model` | `chat` | evaluator | generating answers |
+| `rerank_model` | `rerank` | evaluator (advanced) | re-ranking retrieved chunks |
 
 Unknown keys raise an error on ingest/chunking.
+
+### Re-ranking (advanced)
+
+The advanced pipeline re-ranks the merged retrieval results before answering. The
+re-ranker is chosen purely by its name (`RERANK_MODEL`, default
+`BAAI/bge-reranker-v2-m3`), and can be one of two kinds:
+
+- **`BAAI/bge-reranker-v2-m3`** (default) — a cross-encoder that scores each
+  (query, chunk) pair directly. It runs **locally / in-process** via
+  [FlagEmbedding](https://huggingface.co/BAAI/bge-reranker-v2-m3) (not over Ollama). The
+  ~600MB weights download from the Hugging Face Hub on first use and cache under
+  `~/.cache/huggingface`; `use_fp16` is enabled only on CUDA. See `app/advanced/reranker.py`.
+- **any `LLM_MODELS` tag** (e.g. `gemma4:e4b`) — prompts that chat model over Ollama to
+  order the chunk ids.
+
+```bash
+uv run python -m app.evaluator advanced                  # local bge cross-encoder (default)
+uv run python -m app.evaluator advanced rerank=gemma4:e4b  # LLM-based re-rank over Ollama
+```
+
+The resolved reranker is recorded in each run's `config.json` (`rerank_model`).
 
 > An `embedding` change only takes effect at **ingest** time. Retrieval embeds queries
 > with whatever model the vector DB was built with, so re-run `ingest` after changing
@@ -172,12 +194,13 @@ Each line is one JSON object. Lines starting with `//` or `#` and blank lines ar
 | `embedding_model` | no | default | Embedding used at ingest + query time. |
 | `chat_model` | no | default | Answer-generation model. |
 | `chunk_size` / `chunk_overlap` | no | 1000 / 200 | Recursive chunking, in chars. |
+| `rerank_model` | no | `BAAI/bge-reranker-v2-m3` | Advanced re-ranker: the bge cross-encoder, or an `LLM_MODELS` tag. Alias: `rerank`. |
 | `limit` | no | all | Max questions, stratified across difficulties. |
 | `k` | no | 10 | Top-k documents retrieved. |
 | `include_answers` | no | true | Set `false` for retrieval-only runs. |
 
-Only `embedding_model` and `chat_model` vary per run; preprocess/rewrite/re-rank/judge
-models are constants. Use `"stages": ["evaluate"]` to re-score against an existing DB
+`embedding_model`, `chat_model` and (advanced) `rerank_model` vary per run;
+preprocess/rewrite/judge models are constants. Use `"stages": ["evaluate"]` to re-score against an existing DB
 without rebuilding, or `["chunk","ingest"]` to (re)build a DB without evaluating. A
 failing run is reported and skipped so the rest of the batch still completes; a final
 summary lists where each run was saved.
@@ -225,7 +248,7 @@ Defaults live in `SELECTED_MODELS` in `app/common/models.py`.
     ├── multirun.jsonl       # batch run definitions
     ├── common/              # shared: models, chat, embeddings, rag, paths, documents, chunks, chunking, ingest
     ├── basic/               # basic implementation (retrieval + answer)
-    ├── advanced/            # advanced preprocess + implementation (rewrite + rerank)
+    ├── advanced/            # advanced preprocess + implementation (rewrite + rerank); reranker.py = local bge cross-encoder
     ├── vector_db/           # Chroma stores (created by ingest)
     └── results/             # numbered eval runs (created by evaluator)
 ```

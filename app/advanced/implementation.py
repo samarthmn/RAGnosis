@@ -3,9 +3,15 @@ from __future__ import annotations
 from langchain_core.documents import Document
 from pydantic import BaseModel, Field
 
+from app.advanced.reranker import rerank_local
 from app.common.chat import chat, chat_structured
 from app.common.ingest import db_path_for
-from app.common.models import RERANK_MODEL, REWRITE_MODEL, selected_chat_model
+from app.common.models import (
+    REWRITE_MODEL,
+    is_local_reranker,
+    selected_chat_model,
+    selected_rerank_model,
+)
 from app.common.rag import SYSTEM_PROMPT, format_context, history_to_messages
 from app.common.rag import load_vectorstore as load_common_vectorstore
 
@@ -57,8 +63,20 @@ def merge_chunks(primary: list[Document], secondary: list[Document]) -> list[Doc
 
 
 def rerank(question: str, chunks: list[Document]) -> list[Document]:
+    """Reorder retrieved chunks by relevance using the selected re-ranker.
+
+    Default is the local ``BAAI/bge-reranker-v2-m3`` cross-encoder; pass an
+    ``LLM_MODELS`` tag (e.g. ``rerank=gemma4:e4b``) to rank with a chat model instead.
+    """
     if len(chunks) <= 1:
         return chunks
+    model = selected_rerank_model("advanced")
+    if is_local_reranker(model):
+        return rerank_local(question, chunks, model_name=model)
+    return rerank_llm(question, chunks, model=model)
+
+
+def rerank_llm(question: str, chunks: list[Document], *, model: str) -> list[Document]:
     prompt_parts = [
         f"The user asked:\n\n{question}\n\nRank the chunks by relevance, most relevant first. Include every chunk id exactly once.\n\nChunks:\n"
     ]
@@ -72,7 +90,7 @@ def rerank(question: str, chunks: list[Document]) -> list[Document]:
         {"role": "user", "content": "\n".join(prompt_parts)},
     ]
     try:
-        order = chat_structured(messages, RankOrder, model=RERANK_MODEL).order
+        order = chat_structured(messages, RankOrder, model=model).order
         reranked = [chunks[index - 1] for index in order if 1 <= index <= len(chunks)]
         missing = [
             chunk

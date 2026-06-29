@@ -53,9 +53,9 @@ class SelectedPipelineConfig(TypedDict):
 
 EmbeddingModelName = Literal[
     "all-minilm:l6-v2",
-    "bge-large:latest",
     "qwen3-embedding:latest",
-    "text-embedding-3-small",
+    "bge-large:latest",
+    # "text-embedding-3-small",
 ]
 
 PipelineModelType = Literal[
@@ -137,8 +137,19 @@ LLM_MODELS: dict[str, LlmModelConfig] = {
 # Only embedding_model and chat_model differ per pipeline (see SELECTED_MODELS).
 PREPROCESS_MODEL = LLM_MODELS["gemma4:e4b"]["model"]
 REWRITE_MODEL = LLM_MODELS["gemma4:e4b"]["model"]
-RERANK_MODEL = LLM_MODELS["gemma4:e4b"]["model"]
 JUDGE_MODEL = LLM_MODELS["deepseek-r1:1.5b"]["model"]
+
+# The advanced pipeline's re-ranker. Two kinds are accepted, picked purely by the name:
+#   - "BAAI/bge-reranker-v2-m3" — a local cross-encoder, run in-process via FlagEmbedding
+#     (downloaded from the Hugging Face Hub on first use; see app/advanced/reranker.py).
+#   - any LLM_MODELS tag (e.g. "gemma4:e4b") — prompt-based ranking served over Ollama.
+# Override per run with rerank=<model>. Default is the local cross-encoder.
+RERANK_MODEL = "BAAI/bge-reranker-v2-m3"
+
+
+def is_local_reranker(model: str) -> bool:
+    """True for a local cross-encoder reranker (a HF repo id), False for an LLM tag."""
+    return model.startswith("BAAI/bge-reranker")
 
 SELECTED_MODELS: dict[str, SelectedPipelineConfig] = {
     "basic": {
@@ -166,6 +177,9 @@ CLI_MODEL_KEYS: dict[str, PipelineModelType] = {
     "embedding_model": "embedding_model",
     "chat": "chat_model",
     "chat_model": "chat_model",
+    # Advanced-only: the re-ranker (the bge cross-encoder id, or an LLM_MODELS tag).
+    "rerank": "rerank_model",
+    "rerank_model": "rerank_model",
 }
 
 
@@ -246,13 +260,18 @@ def selected_config(pipeline: str) -> SelectedPipelineConfig:
         ) from exc
 
 
+def selected_rerank_model(pipeline: str) -> str:
+    """Resolve the re-ranker for ``pipeline`` (CLI override → ``RERANK_MODEL``)."""
+    return model_override(pipeline, "rerank_model") or RERANK_MODEL
+
+
 def selected_pipeline_models(pipeline: str) -> dict[PipelineModelType, str | None]:
     return {
         "embedding_model": selected_embedding_model(pipeline),
         "chat_model": selected_chat_model(pipeline),
         "preprocess_model": PREPROCESS_MODEL,
         "rewrite_model": REWRITE_MODEL,
-        "rerank_model": RERANK_MODEL,
+        "rerank_model": selected_rerank_model(pipeline),
         "judge_model": JUDGE_MODEL,
     }
 
