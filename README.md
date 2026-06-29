@@ -211,7 +211,9 @@ summary lists where each run was saved.
 Each run is saved to an auto-incremented folder under `app/results/<n>/`:
 
 - `config.json` — pipeline, resolved models, `k`, `limit`, question count.
-- `evals.json` — per-difficulty retrieval and answer metrics (`NaN` is written as `null`).
+- `evals.json` — retrieval and answer metrics broken down by difficulty
+  (`retrieval`, `answer`) and by question category (`retrieval_by_category`,
+  `answer_by_category`); `NaN` is written as `null`.
 
 ---
 

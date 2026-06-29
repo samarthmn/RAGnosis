@@ -159,8 +159,14 @@ def run_one(record: dict[str, Any], index: int, total: int) -> Path | None:
 
     answers = evaluator.answer_summary(frames["answer"])
     if not answers.empty:
-        print(f"\n{name} answer summary")
+        print(f"\n{name} answer summary (by difficulty)")
         print(answers.to_string(index=False))
+        by_category = evaluator.answer_summary(
+            frames["answer"], group_by="category", order=()
+        )
+        if not by_category.empty:
+            print(f"\n{name} answer summary (by category)")
+            print(by_category.to_string(index=False))
 
     extra_config: dict[str, Any] = {"name": name, "stages": stages}
     for field in CHUNK_FIELDS:

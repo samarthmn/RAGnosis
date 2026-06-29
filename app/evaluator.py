@@ -272,28 +272,44 @@ def implementation_for(pipeline: str) -> Any:
     raise ValueError("pipeline must be one of: basic, advanced")
 
 
-def summarize(results: pd.DataFrame, metrics: list[str]) -> pd.DataFrame:
-    if results.empty:
+def summarize(
+    results: pd.DataFrame,
+    metrics: list[str],
+    *,
+    group_by: str = "difficulty",
+    order: tuple[str, ...] = DIFFICULTIES,
+) -> pd.DataFrame:
+    """Mean each metric within each ``group_by`` value (difficulty or category).
+
+    ``order`` lists known group values to sort first; any unlisted values
+    (e.g. arbitrary categories) sort alphabetically after them.
+    """
+    if results.empty or group_by not in results:
         return pd.DataFrame()
     aggregations = {metric: (metric, "mean") for metric in metrics if metric in results}
-    summary = results.groupby("difficulty", as_index=False).agg(
+    summary = results.groupby(group_by, as_index=False).agg(
         questions=("id", "count"),
         **aggregations,
     )
-    order = {difficulty: index for index, difficulty in enumerate(DIFFICULTIES)}
-    summary["_order"] = summary["difficulty"].map(
-        lambda value: order.get(value, len(order))
-    )
-    return summary.sort_values("_order").drop(columns="_order").reset_index(drop=True)
+    rank = {value: index for index, value in enumerate(order)}
+    summary["_rank"] = summary[group_by].map(lambda value: rank.get(value, len(rank)))
+    summary = summary.sort_values(["_rank", group_by]).drop(columns="_rank")
+    return summary.reset_index(drop=True)
 
 
 def print_retrieval_summary(label: str, retrieval: pd.DataFrame) -> None:
-    """Print the retrieval (MRR/nDCG/coverage) summary per difficulty."""
-    print(f"\n{label} retrieval summary", flush=True)
+    """Print the retrieval (MRR/nDCG/coverage) summary per difficulty and category."""
+    print(f"\n{label} retrieval summary (by difficulty)", flush=True)
     print(
         summarize(retrieval, RETRIEVAL_SUMMARY_METRICS).to_string(index=False),
         flush=True,
     )
+    by_category = summarize(
+        retrieval, RETRIEVAL_SUMMARY_METRICS, group_by="category", order=()
+    )
+    if not by_category.empty:
+        print(f"\n{label} retrieval summary (by category)", flush=True)
+        print(by_category.to_string(index=False), flush=True)
 
 
 def evaluate_pipeline(
@@ -362,13 +378,18 @@ def evaluate(
     }
 
 
-def answer_summary(answer: pd.DataFrame) -> pd.DataFrame:
-    """Per-difficulty answer summary with an ``overall`` mean across judge scores."""
+def answer_summary(
+    answer: pd.DataFrame,
+    *,
+    group_by: str = "difficulty",
+    order: tuple[str, ...] = DIFFICULTIES,
+) -> pd.DataFrame:
+    """Answer summary (grouped by difficulty or category) with an ``overall`` mean."""
     if answer.empty:
         return pd.DataFrame()
     scored = answer.copy()
     scored["overall"] = scored[["accuracy", "completeness", "relevance"]].mean(axis=1)
-    return summarize(scored, ANSWER_SUMMARY_METRICS)
+    return summarize(scored, ANSWER_SUMMARY_METRICS, group_by=group_by, order=order)
 
 
 def _json_number(column: str, value: Any) -> float | int | None:
@@ -379,14 +400,16 @@ def _json_number(column: str, value: Any) -> float | int | None:
     return None if math.isnan(number) else round(number, 6)
 
 
-def _summary_records(summary: pd.DataFrame) -> dict[str, dict[str, Any]]:
-    """Convert a per-difficulty summary frame into a JSON-friendly nested dict."""
+def _summary_records(
+    summary: pd.DataFrame, *, key: str = "difficulty"
+) -> dict[str, dict[str, Any]]:
+    """Convert a grouped summary frame into a JSON-friendly nested dict keyed by ``key``."""
     if summary.empty:
         return {}
     records: dict[str, dict[str, Any]] = {}
     for row in summary.to_dict(orient="records"):
-        difficulty = row.pop("difficulty")
-        records[difficulty] = {
+        group = row.pop(key)
+        records[group] = {
             column: _json_number(column, value) for column, value in row.items()
         }
     return records
@@ -438,6 +461,16 @@ def save_results(
     evals = {
         "retrieval": _summary_records(summarize(retrieval, RETRIEVAL_SUMMARY_METRICS)),
         "answer": _summary_records(answer_summary(answer)),
+        "retrieval_by_category": _summary_records(
+            summarize(
+                retrieval, RETRIEVAL_SUMMARY_METRICS, group_by="category", order=()
+            ),
+            key="category",
+        ),
+        "answer_by_category": _summary_records(
+            answer_summary(answer, group_by="category", order=()),
+            key="category",
+        ),
     }
     (run_dir / "evals.json").write_text(json.dumps(evals, indent=2))
 
@@ -474,8 +507,14 @@ def main() -> None:
         # answer judging). Here we just add the answer summary and persist.
         answers = answer_summary(frames["answer"])
         if not answers.empty:
-            print(f"\n{pipeline_name.upper()} answer summary")
+            print(f"\n{pipeline_name.upper()} answer summary (by difficulty)")
             print(answers.to_string(index=False))
+            by_category = answer_summary(
+                frames["answer"], group_by="category", order=()
+            )
+            if not by_category.empty:
+                print(f"\n{pipeline_name.upper()} answer summary (by category)")
+                print(by_category.to_string(index=False))
 
         save_results(pipeline_name, frames, k=args.k, limit=args.limit)
 
