@@ -135,9 +135,9 @@ LLM_MODELS: dict[str, LlmModelConfig] = {
 
 # Shared across every pipeline — these never vary between basic and advanced.
 # Only embedding_model and chat_model differ per pipeline (see SELECTED_MODELS).
-PREPROCESS_MODEL = LLM_MODELS["gemma4:e4b"]["model"]
+PREPROCESS_MODEL = LLM_MODELS["gpt-oss:20b"]["model"]
 REWRITE_MODEL = LLM_MODELS["gemma4:e4b"]["model"]
-JUDGE_MODEL = LLM_MODELS["deepseek-r1:1.5b"]["model"]
+JUDGE_MODEL = LLM_MODELS["gemma4:e4b"]["model"]
 
 # The advanced pipeline's re-ranker. Two kinds are accepted, picked purely by the name:
 #   - "BAAI/bge-reranker-v2-m3" — a local cross-encoder, run in-process via FlagEmbedding
@@ -151,9 +151,10 @@ def is_local_reranker(model: str) -> bool:
     """True for a local cross-encoder reranker (a HF repo id), False for an LLM tag."""
     return model.startswith("BAAI/bge-reranker")
 
+
 SELECTED_MODELS: dict[str, SelectedPipelineConfig] = {
     "basic": {
-        "embedding_model": EMBEDDING_MODELS["bge-large:latest"],
+        "embedding_model": EMBEDDING_MODELS["all-minilm:l6-v2"],
         "chat_model": LLM_MODELS["gemma4:e4b"],
     },
     "advanced": {

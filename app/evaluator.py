@@ -474,7 +474,18 @@ def save_results(
     }
     (run_dir / "evals.json").write_text(json.dumps(evals, indent=2))
 
-    print(f"\nSaved {pipeline} results to {run_dir}/ (config.json, evals.json)")
+    saved_files = ["config.json", "evals.json"]
+    # Project the vector store to 2D/3D and save the plots alongside the evals.
+    # A visualization failure must not lose the (already written) results.
+    try:
+        from app.common.visualize import visualize
+
+        plots = visualize(pipeline, run_dir)
+        saved_files.extend(path.name for path in plots)
+    except Exception as exc:
+        print(f"[warn] {pipeline}: vector visualization skipped: {exc}")
+
+    print(f"\nSaved {pipeline} results to {run_dir}/ ({', '.join(saved_files)})")
     return run_dir
 
 

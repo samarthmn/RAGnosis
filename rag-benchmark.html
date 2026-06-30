@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="dark" />
+<title>RAGnosis · Benchmark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0e1116;
+    --bg-soft: #161b22;
+    --panel: #1b222c;
+    --panel-2: #212a36;
+    --border: #2a3441;
+    --text: #e6edf3;
+    --muted: #9aa6b6;
+    --faint: #717d8d;
+    --accent: #4dd0c4;
+    --accent-2: #7c9cff;
+    --basic: #7c9cff;
+    --advanced: #4dd0c4;
+    --good: #38b48b;
+    --mid: #d8b24a;
+    --bad: #e08585;
+    --shadow: 0 1px 0 rgba(255,255,255,.03), 0 8px 28px rgba(0,0,0,.45);
+    --radius: 14px;
+    --sans: "Fira Sans", ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "Fira Code", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+    --t-fast: 130ms;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  /* Crisp tabular figures for all data; mono ligatures off so digits read cleanly. */
+  .num, .heat, .kpi .value, .cv, .mval, .bk-row .lab, .kv .v, .run-id,
+  thead th, td { font-feature-settings: "tnum" 1, "calt" 0; }
+  body {
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(124,156,255,.08), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(77,208,196,.07), transparent 55%),
+      var(--bg);
+    color: var(--text);
+    font: 14px/1.5 var(--sans);
+    -webkit-font-smoothing: antialiased;
+    padding: 0 0 80px;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+
+  /* Data values in mono for tabular alignment (Data-Dense Dashboard style). */
+  .heat, .kpi .value, .cv, .mval, .kv .v, tbody td { font-family: var(--mono); }
+  /* Visible keyboard focus on every interactive element (a11y: focus-states). */
+  :focus { outline: none; }
+  :focus-visible { outline: none; box-shadow: var(--focus); border-radius: 8px; }
+  thead th:focus-visible { box-shadow: inset var(--focus); }
+  tbody tr:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+  /* Honour reduced-motion: keep meaning, drop movement (a11y: reduced-motion). */
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: .01ms !important; animation-duration: .01ms !important; scroll-behavior: auto !important; }
+  }
+
+  header.top {
+    position: sticky; top: 0; z-index: 20;
+    backdrop-filter: blur(10px);
+    background: linear-gradient(180deg, rgba(14,17,22,.92), rgba(14,17,22,.72));
+    border-bottom: 1px solid var(--border);
+  }
+  .top-inner { display: flex; align-items: center; gap: 16px; padding: 16px 24px; max-width: 1240px; margin: 0 auto; }
+  .logo {
+    width: 34px; height: 34px; border-radius: 9px; flex: none;
+    background: conic-gradient(from 200deg, var(--accent), var(--accent-2), var(--accent));
+    box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 6px 18px rgba(77,208,196,.25);
+    position: relative;
+  }
+  .logo::after {
+    content: ""; position: absolute; inset: 8px; border-radius: 5px;
+    background: var(--bg); box-shadow: inset 0 0 0 2px rgba(255,255,255,.06);
+  }
+  h1 { font-size: 17px; margin: 0; letter-spacing: .2px; }
+  .sub { color: var(--muted); font-size: 12.5px; }
+  .top-spacer { flex: 1; }
+  .stamp { color: var(--faint); font-size: 12px; text-align: right; }
+
+  section { margin-top: 28px; }
+  .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); margin: 0 0 12px; }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 22px; }
+  .kpi {
+    background: linear-gradient(180deg, var(--panel), var(--bg-soft));
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px 16px 14px; box-shadow: var(--shadow); position: relative; overflow: hidden;
+    transition: border-color var(--t-fast), transform var(--t-fast);
+  }
+  .kpi:not(:first-child)::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(var(--accent), var(--accent-2)); opacity: .65;
+  }
+  .kpi:hover { border-color: var(--faint); transform: translateY(-1px); }
+  .kpi .label { color: var(--muted); font-size: 12px; }
+  .kpi .value { font-size: 26px; font-weight: 600; margin-top: 6px; letter-spacing: .3px; }
+  .kpi .meta { color: var(--faint); font-size: 11.5px; margin-top: 4px; }
+  .kpi .spark { position: absolute; right: 14px; top: 14px; font-size: 11px; color: var(--accent); }
+
+  .toolbar {
+    display: flex; flex-wrap: wrap; gap: 16px 22px; align-items: flex-end;
+    background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 16px; box-shadow: var(--shadow);
+  }
+  .filter-group { display: flex; flex-direction: column; gap: 7px; }
+  .filter-group > .gl { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--faint); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    border: 1px solid var(--border); background: var(--panel-2); color: var(--muted);
+    padding: 5px 11px; border-radius: 999px; font-size: 12.5px; cursor: pointer;
+    user-select: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast);
+    white-space: nowrap; font-family: inherit; line-height: 1.4;
+  }
+  .chip:hover { border-color: var(--faint); color: var(--text); }
+  .chip.on { background: rgba(77,208,196,.16); border-color: var(--accent); color: var(--text); }
+  .chip.on.pipe-basic { background: rgba(124,156,255,.18); border-color: var(--basic); }
+  .chip.on.pipe-advanced { background: rgba(77,208,196,.18); border-color: var(--advanced); }
+  .toolbar .right { margin-left: auto; display: flex; gap: 16px; align-items: flex-end; }
+  select, .reset {
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+    border-radius: 9px; padding: 7px 10px; font-size: 13px; cursor: pointer;
+    font-family: inherit; transition: border-color var(--t-fast);
+  }
+  select:hover { border-color: var(--faint); }
+  .reset:hover { border-color: var(--faint); }
+
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+  }
+  .card .card-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+  .card .card-head h3 { margin: 0; font-size: 14px; }
+  .count-pill { font-size: 12px; color: var(--muted); background: var(--panel-2); border: 1px solid var(--border); border-radius: 999px; padding: 3px 9px; }
+  .seg { display: inline-flex; background: var(--panel-2); border: 1px solid var(--border); border-radius: 9px; padding: 2px; gap: 2px; }
+  .seg button { background: transparent; border: 0; color: var(--muted); padding: 5px 12px; border-radius: 7px; font-size: 12.5px; cursor: pointer; font-weight: 600; }
+  .seg button:hover { color: var(--text); }
+  .seg button.on { background: rgba(77,208,196,.18); color: var(--text); box-shadow: inset 0 0 0 1px var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    position: sticky; top: 0; background: var(--bg-soft); z-index: 5;
+    text-align: right; padding: 10px 12px; font-size: 11px; font-weight: 600;
+    color: var(--muted); border-bottom: 1px solid var(--border); cursor: pointer;
+    white-space: nowrap; text-transform: uppercase; letter-spacing: .05em;
+    transition: color var(--t-fast), background var(--t-fast); user-select: none;
+  }
+  thead th[data-key]:hover { color: var(--text); background: var(--panel-2); }
+  thead th.lt { text-align: left; cursor: default; }
+  thead th .grp { display: block; font-size: 9.5px; color: var(--faint); letter-spacing: .08em; }
+  thead th.sorted { color: var(--accent); }
+  thead th .arrow { opacity: .8; font-size: 10px; color: var(--accent); }
+  tbody td { padding: 9px 12px; text-align: right; border-bottom: 1px solid rgba(42,52,65,.6); font-variant-numeric: tabular-nums; }
+  tbody td.lt { text-align: left; }
+  tbody tr.run-row { cursor: pointer; transition: background var(--t-fast); }
+  tbody tr.run-row:hover { background: rgba(124,156,255,.08); }
+  tbody tr.run-row:hover .heat { filter: brightness(1.06); }
+  tbody tr.run-row.open { background: rgba(124,156,255,.11); }
+  .runtag { display: inline-flex; align-items: center; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .dot.basic { background: var(--basic); }
+  .dot.advanced { background: var(--advanced); }
+  .run-id { font-weight: 600; }
+  .run-src { color: var(--faint); font-size: 11.5px; }
+  .pill {
+    display: inline-block; font-size: 11.5px; padding: 2px 8px; border-radius: 6px;
+    background: var(--panel-2); border: 1px solid var(--border); color: var(--muted);
+  }
+  .pill.basic { color: var(--basic); border-color: rgba(124,156,255,.4); }
+  .pill.advanced { color: var(--advanced); border-color: rgba(77,208,196,.4); }
+  .heat { border-radius: 6px; padding: 4px 8px; display: inline-block; min-width: 52px; color: #0c0f14; font-weight: 600; transition: filter var(--t-fast); }
+  .best-col { box-shadow: inset 0 0 0 1.5px var(--accent); border-radius: 6px; }
+  .heat.err { background: rgba(211,107,107,.16); color: var(--bad); box-shadow: inset 0 0 0 1px var(--bad); font-weight: 700; letter-spacing: .04em; cursor: help; }
+
+  .detail td { background: var(--bg-soft); padding: 0; }
+  .detail-inner { padding: 18px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .detail-inner h4 { margin: 0 0 12px; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+  .bk-row { display: grid; grid-template-columns: 92px 1fr; align-items: center; gap: 10px; margin-bottom: 9px; }
+  .bk-row .lab { font-size: 12px; color: var(--muted); text-transform: capitalize; }
+  .bars { display: flex; flex-direction: column; gap: 5px; }
+  .bar-line { display: grid; grid-template-columns: 64px 1fr 42px; align-items: center; gap: 8px; font-size: 11.5px; }
+  .bar-line .mlab { color: var(--faint); text-align: right; }
+  .track { height: 8px; background: var(--panel-2); border-radius: 6px; overflow: hidden; }
+  .fill { display: block; height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+  .bar-line .mval { color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+  .bar-line .mval.err { color: var(--bad); font-weight: 700; cursor: help; }
+  .detail-meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; padding-top: 6px; border-top: 1px dashed var(--border); margin-top: 4px; color: var(--muted); font-size: 12px; }
+  .detail-meta b { color: var(--text); font-weight: 600; }
+  .viz-links { display: flex; gap: 8px; margin-left: auto; }
+  .viz-links a {
+    border: 1px solid var(--accent); color: var(--accent); border-radius: 8px;
+    padding: 5px 11px; font-size: 12px; font-weight: 600;
+  }
+  .viz-links a:hover { background: rgba(77,208,196,.14); text-decoration: none; }
+  .viz-links a.off { border-color: var(--border); color: var(--faint); cursor: not-allowed; pointer-events: none; }
+
+  .compare { display: grid; grid-template-columns: 1fr; gap: 10px; padding: 16px; }
+  .cmp-row { display: grid; grid-template-columns: 220px 1fr 56px; align-items: center; gap: 12px; }
+  .cmp-row .cl { font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cmp-row .ct { height: 18px; background: var(--panel-2); border-radius: 7px; overflow: hidden; }
+  .cmp-row .cf { display: block; height: 100%; border-radius: 7px; min-width: 2px; }
+  .cmp-row .cv { text-align: right; font-variant-numeric: tabular-nums; font-size: 12.5px; }
+
+  .constants { display: flex; flex-direction: column; gap: 10px; padding: 16px; }
+  .const-set {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px;
+    padding: 11px 13px; border: 1px solid var(--border); border-radius: 11px;
+    background: linear-gradient(180deg, var(--panel-2), var(--bg-soft));
+  }
+  .const-set .set-name { font-weight: 650; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; }
+  .const-set .set-name .badge { font-size: 11px; color: var(--muted); background: var(--panel); border: 1px solid var(--border); border-radius: 999px; padding: 2px 8px; font-weight: 500; }
+  .const-set .sep { width: 1px; height: 18px; background: var(--border); margin: 0 4px; }
+  .kv { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+  .kv .k { color: var(--faint); text-transform: uppercase; letter-spacing: .06em; font-size: 10.5px; }
+  .kv .v { color: var(--text); background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; font-variant-numeric: tabular-nums; }
+  .const-set .none { color: var(--faint); font-size: 12px; font-style: italic; }
+  .empty { padding: 40px; text-align: center; color: var(--muted); }
+  .footnote { color: var(--faint); font-size: 12px; margin-top: 14px; line-height: 1.7; }
+  @media (max-width: 920px) {
+    .kpis { grid-template-columns: repeat(2,1fr); }
+    .detail-inner { grid-template-columns: 1fr; }
+    .cmp-row { grid-template-columns: 140px 1fr 50px; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="logo"></div>
+    <div>
+      <h1>RAGnosis Benchmark</h1>
+      <div class="sub">Retrieval &amp; answer quality across pipeline / embedding / chat configurations</div>
+    </div>
+    <div class="top-spacer"></div>
+    <div class="stamp" id="stamp"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="kpis" id="kpis"></section>
+
+  <section>
+    <div class="toolbar" id="toolbar"></div>
+  </section>
+
+  <section id="constSection">
+    <div class="card">
+      <div class="card-head">
+        <h3>Constant configuration</h3>
+        <span class="sub" style="margin-left:auto">Models held fixed across each run set (preprocess / rewrite / judge / rerank)</span>
+      </div>
+      <div class="constants" id="constants"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="card">
+      <div class="card-head">
+        <h3>Leaderboard</h3>
+        <span class="count-pill" id="count"></span>
+        <div class="seg" id="viewToggle">
+          <button data-view="metrics" class="on">Metrics</button>
+          <button data-view="percent">Percent + RAG Index</button>
+        </div>
+        <span class="sub" style="margin-left:auto">Click a row for difficulty / category breakdown &amp; vector plots</span>
+      </div>
+      <div style="overflow:auto">
+        <table id="table"></table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="card">
+      <div class="card-head">
+        <h3>Compare</h3>
+        <select id="cmpMetric"></select>
+        <span class="sub" style="margin-left:auto">Sorted best → worst on the selected metric</span>
+      </div>
+      <div class="compare" id="compare"></div>
+    </div>
+    <div class="footnote" id="foot"></div>
+  </section>
+</div>
+
+<script>
+const DATA = {"generatedAt": "2026-06-30 01:30 UTC", "runs": [{"id": "run-1/1", "source": "run-1", "name": "1", "pipeline": "basic", "embedding_model": "all-minilm:l6-v2", "chat_model": "deepseek-r1:1.5b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.31943, "ndcg": 0.332214, "keyword_coverage": 0.476746}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.464246, "ndcg": 0.478314, "keyword_coverage": 0.670714}, "medium": {"questions": 10, "mrr": 0.303389, "ndcg": 0.308656, "keyword_coverage": 0.435}, "hard": {"questions": 10, "mrr": 0.190655, "ndcg": 0.209671, "keyword_coverage": 0.324524}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.252083, "ndcg": 0.267783, "keyword_coverage": 0.42381}, "direct_fact": {"questions": 4, "mrr": 0.484226, "ndcg": 0.506892, "keyword_coverage": 0.714286}, "holistic": {"questions": 3, "mrr": 0.105556, "ndcg": 0.150827, "keyword_coverage": 0.272222}, "numerical": {"questions": 5, "mrr": 0.226111, "ndcg": 0.239712, "keyword_coverage": 0.366667}, "relationship": {"questions": 5, "mrr": 0.516778, "ndcg": 0.546941, "keyword_coverage": 0.76}, "spanning": {"questions": 5, "mrr": 0.26131, "ndcg": 0.260243, "keyword_coverage": 0.366667}, "temporal": {"questions": 4, "mrr": 0.325, "ndcg": 0.295183, "keyword_coverage": 0.366667}}}, "answer": {"overall": {"accuracy": 2.666667, "completeness": 2.9, "relevance": 2.6, "answer_keyword_coverage": 0.326984, "overall": 2.722222}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 2.3, "completeness": 2.7, "relevance": 2.8, "answer_keyword_coverage": 0.490952, "overall": 2.6}, "medium": {"questions": 10, "accuracy": 3.2, "completeness": 3.0, "relevance": 2.6, "answer_keyword_coverage": 0.303333, "overall": 2.933333}, "hard": {"questions": 10, "accuracy": 2.5, "completeness": 3.0, "relevance": 2.4, "answer_keyword_coverage": 0.186667, "overall": 2.633333}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 2.75, "completeness": 3.75, "relevance": 3.25, "answer_keyword_coverage": 0.352381, "overall": 3.25}, "direct_fact": {"questions": 4, "accuracy": 1.75, "completeness": 3.0, "relevance": 2.0, "answer_keyword_coverage": 0.452381, "overall": 2.25}, "holistic": {"questions": 3, "accuracy": 1.0, "completeness": 2.0, "relevance": 1.333333, "answer_keyword_coverage": 0.066667, "overall": 1.444444}, "numerical": {"questions": 5, "accuracy": 3.8, "completeness": 2.6, "relevance": 2.4, "answer_keyword_coverage": 0.213333, "overall": 2.933333}, "relationship": {"questions": 5, "accuracy": 2.4, "completeness": 2.6, "relevance": 2.2, "answer_keyword_coverage": 0.49, "overall": 2.4}, "spanning": {"questions": 5, "accuracy": 4.0, "completeness": 3.8, "relevance": 3.4, "answer_keyword_coverage": 0.271429, "overall": 3.733333}, "temporal": {"questions": 4, "accuracy": 2.0, "completeness": 2.25, "relevance": 3.25, "answer_keyword_coverage": 0.379167, "overall": 2.5}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/2", "source": "run-1", "name": "2", "pipeline": "basic", "embedding_model": "all-minilm:l6-v2", "chat_model": "gemma4:e4b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.31943, "ndcg": 0.332214, "keyword_coverage": 0.476746}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.464246, "ndcg": 0.478314, "keyword_coverage": 0.670714}, "medium": {"questions": 10, "mrr": 0.303389, "ndcg": 0.308656, "keyword_coverage": 0.435}, "hard": {"questions": 10, "mrr": 0.190655, "ndcg": 0.209671, "keyword_coverage": 0.324524}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.252083, "ndcg": 0.267783, "keyword_coverage": 0.42381}, "direct_fact": {"questions": 4, "mrr": 0.484226, "ndcg": 0.506892, "keyword_coverage": 0.714286}, "holistic": {"questions": 3, "mrr": 0.105556, "ndcg": 0.150827, "keyword_coverage": 0.272222}, "numerical": {"questions": 5, "mrr": 0.226111, "ndcg": 0.239712, "keyword_coverage": 0.366667}, "relationship": {"questions": 5, "mrr": 0.516778, "ndcg": 0.546941, "keyword_coverage": 0.76}, "spanning": {"questions": 5, "mrr": 0.26131, "ndcg": 0.260243, "keyword_coverage": 0.366667}, "temporal": {"questions": 4, "mrr": 0.325, "ndcg": 0.295183, "keyword_coverage": 0.366667}}}, "answer": {"overall": {"accuracy": 3.0, "completeness": 3.166667, "relevance": 3.7, "answer_keyword_coverage": 0.345873, "overall": 3.288889}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 3.4, "completeness": 3.3, "relevance": 4.1, "answer_keyword_coverage": 0.450952, "overall": 3.6}, "medium": {"questions": 10, "accuracy": 2.9, "completeness": 3.3, "relevance": 4.3, "answer_keyword_coverage": 0.416667, "overall": 3.5}, "hard": {"questions": 10, "accuracy": 2.7, "completeness": 2.9, "relevance": 2.7, "answer_keyword_coverage": 0.17, "overall": 2.766667}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 4.0, "completeness": 4.0, "relevance": 3.75, "answer_keyword_coverage": 0.352381, "overall": 3.916667}, "direct_fact": {"questions": 4, "accuracy": 4.5, "completeness": 4.5, "relevance": 4.75, "answer_keyword_coverage": 0.452381, "overall": 4.583333}, "holistic": {"questions": 3, "accuracy": 2.666667, "completeness": 2.666667, "relevance": 2.666667, "answer_keyword_coverage": 0.066667, "overall": 2.666667}, "numerical": {"questions": 5, "accuracy": 2.8, "completeness": 2.8, "relevance": 4.0, "answer_keyword_coverage": 0.38, "overall": 3.2}, "relationship": {"questions": 5, "accuracy": 3.2, "completeness": 2.4, "relevance": 4.0, "answer_keyword_coverage": 0.52, "overall": 3.2}, "spanning": {"questions": 5, "accuracy": 2.6, "completeness": 3.0, "relevance": 2.8, "answer_keyword_coverage": 0.238095, "overall": 2.8}, "temporal": {"questions": 4, "accuracy": 1.25, "completeness": 3.0, "relevance": 3.75, "answer_keyword_coverage": 0.316667, "overall": 2.666667}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/3", "source": "run-1", "name": "3", "pipeline": "basic", "embedding_model": "all-minilm:l6-v2", "chat_model": "gpt-oss:20b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.31943, "ndcg": 0.332214, "keyword_coverage": 0.476746}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.464246, "ndcg": 0.478314, "keyword_coverage": 0.670714}, "medium": {"questions": 10, "mrr": 0.303389, "ndcg": 0.308656, "keyword_coverage": 0.435}, "hard": {"questions": 10, "mrr": 0.190655, "ndcg": 0.209671, "keyword_coverage": 0.324524}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.252083, "ndcg": 0.267783, "keyword_coverage": 0.42381}, "direct_fact": {"questions": 4, "mrr": 0.484226, "ndcg": 0.506892, "keyword_coverage": 0.714286}, "holistic": {"questions": 3, "mrr": 0.105556, "ndcg": 0.150827, "keyword_coverage": 0.272222}, "numerical": {"questions": 5, "mrr": 0.226111, "ndcg": 0.239712, "keyword_coverage": 0.366667}, "relationship": {"questions": 5, "mrr": 0.516778, "ndcg": 0.546941, "keyword_coverage": 0.76}, "spanning": {"questions": 5, "mrr": 0.26131, "ndcg": 0.260243, "keyword_coverage": 0.366667}, "temporal": {"questions": 4, "mrr": 0.325, "ndcg": 0.295183, "keyword_coverage": 0.366667}}}, "answer": {"overall": {"accuracy": 3.333333, "completeness": 3.1, "relevance": 3.6, "answer_keyword_coverage": 0.212778, "overall": 3.344444}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 3.6, "completeness": 2.7, "relevance": 4.0, "answer_keyword_coverage": 0.273571, "overall": 3.433333}, "medium": {"questions": 10, "accuracy": 3.5, "completeness": 3.5, "relevance": 3.8, "answer_keyword_coverage": 0.253333, "overall": 3.6}, "hard": {"questions": 10, "accuracy": 2.9, "completeness": 3.1, "relevance": 3.0, "answer_keyword_coverage": 0.111429, "overall": 3.0}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 4.0, "completeness": 4.25, "relevance": 4.0, "answer_keyword_coverage": 0.223214, "overall": 4.083333}, "direct_fact": {"questions": 4, "accuracy": 4.0, "completeness": 3.75, "relevance": 3.75, "answer_keyword_coverage": 0.404762, "overall": 3.833333}, "holistic": {"questions": 3, "accuracy": 2.666667, "completeness": 2.333333, "relevance": 2.666667, "answer_keyword_coverage": 0.133333, "overall": 2.555556}, "numerical": {"questions": 5, "accuracy": 2.0, "completeness": 3.0, "relevance": 3.6, "answer_keyword_coverage": 0.266667, "overall": 2.866667}, "relationship": {"questions": 5, "accuracy": 4.8, "completeness": 2.2, "relevance": 3.8, "answer_keyword_coverage": 0.223333, "overall": 3.6}, "spanning": {"questions": 5, "accuracy": 3.0, "completeness": 3.4, "relevance": 3.2, "answer_keyword_coverage": 0.114286, "overall": 3.2}, "temporal": {"questions": 4, "accuracy": 2.75, "completeness": 2.75, "relevance": 4.0, "answer_keyword_coverage": 0.1125, "overall": 3.166667}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/4", "source": "run-1", "name": "4", "pipeline": "basic", "embedding_model": "qwen3-embedding:latest", "chat_model": "deepseek-r1:1.5b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.351746, "ndcg": 0.38384, "keyword_coverage": 0.512381}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.487659, "ndcg": 0.522128, "keyword_coverage": 0.650714}, "medium": {"questions": 10, "mrr": 0.281474, "ndcg": 0.322168, "keyword_coverage": 0.441667}, "hard": {"questions": 10, "mrr": 0.286104, "ndcg": 0.307225, "keyword_coverage": 0.444762}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.226832, "ndcg": 0.260493, "keyword_coverage": 0.379762}, "direct_fact": {"questions": 4, "mrr": 0.56498, "ndcg": 0.584381, "keyword_coverage": 0.714286}, "holistic": {"questions": 3, "mrr": 0.133333, "ndcg": 0.123493, "keyword_coverage": 0.133333}, "numerical": {"questions": 5, "mrr": 0.198519, "ndcg": 0.246196, "keyword_coverage": 0.386667}, "relationship": {"questions": 5, "mrr": 0.59, "ndcg": 0.643242, "keyword_coverage": 0.8}, "spanning": {"questions": 5, "mrr": 0.433743, "ndcg": 0.468329, "keyword_coverage": 0.685714}, "temporal": {"questions": 4, "mrr": 0.218452, "ndcg": 0.244102, "keyword_coverage": 0.308333}}}, "answer": {"overall": {"accuracy": 2.366667, "completeness": 2.633333, "relevance": 3.066667, "answer_keyword_coverage": 0.430793, "overall": 2.688889}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 2.5, "completeness": 3.0, "relevance": 3.5, "answer_keyword_coverage": 0.578571, "overall": 3.0}, "medium": {"questions": 10, "accuracy": 2.3, "completeness": 2.5, "relevance": 2.7, "answer_keyword_coverage": 0.453333, "overall": 2.5}, "hard": {"questions": 10, "accuracy": 2.3, "completeness": 2.4, "relevance": 3.0, "answer_keyword_coverage": 0.260476, "overall": 2.566667}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 2.5, "completeness": 2.0, "relevance": 3.0, "answer_keyword_coverage": 0.435714, "overall": 2.5}, "direct_fact": {"questions": 4, "accuracy": 3.75, "completeness": 3.5, "relevance": 3.75, "answer_keyword_coverage": 0.571429, "overall": 3.666667}, "holistic": {"questions": 3, "accuracy": 1.666667, "completeness": 2.333333, "relevance": 2.333333, "answer_keyword_coverage": 0.066667, "overall": 2.111111}, "numerical": {"questions": 5, "accuracy": 1.8, "completeness": 2.4, "relevance": 3.0, "answer_keyword_coverage": 0.38, "overall": 2.4}, "relationship": {"questions": 5, "accuracy": 2.4, "completeness": 2.6, "relevance": 2.8, "answer_keyword_coverage": 0.62, "overall": 2.6}, "spanning": {"questions": 5, "accuracy": 3.2, "completeness": 3.2, "relevance": 4.0, "answer_keyword_coverage": 0.452381, "overall": 3.466667}, "temporal": {"questions": 4, "accuracy": 1.0, "completeness": 2.25, "relevance": 2.25, "answer_keyword_coverage": 0.358333, "overall": 1.833333}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/5", "source": "run-1", "name": "5", "pipeline": "basic", "embedding_model": "qwen3-embedding:latest", "chat_model": "gemma4:e4b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.351746, "ndcg": 0.38384, "keyword_coverage": 0.512381}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.487659, "ndcg": 0.522128, "keyword_coverage": 0.650714}, "medium": {"questions": 10, "mrr": 0.281474, "ndcg": 0.322168, "keyword_coverage": 0.441667}, "hard": {"questions": 10, "mrr": 0.286104, "ndcg": 0.307225, "keyword_coverage": 0.444762}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.226832, "ndcg": 0.260493, "keyword_coverage": 0.379762}, "direct_fact": {"questions": 4, "mrr": 0.56498, "ndcg": 0.584381, "keyword_coverage": 0.714286}, "holistic": {"questions": 3, "mrr": 0.133333, "ndcg": 0.123493, "keyword_coverage": 0.133333}, "numerical": {"questions": 5, "mrr": 0.198519, "ndcg": 0.246196, "keyword_coverage": 0.386667}, "relationship": {"questions": 5, "mrr": 0.59, "ndcg": 0.643242, "keyword_coverage": 0.8}, "spanning": {"questions": 5, "mrr": 0.433743, "ndcg": 0.468329, "keyword_coverage": 0.685714}, "temporal": {"questions": 4, "mrr": 0.218452, "ndcg": 0.244102, "keyword_coverage": 0.308333}}}, "answer": {"overall": {"accuracy": 3.233333, "completeness": 3.933333, "relevance": -33333333333329.465, "answer_keyword_coverage": 0.418254, "overall": -11111111111107.434}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 3.4, "completeness": 4.0, "relevance": 4.0, "answer_keyword_coverage": 0.552619, "overall": 3.8}, "medium": {"questions": 10, "accuracy": 3.3, "completeness": 4.1, "relevance": 4.5, "answer_keyword_coverage": 0.441667, "overall": 3.966667}, "hard": {"questions": 10, "accuracy": 3.0, "completeness": 3.7, "relevance": -99999999999996.9, "answer_keyword_coverage": 0.260476, "overall": -33333333333330.07}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 4.0, "completeness": 4.75, "relevance": 4.5, "answer_keyword_coverage": 0.352381, "overall": 4.416667}, "direct_fact": {"questions": 4, "accuracy": 3.5, "completeness": 3.75, "relevance": 4.5, "answer_keyword_coverage": 0.619048, "overall": 3.916667}, "holistic": {"questions": 3, "accuracy": 2.333333, "completeness": 2.666667, "relevance": 2.333333, "answer_keyword_coverage": 0.066667, "overall": 2.444444}, "numerical": {"questions": 5, "accuracy": 2.4, "completeness": 3.6, "relevance": 4.0, "answer_keyword_coverage": 0.38, "overall": 3.333333}, "relationship": {"questions": 5, "accuracy": 3.8, "completeness": 4.8, "relevance": 4.8, "answer_keyword_coverage": 0.72, "overall": 4.466667}, "spanning": {"questions": 5, "accuracy": 3.4, "completeness": 4.0, "relevance": -199999999999996.8, "answer_keyword_coverage": 0.419048, "overall": -66666666666663.125}, "temporal": {"questions": 4, "accuracy": 3.0, "completeness": 3.5, "relevance": 3.25, "answer_keyword_coverage": 0.216667, "overall": 3.25}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/6", "source": "run-1", "name": "6", "pipeline": "basic", "embedding_model": "qwen3-embedding:latest", "chat_model": "gpt-oss:20b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.351746, "ndcg": 0.38384, "keyword_coverage": 0.512381}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.487659, "ndcg": 0.522128, "keyword_coverage": 0.650714}, "medium": {"questions": 10, "mrr": 0.281474, "ndcg": 0.322168, "keyword_coverage": 0.441667}, "hard": {"questions": 10, "mrr": 0.286104, "ndcg": 0.307225, "keyword_coverage": 0.444762}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.226832, "ndcg": 0.260493, "keyword_coverage": 0.379762}, "direct_fact": {"questions": 4, "mrr": 0.56498, "ndcg": 0.584381, "keyword_coverage": 0.714286}, "holistic": {"questions": 3, "mrr": 0.133333, "ndcg": 0.123493, "keyword_coverage": 0.133333}, "numerical": {"questions": 5, "mrr": 0.198519, "ndcg": 0.246196, "keyword_coverage": 0.386667}, "relationship": {"questions": 5, "mrr": 0.59, "ndcg": 0.643242, "keyword_coverage": 0.8}, "spanning": {"questions": 5, "mrr": 0.433743, "ndcg": 0.468329, "keyword_coverage": 0.685714}, "temporal": {"questions": 4, "mrr": 0.218452, "ndcg": 0.244102, "keyword_coverage": 0.308333}}}, "answer": {"overall": {"accuracy": 2.966667, "completeness": 3.433333, "relevance": 3.6, "answer_keyword_coverage": 0.244444, "overall": 3.333333}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 3.0, "completeness": 3.7, "relevance": 3.3, "answer_keyword_coverage": 0.319286, "overall": 3.333333}, "medium": {"questions": 10, "accuracy": 2.9, "completeness": 3.5, "relevance": 3.7, "answer_keyword_coverage": 0.278333, "overall": 3.366667}, "hard": {"questions": 10, "accuracy": 3.0, "completeness": 3.1, "relevance": 3.8, "answer_keyword_coverage": 0.135714, "overall": 3.3}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 3.0, "completeness": 3.25, "relevance": 4.25, "answer_keyword_coverage": 0.1875, "overall": 3.5}, "direct_fact": {"questions": 4, "accuracy": 2.0, "completeness": 4.25, "relevance": 4.5, "answer_keyword_coverage": 0.369048, "overall": 3.583333}, "holistic": {"questions": 3, "accuracy": 3.333333, "completeness": 3.0, "relevance": 3.0, "answer_keyword_coverage": 0.0, "overall": 3.111111}, "numerical": {"questions": 5, "accuracy": 3.0, "completeness": 3.4, "relevance": 4.0, "answer_keyword_coverage": 0.266667, "overall": 3.466667}, "relationship": {"questions": 5, "accuracy": 3.8, "completeness": 3.8, "relevance": 3.4, "answer_keyword_coverage": 0.353333, "overall": 3.666667}, "spanning": {"questions": 5, "accuracy": 3.6, "completeness": 3.6, "relevance": 4.4, "answer_keyword_coverage": 0.271429, "overall": 3.866667}, "temporal": {"questions": 4, "accuracy": 1.75, "completeness": 2.5, "relevance": 1.25, "answer_keyword_coverage": 0.1625, "overall": 1.833333}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/7", "source": "run-1", "name": "7", "pipeline": "basic", "embedding_model": "bge-large:latest", "chat_model": "deepseek-r1:1.5b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.405493, "ndcg": 0.420278, "keyword_coverage": 0.54746}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.559381, "ndcg": 0.569695, "keyword_coverage": 0.731667}, "medium": {"questions": 10, "mrr": 0.380556, "ndcg": 0.386859, "keyword_coverage": 0.468333}, "hard": {"questions": 10, "mrr": 0.276541, "ndcg": 0.304279, "keyword_coverage": 0.442381}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.3875, "ndcg": 0.402412, "keyword_coverage": 0.49881}, "direct_fact": {"questions": 4, "mrr": 0.729167, "ndcg": 0.73179, "keyword_coverage": 0.916667}, "holistic": {"questions": 3, "mrr": 0.140278, "ndcg": 0.150859, "keyword_coverage": 0.188889}, "numerical": {"questions": 5, "mrr": 0.229206, "ndcg": 0.271703, "keyword_coverage": 0.433333}, "relationship": {"questions": 5, "mrr": 0.689, "ndcg": 0.654658, "keyword_coverage": 0.76}, "spanning": {"questions": 5, "mrr": 0.293915, "ndcg": 0.342816, "keyword_coverage": 0.552381}, "temporal": {"questions": 4, "mrr": 0.304167, "ndcg": 0.318264, "keyword_coverage": 0.366667}}}, "answer": {"overall": {"accuracy": 19.233333, "completeness": 19.533333, "relevance": 19.65, "answer_keyword_coverage": 0.389127, "overall": 19.472222}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 3.2, "completeness": 2.9, "relevance": 3.25, "answer_keyword_coverage": 0.558571, "overall": 3.116667}, "medium": {"questions": 10, "accuracy": 2.3, "completeness": 2.9, "relevance": 3.2, "answer_keyword_coverage": 0.431667, "overall": 2.8}, "hard": {"questions": 10, "accuracy": 52.2, "completeness": 52.8, "relevance": 52.5, "answer_keyword_coverage": 0.177143, "overall": 52.5}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 4.25, "completeness": 3.75, "relevance": 4.25, "answer_keyword_coverage": 0.352381, "overall": 4.083333}, "direct_fact": {"questions": 4, "accuracy": 3.75, "completeness": 3.75, "relevance": 3.625, "answer_keyword_coverage": 0.571429, "overall": 3.708333}, "holistic": {"questions": 3, "accuracy": 2.0, "completeness": 2.333333, "relevance": 2.333333, "answer_keyword_coverage": 0.122222, "overall": 2.222222}, "numerical": {"questions": 5, "accuracy": 1.8, "completeness": 2.4, "relevance": 3.2, "answer_keyword_coverage": 0.38, "overall": 2.466667}, "relationship": {"questions": 5, "accuracy": 3.2, "completeness": 2.6, "relevance": 2.8, "answer_keyword_coverage": 0.62, "overall": 2.866667}, "spanning": {"questions": 5, "accuracy": 101.6, "completeness": 102.8, "relevance": 102.2, "answer_keyword_coverage": 0.219048, "overall": 102.2}, "temporal": {"questions": 4, "accuracy": 1.5, "completeness": 2.5, "relevance": 2.5, "answer_keyword_coverage": 0.379167, "overall": 2.166667}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/8", "source": "run-1", "name": "8", "pipeline": "basic", "embedding_model": "bge-large:latest", "chat_model": "gemma4:e4b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.405493, "ndcg": 0.420278, "keyword_coverage": 0.54746}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.559381, "ndcg": 0.569695, "keyword_coverage": 0.731667}, "medium": {"questions": 10, "mrr": 0.380556, "ndcg": 0.386859, "keyword_coverage": 0.468333}, "hard": {"questions": 10, "mrr": 0.276541, "ndcg": 0.304279, "keyword_coverage": 0.442381}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.3875, "ndcg": 0.402412, "keyword_coverage": 0.49881}, "direct_fact": {"questions": 4, "mrr": 0.729167, "ndcg": 0.73179, "keyword_coverage": 0.916667}, "holistic": {"questions": 3, "mrr": 0.140278, "ndcg": 0.150859, "keyword_coverage": 0.188889}, "numerical": {"questions": 5, "mrr": 0.229206, "ndcg": 0.271703, "keyword_coverage": 0.433333}, "relationship": {"questions": 5, "mrr": 0.689, "ndcg": 0.654658, "keyword_coverage": 0.76}, "spanning": {"questions": 5, "mrr": 0.293915, "ndcg": 0.342816, "keyword_coverage": 0.552381}, "temporal": {"questions": 4, "mrr": 0.304167, "ndcg": 0.318264, "keyword_coverage": 0.366667}}}, "answer": {"overall": {"accuracy": 3.6, "completeness": 3.5, "relevance": 3.833333, "answer_keyword_coverage": 0.425555, "overall": 3.644444}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 3.7, "completeness": 3.4, "relevance": 4.1, "answer_keyword_coverage": 0.630714, "overall": 3.733333}, "medium": {"questions": 10, "accuracy": 4.1, "completeness": 4.1, "relevance": 4.3, "answer_keyword_coverage": 0.448333, "overall": 4.166667}, "hard": {"questions": 10, "accuracy": 3.0, "completeness": 3.0, "relevance": 3.1, "answer_keyword_coverage": 0.197619, "overall": 3.033333}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 4.25, "completeness": 3.75, "relevance": 4.0, "answer_keyword_coverage": 0.385714, "overall": 4.0}, "direct_fact": {"questions": 4, "accuracy": 4.75, "completeness": 4.75, "relevance": 4.75, "answer_keyword_coverage": 0.964286, "overall": 4.75}, "holistic": {"questions": 3, "accuracy": 1.666667, "completeness": 2.333333, "relevance": 3.333333, "answer_keyword_coverage": 0.0, "overall": 2.444444}, "numerical": {"questions": 5, "accuracy": 3.8, "completeness": 4.2, "relevance": 4.6, "answer_keyword_coverage": 0.313333, "overall": 4.2}, "relationship": {"questions": 5, "accuracy": 4.0, "completeness": 3.2, "relevance": 4.0, "answer_keyword_coverage": 0.64, "overall": 3.733333}, "spanning": {"questions": 5, "accuracy": 3.2, "completeness": 3.2, "relevance": 2.8, "answer_keyword_coverage": 0.266667, "overall": 3.066667}, "temporal": {"questions": 4, "accuracy": 3.0, "completeness": 2.75, "relevance": 3.25, "answer_keyword_coverage": 0.316667, "overall": 3.0}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/9", "source": "run-1", "name": "9", "pipeline": "basic", "embedding_model": "bge-large:latest", "chat_model": "gpt-oss:20b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.405493, "ndcg": 0.420278, "keyword_coverage": 0.54746}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.559381, "ndcg": 0.569695, "keyword_coverage": 0.731667}, "medium": {"questions": 10, "mrr": 0.380556, "ndcg": 0.386859, "keyword_coverage": 0.468333}, "hard": {"questions": 10, "mrr": 0.276541, "ndcg": 0.304279, "keyword_coverage": 0.442381}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.3875, "ndcg": 0.402412, "keyword_coverage": 0.49881}, "direct_fact": {"questions": 4, "mrr": 0.729167, "ndcg": 0.73179, "keyword_coverage": 0.916667}, "holistic": {"questions": 3, "mrr": 0.140278, "ndcg": 0.150859, "keyword_coverage": 0.188889}, "numerical": {"questions": 5, "mrr": 0.229206, "ndcg": 0.271703, "keyword_coverage": 0.433333}, "relationship": {"questions": 5, "mrr": 0.689, "ndcg": 0.654658, "keyword_coverage": 0.76}, "spanning": {"questions": 5, "mrr": 0.293915, "ndcg": 0.342816, "keyword_coverage": 0.552381}, "temporal": {"questions": 4, "mrr": 0.304167, "ndcg": 0.318264, "keyword_coverage": 0.366667}}}, "answer": {"overall": {"accuracy": 2.7, "completeness": 3.0, "relevance": 3.433333, "answer_keyword_coverage": 0.267222, "overall": 3.044444}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 3.1, "completeness": 3.1, "relevance": 3.6, "answer_keyword_coverage": 0.375476, "overall": 3.266667}, "medium": {"questions": 10, "accuracy": 2.6, "completeness": 3.1, "relevance": 4.3, "answer_keyword_coverage": 0.33, "overall": 3.333333}, "hard": {"questions": 10, "accuracy": 2.4, "completeness": 2.8, "relevance": 2.4, "answer_keyword_coverage": 0.09619, "overall": 2.533333}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 4.75, "completeness": 4.75, "relevance": 4.75, "answer_keyword_coverage": 0.333333, "overall": 4.75}, "direct_fact": {"questions": 4, "accuracy": 4.75, "completeness": 4.5, "relevance": 4.75, "answer_keyword_coverage": 0.559524, "overall": 4.666667}, "holistic": {"questions": 3, "accuracy": 2.0, "completeness": 2.666667, "relevance": 2.0, "answer_keyword_coverage": 0.066667, "overall": 2.222222}, "numerical": {"questions": 5, "accuracy": 1.0, "completeness": 2.0, "relevance": 3.8, "answer_keyword_coverage": 0.2, "overall": 2.266667}, "relationship": {"questions": 5, "accuracy": 3.0, "completeness": 3.4, "relevance": 4.0, "answer_keyword_coverage": 0.433333, "overall": 3.466667}, "spanning": {"questions": 5, "accuracy": 1.8, "completeness": 2.2, "relevance": 1.8, "answer_keyword_coverage": 0.085714, "overall": 1.933333}, "temporal": {"questions": 4, "accuracy": 2.0, "completeness": 1.75, "relevance": 2.75, "answer_keyword_coverage": 0.1625, "overall": 2.166667}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/10", "source": "run-1", "name": "10", "pipeline": "advanced", "embedding_model": "all-minilm:l6-v2", "chat_model": "deepseek-r1:1.5b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.419532, "ndcg": 0.449206, "keyword_coverage": 0.579365}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.65673, "ndcg": 0.673229, "keyword_coverage": 0.85}, "medium": {"questions": 10, "mrr": 0.377222, "ndcg": 0.425504, "keyword_coverage": 0.535}, "hard": {"questions": 10, "mrr": 0.224643, "ndcg": 0.248885, "keyword_coverage": 0.353095}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.333631, "ndcg": 0.357716, "keyword_coverage": 0.465476}, "direct_fact": {"questions": 4, "mrr": 0.919643, "ndcg": 0.898118, "keyword_coverage": 1.0}, "holistic": {"questions": 3, "mrr": 0.149603, "ndcg": 0.171253, "keyword_coverage": 0.272222}, "numerical": {"questions": 5, "mrr": 0.325, "ndcg": 0.335822, "keyword_coverage": 0.433333}, "relationship": {"questions": 5, "mrr": 0.562048, "ndcg": 0.623579, "keyword_coverage": 0.8}, "spanning": {"questions": 5, "mrr": 0.247619, "ndcg": 0.277697, "keyword_coverage": 0.390476}, "temporal": {"questions": 4, "mrr": 0.362679, "ndcg": 0.438398, "keyword_coverage": 0.645833}}}, "answer": {"overall": {"accuracy": 1.9, "completeness": 2.733333, "relevance": 2.183333, "answer_keyword_coverage": 0.396191, "overall": 2.272222}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 1.4, "completeness": 2.9, "relevance": 2.35, "answer_keyword_coverage": 0.565238, "overall": 2.216667}, "medium": {"questions": 10, "accuracy": 2.6, "completeness": 3.4, "relevance": 3.1, "answer_keyword_coverage": 0.416667, "overall": 3.033333}, "hard": {"questions": 10, "accuracy": 1.7, "completeness": 1.9, "relevance": 1.1, "answer_keyword_coverage": 0.206667, "overall": 1.566667}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 2.75, "completeness": 3.75, "relevance": 2.75, "answer_keyword_coverage": 0.2875, "overall": 3.083333}, "direct_fact": {"questions": 4, "accuracy": 1.0, "completeness": 2.75, "relevance": 2.375, "answer_keyword_coverage": 0.738095, "overall": 2.041667}, "holistic": {"questions": 3, "accuracy": 1.0, "completeness": 1.666667, "relevance": 0.666667, "answer_keyword_coverage": 0.133333, "overall": 1.111111}, "numerical": {"questions": 5, "accuracy": 1.8, "completeness": 3.0, "relevance": 2.4, "answer_keyword_coverage": 0.34, "overall": 2.4}, "relationship": {"questions": 5, "accuracy": 2.4, "completeness": 3.2, "relevance": 2.8, "answer_keyword_coverage": 0.5, "overall": 2.8}, "spanning": {"questions": 5, "accuracy": 2.2, "completeness": 1.8, "relevance": 1.4, "answer_keyword_coverage": 0.333333, "overall": 1.8}, "temporal": {"questions": 4, "accuracy": 1.75, "completeness": 2.75, "relevance": 2.5, "answer_keyword_coverage": 0.379167, "overall": 2.333333}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/11", "source": "run-1", "name": "11", "pipeline": "advanced", "embedding_model": "all-minilm:l6-v2", "chat_model": "gemma4:e4b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.419532, "ndcg": 0.449206, "keyword_coverage": 0.579365}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.65673, "ndcg": 0.673229, "keyword_coverage": 0.85}, "medium": {"questions": 10, "mrr": 0.377222, "ndcg": 0.425504, "keyword_coverage": 0.535}, "hard": {"questions": 10, "mrr": 0.224643, "ndcg": 0.248885, "keyword_coverage": 0.353095}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.333631, "ndcg": 0.357716, "keyword_coverage": 0.465476}, "direct_fact": {"questions": 4, "mrr": 0.919643, "ndcg": 0.898118, "keyword_coverage": 1.0}, "holistic": {"questions": 3, "mrr": 0.149603, "ndcg": 0.171253, "keyword_coverage": 0.272222}, "numerical": {"questions": 5, "mrr": 0.325, "ndcg": 0.335822, "keyword_coverage": 0.433333}, "relationship": {"questions": 5, "mrr": 0.562048, "ndcg": 0.623579, "keyword_coverage": 0.8}, "spanning": {"questions": 5, "mrr": 0.247619, "ndcg": 0.277697, "keyword_coverage": 0.390476}, "temporal": {"questions": 4, "mrr": 0.362679, "ndcg": 0.438398, "keyword_coverage": 0.645833}}}, "answer": {"overall": {"accuracy": 2.966667, "completeness": 2.9, "relevance": 3.0, "answer_keyword_coverage": 0.440397, "overall": 2.955556}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 3.4, "completeness": 3.1, "relevance": 3.2, "answer_keyword_coverage": 0.618571, "overall": 3.233333}, "medium": {"questions": 10, "accuracy": 2.9, "completeness": 3.0, "relevance": 3.3, "answer_keyword_coverage": 0.518333, "overall": 3.066667}, "hard": {"questions": 10, "accuracy": 2.6, "completeness": 2.6, "relevance": 2.5, "answer_keyword_coverage": 0.184286, "overall": 2.566667}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 4.0, "completeness": 3.5, "relevance": 3.25, "answer_keyword_coverage": 0.352381, "overall": 3.583333}, "direct_fact": {"questions": 4, "accuracy": 4.0, "completeness": 4.0, "relevance": 4.0, "answer_keyword_coverage": 0.821429, "overall": 4.0}, "holistic": {"questions": 3, "accuracy": 1.0, "completeness": 1.333333, "relevance": 1.666667, "answer_keyword_coverage": 0.066667, "overall": 1.333333}, "numerical": {"questions": 5, "accuracy": 2.4, "completeness": 3.2, "relevance": 3.6, "answer_keyword_coverage": 0.38, "overall": 3.066667}, "relationship": {"questions": 5, "accuracy": 4.2, "completeness": 3.0, "relevance": 2.8, "answer_keyword_coverage": 0.64, "overall": 3.333333}, "spanning": {"questions": 5, "accuracy": 3.0, "completeness": 3.2, "relevance": 2.8, "answer_keyword_coverage": 0.266667, "overall": 3.0}, "temporal": {"questions": 4, "accuracy": 1.5, "completeness": 1.5, "relevance": 2.5, "answer_keyword_coverage": 0.470833, "overall": 1.833333}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/12", "source": "run-1", "name": "12", "pipeline": "advanced", "embedding_model": "all-minilm:l6-v2", "chat_model": "gpt-oss:20b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.419532, "ndcg": 0.449206, "keyword_coverage": 0.579365}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.65673, "ndcg": 0.673229, "keyword_coverage": 0.85}, "medium": {"questions": 10, "mrr": 0.377222, "ndcg": 0.425504, "keyword_coverage": 0.535}, "hard": {"questions": 10, "mrr": 0.224643, "ndcg": 0.248885, "keyword_coverage": 0.353095}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.333631, "ndcg": 0.357716, "keyword_coverage": 0.465476}, "direct_fact": {"questions": 4, "mrr": 0.919643, "ndcg": 0.898118, "keyword_coverage": 1.0}, "holistic": {"questions": 3, "mrr": 0.149603, "ndcg": 0.171253, "keyword_coverage": 0.272222}, "numerical": {"questions": 5, "mrr": 0.325, "ndcg": 0.335822, "keyword_coverage": 0.433333}, "relationship": {"questions": 5, "mrr": 0.562048, "ndcg": 0.623579, "keyword_coverage": 0.8}, "spanning": {"questions": 5, "mrr": 0.247619, "ndcg": 0.277697, "keyword_coverage": 0.390476}, "temporal": {"questions": 4, "mrr": 0.362679, "ndcg": 0.438398, "keyword_coverage": 0.645833}}}, "answer": {"overall": {"accuracy": 3.333333, "completeness": 3.3, "relevance": 3.533333, "answer_keyword_coverage": 0.253809, "overall": 3.388889}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 3.1, "completeness": 3.4, "relevance": 3.8, "answer_keyword_coverage": 0.326905, "overall": 3.433333}, "medium": {"questions": 10, "accuracy": 3.8, "completeness": 3.5, "relevance": 3.8, "answer_keyword_coverage": 0.318333, "overall": 3.7}, "hard": {"questions": 10, "accuracy": 3.1, "completeness": 3.0, "relevance": 3.0, "answer_keyword_coverage": 0.11619, "overall": 3.033333}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 3.75, "completeness": 3.75, "relevance": 4.25, "answer_keyword_coverage": 0.166667, "overall": 3.916667}, "direct_fact": {"questions": 4, "accuracy": 5.0, "completeness": 4.75, "relevance": 4.5, "answer_keyword_coverage": 0.488095, "overall": 4.75}, "holistic": {"questions": 3, "accuracy": 2.0, "completeness": 3.0, "relevance": 3.0, "answer_keyword_coverage": 0.133333, "overall": 2.666667}, "numerical": {"questions": 5, "accuracy": 3.2, "completeness": 3.2, "relevance": 3.2, "answer_keyword_coverage": 0.306667, "overall": 3.2}, "relationship": {"questions": 5, "accuracy": 3.2, "completeness": 2.8, "relevance": 3.2, "answer_keyword_coverage": 0.363333, "overall": 3.066667}, "spanning": {"questions": 5, "accuracy": 4.0, "completeness": 3.0, "relevance": 2.8, "answer_keyword_coverage": 0.119048, "overall": 3.266667}, "temporal": {"questions": 4, "accuracy": 1.75, "completeness": 2.75, "relevance": 4.0, "answer_keyword_coverage": 0.1625, "overall": 2.833333}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/13", "source": "run-1", "name": "13", "pipeline": "advanced", "embedding_model": "qwen3-embedding:latest", "chat_model": "deepseek-r1:1.5b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.402173, "ndcg": 0.431326, "keyword_coverage": 0.544365}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.676095, "ndcg": 0.683341, "keyword_coverage": 0.770714}, "medium": {"questions": 10, "mrr": 0.329167, "ndcg": 0.347258, "keyword_coverage": 0.403333}, "hard": {"questions": 10, "mrr": 0.201257, "ndcg": 0.263379, "keyword_coverage": 0.459048}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.321197, "ndcg": 0.347055, "keyword_coverage": 0.50119}, "direct_fact": {"questions": 4, "mrr": 0.870238, "ndcg": 0.852338, "keyword_coverage": 0.964286}, "holistic": {"questions": 3, "mrr": 0.127778, "ndcg": 0.140404, "keyword_coverage": 0.188889}, "numerical": {"questions": 5, "mrr": 0.273333, "ndcg": 0.29066, "keyword_coverage": 0.353333}, "relationship": {"questions": 5, "mrr": 0.646, "ndcg": 0.677398, "keyword_coverage": 0.75}, "spanning": {"questions": 5, "mrr": 0.243889, "ndcg": 0.345047, "keyword_coverage": 0.62381}, "temporal": {"questions": 4, "mrr": 0.275, "ndcg": 0.288868, "keyword_coverage": 0.316667}}}, "answer": {"overall": {"accuracy": 2.333333, "completeness": 2.5, "relevance": 2.966667, "answer_keyword_coverage": 0.411587, "overall": 2.6}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 2.5, "completeness": 2.8, "relevance": 3.7, "answer_keyword_coverage": 0.585238, "overall": 3.0}, "medium": {"questions": 10, "accuracy": 1.9, "completeness": 2.0, "relevance": 2.4, "answer_keyword_coverage": 0.503333, "overall": 2.1}, "hard": {"questions": 10, "accuracy": 2.6, "completeness": 2.7, "relevance": 2.8, "answer_keyword_coverage": 0.14619, "overall": 2.7}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 3.5, "completeness": 3.25, "relevance": 3.0, "answer_keyword_coverage": 0.3375, "overall": 3.25}, "direct_fact": {"questions": 4, "accuracy": 3.5, "completeness": 3.25, "relevance": 4.25, "answer_keyword_coverage": 0.738095, "overall": 3.666667}, "holistic": {"questions": 3, "accuracy": 2.333333, "completeness": 3.666667, "relevance": 4.0, "answer_keyword_coverage": 0.066667, "overall": 3.333333}, "numerical": {"questions": 5, "accuracy": 1.4, "completeness": 1.2, "relevance": 2.2, "answer_keyword_coverage": 0.38, "overall": 1.6}, "relationship": {"questions": 5, "accuracy": 2.0, "completeness": 2.8, "relevance": 3.4, "answer_keyword_coverage": 0.55, "overall": 2.733333}, "spanning": {"questions": 5, "accuracy": 2.8, "completeness": 2.2, "relevance": 2.2, "answer_keyword_coverage": 0.252381, "overall": 2.4}, "temporal": {"questions": 4, "accuracy": 1.0, "completeness": 1.75, "relevance": 2.25, "answer_keyword_coverage": 0.483333, "overall": 1.666667}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/14", "source": "run-1", "name": "14", "pipeline": "advanced", "embedding_model": "qwen3-embedding:latest", "chat_model": "gemma4:e4b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.402173, "ndcg": 0.431326, "keyword_coverage": 0.544365}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.676095, "ndcg": 0.683341, "keyword_coverage": 0.770714}, "medium": {"questions": 10, "mrr": 0.329167, "ndcg": 0.347258, "keyword_coverage": 0.403333}, "hard": {"questions": 10, "mrr": 0.201257, "ndcg": 0.263379, "keyword_coverage": 0.459048}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.321197, "ndcg": 0.347055, "keyword_coverage": 0.50119}, "direct_fact": {"questions": 4, "mrr": 0.870238, "ndcg": 0.852338, "keyword_coverage": 0.964286}, "holistic": {"questions": 3, "mrr": 0.127778, "ndcg": 0.140404, "keyword_coverage": 0.188889}, "numerical": {"questions": 5, "mrr": 0.273333, "ndcg": 0.29066, "keyword_coverage": 0.353333}, "relationship": {"questions": 5, "mrr": 0.646, "ndcg": 0.677398, "keyword_coverage": 0.75}, "spanning": {"questions": 5, "mrr": 0.243889, "ndcg": 0.345047, "keyword_coverage": 0.62381}, "temporal": {"questions": 4, "mrr": 0.275, "ndcg": 0.288868, "keyword_coverage": 0.316667}}}, "answer": {"overall": {"accuracy": 3.2, "completeness": 3.766667, "relevance": 3.8, "answer_keyword_coverage": 0.45627, "overall": 3.588889}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 3.3, "completeness": 3.6, "relevance": 3.8, "answer_keyword_coverage": 0.685714, "overall": 3.566667}, "medium": {"questions": 10, "accuracy": 2.9, "completeness": 4.1, "relevance": 4.0, "answer_keyword_coverage": 0.391667, "overall": 3.666667}, "hard": {"questions": 10, "accuracy": 3.4, "completeness": 3.6, "relevance": 3.6, "answer_keyword_coverage": 0.291429, "overall": 3.533333}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 4.25, "completeness": 4.25, "relevance": 4.0, "answer_keyword_coverage": 0.388095, "overall": 4.166667}, "direct_fact": {"questions": 4, "accuracy": 4.5, "completeness": 4.0, "relevance": 4.0, "answer_keyword_coverage": 0.964286, "overall": 4.166667}, "holistic": {"questions": 3, "accuracy": 4.0, "completeness": 3.666667, "relevance": 3.333333, "answer_keyword_coverage": 0.066667, "overall": 3.666667}, "numerical": {"questions": 5, "accuracy": 2.0, "completeness": 3.4, "relevance": 3.6, "answer_keyword_coverage": 0.38, "overall": 3.0}, "relationship": {"questions": 5, "accuracy": 2.8, "completeness": 3.6, "relevance": 3.6, "answer_keyword_coverage": 0.63, "overall": 3.333333}, "spanning": {"questions": 5, "accuracy": 2.8, "completeness": 3.4, "relevance": 3.8, "answer_keyword_coverage": 0.452381, "overall": 3.333333}, "temporal": {"questions": 4, "accuracy": 2.75, "completeness": 4.25, "relevance": 4.25, "answer_keyword_coverage": 0.191667, "overall": 3.75}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/15", "source": "run-1", "name": "15", "pipeline": "advanced", "embedding_model": "qwen3-embedding:latest", "chat_model": "gpt-oss:20b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.402173, "ndcg": 0.431326, "keyword_coverage": 0.544365}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.676095, "ndcg": 0.683341, "keyword_coverage": 0.770714}, "medium": {"questions": 10, "mrr": 0.329167, "ndcg": 0.347258, "keyword_coverage": 0.403333}, "hard": {"questions": 10, "mrr": 0.201257, "ndcg": 0.263379, "keyword_coverage": 0.459048}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.321197, "ndcg": 0.347055, "keyword_coverage": 0.50119}, "direct_fact": {"questions": 4, "mrr": 0.870238, "ndcg": 0.852338, "keyword_coverage": 0.964286}, "holistic": {"questions": 3, "mrr": 0.127778, "ndcg": 0.140404, "keyword_coverage": 0.188889}, "numerical": {"questions": 5, "mrr": 0.273333, "ndcg": 0.29066, "keyword_coverage": 0.353333}, "relationship": {"questions": 5, "mrr": 0.646, "ndcg": 0.677398, "keyword_coverage": 0.75}, "spanning": {"questions": 5, "mrr": 0.243889, "ndcg": 0.345047, "keyword_coverage": 0.62381}, "temporal": {"questions": 4, "mrr": 0.275, "ndcg": 0.288868, "keyword_coverage": 0.316667}}}, "answer": {"overall": {"accuracy": 3.133333, "completeness": 3.4, "relevance": 3.6, "answer_keyword_coverage": 0.267222, "overall": 3.377778}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 3.8, "completeness": 3.5, "relevance": 3.8, "answer_keyword_coverage": 0.389762, "overall": 3.7}, "medium": {"questions": 10, "accuracy": 2.7, "completeness": 3.3, "relevance": 3.6, "answer_keyword_coverage": 0.233333, "overall": 3.2}, "hard": {"questions": 10, "accuracy": 2.9, "completeness": 3.4, "relevance": 3.4, "answer_keyword_coverage": 0.178571, "overall": 3.233333}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 4.75, "completeness": 4.0, "relevance": 4.5, "answer_keyword_coverage": 0.160714, "overall": 4.416667}, "direct_fact": {"questions": 4, "accuracy": 5.0, "completeness": 5.0, "relevance": 4.75, "answer_keyword_coverage": 0.595238, "overall": 4.916667}, "holistic": {"questions": 3, "accuracy": 1.0, "completeness": 3.333333, "relevance": 3.0, "answer_keyword_coverage": 0.0, "overall": 2.444444}, "numerical": {"questions": 5, "accuracy": 2.6, "completeness": 3.4, "relevance": 3.6, "answer_keyword_coverage": 0.266667, "overall": 3.2}, "relationship": {"questions": 5, "accuracy": 3.0, "completeness": 3.0, "relevance": 3.4, "answer_keyword_coverage": 0.313333, "overall": 3.133333}, "spanning": {"questions": 5, "accuracy": 3.2, "completeness": 3.2, "relevance": 3.4, "answer_keyword_coverage": 0.328571, "overall": 3.266667}, "temporal": {"questions": 4, "accuracy": 2.0, "completeness": 2.0, "relevance": 2.5, "answer_keyword_coverage": 0.1125, "overall": 2.166667}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/16", "source": "run-1", "name": "16", "pipeline": "advanced", "embedding_model": "bge-large:latest", "chat_model": "deepseek-r1:1.5b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.402603, "ndcg": 0.43821, "keyword_coverage": 0.57}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.570571, "ndcg": 0.602681, "keyword_coverage": 0.750714}, "medium": {"questions": 10, "mrr": 0.385833, "ndcg": 0.424758, "keyword_coverage": 0.538333}, "hard": {"questions": 10, "mrr": 0.251406, "ndcg": 0.287192, "keyword_coverage": 0.420952}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.393197, "ndcg": 0.416724, "keyword_coverage": 0.578571}, "direct_fact": {"questions": 4, "mrr": 0.758929, "ndcg": 0.773919, "keyword_coverage": 0.964286}, "holistic": {"questions": 3, "mrr": 0.144444, "ndcg": 0.154825, "keyword_coverage": 0.188889}, "numerical": {"questions": 5, "mrr": 0.31, "ndcg": 0.367677, "keyword_coverage": 0.5}, "relationship": {"questions": 5, "mrr": 0.565667, "ndcg": 0.629408, "keyword_coverage": 0.8}, "spanning": {"questions": 5, "mrr": 0.281587, "ndcg": 0.32992, "keyword_coverage": 0.485714}, "temporal": {"questions": 4, "mrr": 0.3125, "ndcg": 0.32106, "keyword_coverage": 0.358333}}}, "answer": {"overall": {"accuracy": 2.4, "completeness": 2.533333, "relevance": 2.8, "answer_keyword_coverage": 0.403175, "overall": 2.577778}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 2.6, "completeness": 2.8, "relevance": 3.2, "answer_keyword_coverage": 0.551905, "overall": 2.866667}, "medium": {"questions": 10, "accuracy": 2.2, "completeness": 2.5, "relevance": 2.8, "answer_keyword_coverage": 0.453333, "overall": 2.5}, "hard": {"questions": 10, "accuracy": 2.4, "completeness": 2.3, "relevance": 2.4, "answer_keyword_coverage": 0.204286, "overall": 2.366667}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 2.25, "completeness": 3.0, "relevance": 2.5, "answer_keyword_coverage": 0.400595, "overall": 2.583333}, "direct_fact": {"questions": 4, "accuracy": 2.75, "completeness": 3.0, "relevance": 2.75, "answer_keyword_coverage": 0.654762, "overall": 2.833333}, "holistic": {"questions": 3, "accuracy": 1.666667, "completeness": 1.666667, "relevance": 1.0, "answer_keyword_coverage": 0.133333, "overall": 1.444444}, "numerical": {"questions": 5, "accuracy": 1.6, "completeness": 2.6, "relevance": 3.0, "answer_keyword_coverage": 0.38, "overall": 2.4}, "relationship": {"questions": 5, "accuracy": 3.2, "completeness": 3.0, "relevance": 3.6, "answer_keyword_coverage": 0.59, "overall": 3.266667}, "spanning": {"questions": 5, "accuracy": 2.6, "completeness": 2.0, "relevance": 3.0, "answer_keyword_coverage": 0.238095, "overall": 2.533333}, "temporal": {"questions": 4, "accuracy": 2.5, "completeness": 2.25, "relevance": 3.0, "answer_keyword_coverage": 0.358333, "overall": 2.583333}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/17", "source": "run-1", "name": "17", "pipeline": "advanced", "embedding_model": "bge-large:latest", "chat_model": "gemma4:e4b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.402603, "ndcg": 0.43821, "keyword_coverage": 0.57}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.570571, "ndcg": 0.602681, "keyword_coverage": 0.750714}, "medium": {"questions": 10, "mrr": 0.385833, "ndcg": 0.424758, "keyword_coverage": 0.538333}, "hard": {"questions": 10, "mrr": 0.251406, "ndcg": 0.287192, "keyword_coverage": 0.420952}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.393197, "ndcg": 0.416724, "keyword_coverage": 0.578571}, "direct_fact": {"questions": 4, "mrr": 0.758929, "ndcg": 0.773919, "keyword_coverage": 0.964286}, "holistic": {"questions": 3, "mrr": 0.144444, "ndcg": 0.154825, "keyword_coverage": 0.188889}, "numerical": {"questions": 5, "mrr": 0.31, "ndcg": 0.367677, "keyword_coverage": 0.5}, "relationship": {"questions": 5, "mrr": 0.565667, "ndcg": 0.629408, "keyword_coverage": 0.8}, "spanning": {"questions": 5, "mrr": 0.281587, "ndcg": 0.32992, "keyword_coverage": 0.485714}, "temporal": {"questions": 4, "mrr": 0.3125, "ndcg": 0.32106, "keyword_coverage": 0.358333}}}, "answer": {"overall": {"accuracy": 3.0, "completeness": 3.3, "relevance": 3.416667, "answer_keyword_coverage": 0.433095, "overall": 3.238889}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 3.0, "completeness": 3.4, "relevance": 3.45, "answer_keyword_coverage": 0.587857, "overall": 3.283333}, "medium": {"questions": 10, "accuracy": 2.9, "completeness": 3.3, "relevance": 3.7, "answer_keyword_coverage": 0.453333, "overall": 3.3}, "hard": {"questions": 10, "accuracy": 3.1, "completeness": 3.2, "relevance": 3.1, "answer_keyword_coverage": 0.258095, "overall": 3.133333}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 2.75, "completeness": 3.5, "relevance": 2.75, "answer_keyword_coverage": 0.394048, "overall": 3.0}, "direct_fact": {"questions": 4, "accuracy": 4.25, "completeness": 4.25, "relevance": 4.25, "answer_keyword_coverage": 0.857143, "overall": 4.25}, "holistic": {"questions": 3, "accuracy": 3.0, "completeness": 4.0, "relevance": 4.666667, "answer_keyword_coverage": 0.066667, "overall": 3.888889}, "numerical": {"questions": 5, "accuracy": 2.6, "completeness": 2.8, "relevance": 2.8, "answer_keyword_coverage": 0.38, "overall": 2.733333}, "relationship": {"questions": 5, "accuracy": 3.2, "completeness": 3.0, "relevance": 3.9, "answer_keyword_coverage": 0.51, "overall": 3.366667}, "spanning": {"questions": 5, "accuracy": 4.0, "completeness": 3.0, "relevance": 3.0, "answer_keyword_coverage": 0.380952, "overall": 3.333333}, "temporal": {"questions": 4, "accuracy": 1.0, "completeness": 3.0, "relevance": 3.0, "answer_keyword_coverage": 0.358333, "overall": 2.333333}}}, "viz": {"d2": null, "d3": null}}, {"id": "run-1/18", "source": "run-1", "name": "18", "pipeline": "advanced", "embedding_model": "bge-large:latest", "chat_model": "gpt-oss:20b", "judge_model": "deepseek-r1:1.5b", "rerank_model": "BAAI/bge-reranker-v2-m3", "preprocess_model": "gemma4:e4b", "rewrite_model": "gemma4:e4b", "k": 10, "questions": 30, "limit": null, "retrieval": {"overall": {"mrr": 0.402603, "ndcg": 0.43821, "keyword_coverage": 0.57}, "byDifficulty": {"easy": {"questions": 10, "mrr": 0.570571, "ndcg": 0.602681, "keyword_coverage": 0.750714}, "medium": {"questions": 10, "mrr": 0.385833, "ndcg": 0.424758, "keyword_coverage": 0.538333}, "hard": {"questions": 10, "mrr": 0.251406, "ndcg": 0.287192, "keyword_coverage": 0.420952}}, "byCategory": {"comparative": {"questions": 4, "mrr": 0.393197, "ndcg": 0.416724, "keyword_coverage": 0.578571}, "direct_fact": {"questions": 4, "mrr": 0.758929, "ndcg": 0.773919, "keyword_coverage": 0.964286}, "holistic": {"questions": 3, "mrr": 0.144444, "ndcg": 0.154825, "keyword_coverage": 0.188889}, "numerical": {"questions": 5, "mrr": 0.31, "ndcg": 0.367677, "keyword_coverage": 0.5}, "relationship": {"questions": 5, "mrr": 0.565667, "ndcg": 0.629408, "keyword_coverage": 0.8}, "spanning": {"questions": 5, "mrr": 0.281587, "ndcg": 0.32992, "keyword_coverage": 0.485714}, "temporal": {"questions": 4, "mrr": 0.3125, "ndcg": 0.32106, "keyword_coverage": 0.358333}}}, "answer": {"overall": {"accuracy": 2.633333, "completeness": 3.133333, "relevance": 3.2, "answer_keyword_coverage": 0.257063, "overall": 2.988889}, "byDifficulty": {"easy": {"questions": 10, "accuracy": 3.0, "completeness": 3.3, "relevance": 3.4, "answer_keyword_coverage": 0.312619, "overall": 3.233333}, "medium": {"questions": 10, "accuracy": 2.2, "completeness": 2.9, "relevance": 3.6, "answer_keyword_coverage": 0.293333, "overall": 2.9}, "hard": {"questions": 10, "accuracy": 2.7, "completeness": 3.2, "relevance": 2.6, "answer_keyword_coverage": 0.165238, "overall": 2.833333}}, "byCategory": {"comparative": {"questions": 4, "accuracy": 3.75, "completeness": 3.75, "relevance": 4.25, "answer_keyword_coverage": 0.166667, "overall": 3.916667}, "direct_fact": {"questions": 4, "accuracy": 3.75, "completeness": 4.0, "relevance": 3.75, "answer_keyword_coverage": 0.452381, "overall": 3.833333}, "holistic": {"questions": 3, "accuracy": 1.666667, "completeness": 3.333333, "relevance": 1.333333, "answer_keyword_coverage": 0.066667, "overall": 2.111111}, "numerical": {"questions": 5, "accuracy": 2.0, "completeness": 3.0, "relevance": 3.6, "answer_keyword_coverage": 0.306667, "overall": 2.866667}, "relationship": {"questions": 5, "accuracy": 2.4, "completeness": 2.8, "relevance": 4.0, "answer_keyword_coverage": 0.313333, "overall": 3.066667}, "spanning": {"questions": 5, "accuracy": 2.4, "completeness": 2.6, "relevance": 2.6, "answer_keyword_coverage": 0.257143, "overall": 2.533333}, "temporal": {"questions": 4, "accuracy": 2.5, "completeness": 2.75, "relevance": 2.25, "answer_keyword_coverage": 0.1625, "overall": 2.5}}}, "viz": {"d2": null, "d3": null}}], "runSets": [{"source": "run-1", "count": 18, "constants": {"PREPROCESS_MODEL": "gemma4:e4b", "REWRITE_MODEL": "gemma4:e4b", "JUDGE_MODEL": "deepseek-r1:1.5b", "RERANK_MODEL": "BAAI/bge-reranker-v2-m3"}}], "pipelines": ["advanced", "basic"], "embeddings": ["all-minilm:l6-v2", "bge-large:latest", "qwen3-embedding:latest"], "chats": ["deepseek-r1:1.5b", "gemma4:e4b", "gpt-oss:20b"]};
+
+const RETRIEVAL = [
+  {key:"mrr", label:"MRR", group:"Retrieval", domain:[0,1], dec:3},
+  {key:"ndcg", label:"nDCG", group:"Retrieval", domain:[0,1], dec:3},
+  {key:"keyword_coverage", label:"Kw Cov", group:"Retrieval", domain:[0,1], dec:3},
+];
+const ANSWER = [
+  {key:"accuracy", label:"Acc", group:"Answer", domain:[1,5], dec:2},
+  {key:"completeness", label:"Compl", group:"Answer", domain:[1,5], dec:2},
+  {key:"relevance", label:"Rel", group:"Answer", domain:[1,5], dec:2},
+  {key:"answer_keyword_coverage", label:"Ans Kw", group:"Answer", domain:[0,1], dec:3},
+  {key:"overall", label:"Overall", group:"Answer", domain:[1,5], dec:2},
+];
+const COLS = [...RETRIEVAL, ...ANSWER];
+const COLMAP = Object.fromEntries(COLS.map(c => [c.key, c]));
+
+// Aggregate "raw percentage" columns + a single blended RAG Index.
+// Each metric is taken as a percent of its scale max (0-1 -> x100, 1-5 score -> /5*100).
+const COMPUTED = [
+  {key:"retrievalPct", label:"Ret %", group:"Summary", dec:1, computed:true},
+  {key:"answerPct", label:"Ans %", group:"Summary", dec:1, computed:true},
+  {key:"ragIndex", label:"RAG Index", group:"Summary", dec:1, computed:true},
+];
+const COMPMAP = Object.fromEntries(COMPUTED.map(c => [c.key, c]));
+function avg(xs){ xs = xs.filter(x => x != null); return xs.length ? xs.reduce((a,b)=>a+b,0)/xs.length : null; }
+function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+// Percent of a metric's scale max. Errored answer values (out of the 1-5 scale) are
+// dropped entirely — returned as null so they're excluded from Ans % and the RAG Index,
+// never considered for anything (a flaky judge occasionally returns e.g. 52 on a 1-5 scale).
+function metricPct(run, key){
+  const v = metricOf(run, key);
+  if (v == null || isAnswerError(key, v)) return null;
+  const c = COLMAP[key];
+  return clamp(v / c.domain[1] * 100, 0, 100);
+}
+function retrievalPct(run){ return avg(RETRIEVAL.map(c => metricPct(run, c.key))); }
+function answerPct(run){ return avg(ANSWER.map(c => metricPct(run, c.key))); }
+function ragIndex(run){ const r = retrievalPct(run), a = answerPct(run); if (r == null && a == null) return null; return 0.5*(r ?? a) + 0.5*(a ?? r); }
+const COMPFN = { retrievalPct, answerPct, ragIndex };
+function valueFor(run, key){ return COMPMAP[key] ? COMPFN[key](run) : metricOf(run, key); }
+// Answer scores live on a 1-5 scale; anything outside that range is a judge error,
+// surfaced as "ERR" in the UI rather than a misleading number.
+function isScoreKey(key){ const c = COLMAP[key]; return !!(c && c.domain && c.domain[1] === 5); }
+function isAnswerError(key, v){ return v != null && isScoreKey(key) && (v > 5 || v < 1); }
+function activeColumns(){ return state.view === "percent" ? [...COMPUTED, ...COLS] : COLS; }
+
+const state = {
+  runSet: "all",
+  pipelines: new Set(DATA ? DATA.pipelines : []),
+  embeddings: new Set(DATA ? DATA.embeddings : []),
+  chats: new Set(DATA ? DATA.chats : []),
+  sortKey: "overall",
+  sortDir: -1,
+  open: null,
+  view: "metrics",
+  cmpMetric: "ragIndex",
+};
+
+function metricOf(run, key) {
+  const g = (RETRIEVAL.some(c => c.key === key)) ? run.retrieval : run.answer;
+  const v = g.overall[key];
+  return (v === undefined || v === null) ? null : v;
+}
+function shortEmb(m){ return m.replace(":latest","").replace(":l6-v2","-l6"); }
+function fmt(v, dec){ return v == null ? "—" : v.toFixed(dec); }
+// Faithful for in-range values; compact for out-of-scale judge anomalies so they don't
+// blow out the column width (the raw number is preserved in the cell's title tooltip).
+function fmtNative(v, dec){ if (v == null) return "—"; return Math.abs(v) >= 1000 ? v.toExponential(1) : v.toFixed(dec); }
+
+function lerp(a,b,t){ return a + (b-a)*t; }
+function heatColor(t){ // 0..1 -> red..amber..green, muted
+  t = Math.max(0, Math.min(1, t));
+  const stops = [[211,107,107],[216,178,74],[56,180,139]];
+  let c;
+  if (t < 0.5){ const u=t/0.5; c=[lerp(stops[0][0],stops[1][0],u),lerp(stops[0][1],stops[1][1],u),lerp(stops[0][2],stops[1][2],u)]; }
+  else { const u=(t-0.5)/0.5; c=[lerp(stops[1][0],stops[2][0],u),lerp(stops[1][1],stops[2][1],u),lerp(stops[1][2],stops[2][2],u)]; }
+  return `rgb(${c.map(x=>Math.round(x)).join(",")})`;
+}
+
+function filteredRuns(){
+  return DATA.runs.filter(r =>
+    (state.runSet === "all" || r.source === state.runSet) &&
+    state.pipelines.has(r.pipeline) &&
+    state.embeddings.has(r.embedding_model) &&
+    state.chats.has(r.chat_model));
+}
+function sortedRuns(){
+  const runs = filteredRuns();
+  runs.sort((a,b) => {
+    const av = valueFor(a, state.sortKey), bv = valueFor(b, state.sortKey);
+    if (av == null && bv == null) return 0;
+    if (av == null) return 1;
+    if (bv == null) return -1;
+    // Errored answer values are not real scores — keep them at the bottom either way.
+    const ae = isAnswerError(state.sortKey, av), be = isAnswerError(state.sortKey, bv);
+    if (ae !== be) return ae ? 1 : -1;
+    return (av - bv) * state.sortDir;
+  });
+  return runs;
+}
+
+function renderKpis(){
+  const runs = filteredRuns();
+  const el = document.getElementById("kpis");
+  if (!runs.length){ el.innerHTML = ""; return; }
+  function best(key){
+    let top = null;
+    for (const r of runs){
+      const v = valueFor(r,key);
+      if (v!=null && !isAnswerError(key,v) && (top==null || v>top.v)) top={v, r};
+    }
+    return top;
+  }
+  const bi = best("ragIndex"), bo = best("overall"), bm = best("mrr");
+  const cards = [
+    {label:"Runs in view", value:String(runs.length), meta:`${DATA.runs.length} total · ${DATA.pipelines.length} pipelines`, spark:""},
+    {label:"Top RAG Index", value: bi? bi.v.toFixed(1)+"%":"—", meta: bi? `${bi.r.id} · ${shortEmb(bi.r.embedding_model)} · ${bi.r.chat_model}`:"", spark:"◆"},
+    {label:"Best answer overall", value: bo? bo.v.toFixed(2):"—", meta: bo? `${bo.r.id} · ${shortEmb(bo.r.embedding_model)} · ${bo.r.chat_model}`:"", spark:"★"},
+    {label:"Best retrieval MRR", value: bm? bm.v.toFixed(3):"—", meta: bm? `${bm.r.id} · ${shortEmb(bm.r.embedding_model)}`:"", spark:"★"},
+  ];
+  el.innerHTML = cards.map(c => `
+    <div class="kpi">
+      <span class="spark">${c.spark}</span>
+      <div class="label">${c.label}</div>
+      <div class="value">${c.value}</div>
+      <div class="meta">${c.meta || "&nbsp;"}</div>
+    </div>`).join("");
+}
+
+function chip(value, on, cls, onclick){
+  const c = document.createElement("button");
+  c.type = "button";
+  c.className = "chip" + (on ? " on" : "") + (cls ? " " + cls : "");
+  c.textContent = value;
+  c.setAttribute("aria-pressed", on ? "true" : "false");
+  c.onclick = onclick;
+  return c;
+}
+function renderToolbar(){
+  const tb = document.getElementById("toolbar");
+  tb.innerHTML = "";
+
+  // Run-set picker (single-select): "All" plus each discovered run set folder.
+  if (DATA.runSets && DATA.runSets.length >= 1){
+    const rsWrap = document.createElement("div");
+    rsWrap.className = "filter-group";
+    rsWrap.innerHTML = `<span class="gl">Run set</span>`;
+    const rsChips = document.createElement("div");
+    rsChips.className = "chips";
+    const options = [{source:"all", count: DATA.runs.length}, ...DATA.runSets];
+    for (const opt of options){
+      const label = opt.source === "all" ? "All sets" : opt.source;
+      rsChips.appendChild(chip(`${label} · ${opt.count}`, state.runSet === opt.source, "", () => {
+        state.runSet = opt.source;
+        render();
+      }));
+    }
+    rsWrap.appendChild(rsChips);
+    tb.appendChild(rsWrap);
+  }
+
+  const groups = [
+    {gl:"Pipeline", values: DATA.pipelines, set: state.pipelines, pipe:true},
+    {gl:"Embedding model", values: DATA.embeddings, set: state.embeddings},
+    {gl:"Chat model", values: DATA.chats, set: state.chats},
+  ];
+  for (const g of groups){
+    const wrap = document.createElement("div");
+    wrap.className = "filter-group";
+    wrap.innerHTML = `<span class="gl">${g.gl}</span>`;
+    const chips = document.createElement("div");
+    chips.className = "chips";
+    for (const v of g.values){
+      const cls = g.pipe ? `pipe-${v}` : "";
+      chips.appendChild(chip(g.pipe ? v : (g.gl[0]==="E"? shortEmb(v): v), g.set.has(v), cls, () => {
+        if (g.set.has(v)) g.set.delete(v); else g.set.add(v);
+        if (g.set.size === 0) g.values.forEach(x => g.set.add(x)); // never empty
+        render();
+      }));
+    }
+    wrap.appendChild(chips);
+    tb.appendChild(wrap);
+  }
+  const right = document.createElement("div");
+  right.className = "right";
+  const reset = document.createElement("button");
+  reset.className = "reset";
+  reset.textContent = "Reset filters";
+  reset.onclick = () => {
+    state.runSet = "all";
+    state.pipelines = new Set(DATA.pipelines);
+    state.embeddings = new Set(DATA.embeddings);
+    state.chats = new Set(DATA.chats);
+    render();
+  };
+  right.appendChild(reset);
+  tb.appendChild(right);
+}
+
+function colExtent(runs, key){
+  let lo=Infinity, hi=-Infinity;
+  for (const r of runs){ const v=valueFor(r,key); if(v!=null){ lo=Math.min(lo,v); hi=Math.max(hi,v); } }
+  if (lo===Infinity) return null;
+  return [lo,hi];
+}
+
+function cellFor(run, col){
+  const raw = valueFor(run, col.key);
+  if (raw == null) return {bg:"transparent", color:"var(--faint)", text:"—"};
+  if (isAnswerError(col.key, raw))
+    return {err:true, text:"ERR", title:`Invalid answer score (expected 1–5): ${raw}`};
+  let text, t;
+  if (col.computed){ text = raw.toFixed(col.dec) + "%"; t = raw/100; }
+  else {
+    const pv = clamp(raw / col.domain[1] * 100, 0, 100);  // absolute, scale-based shade
+    t = pv / 100;
+    text = state.view === "percent" ? pv.toFixed(1) + "%" : fmtNative(raw, col.dec);  // raw stays faithful
+  }
+  const outOfScale = !col.computed && (raw < col.domain[0] || raw > col.domain[1]);
+  return {bg: heatColor(t), color: "#0c0f14", text, title: outOfScale ? `Out of ${col.domain[0]}–${col.domain[1]} scale: ${raw}` : ""};
+}
+
+function renderTable(){
+  const cols = activeColumns();
+  const runs = sortedRuns();
+  const table = document.getElementById("table");
+  document.getElementById("count").textContent = `${runs.length} configuration${runs.length===1?"":"s"}`;
+  if (!runs.length){ table.innerHTML = `<tbody><tr><td class="empty">No runs match these filters.</td></tr></tbody>`; return; }
+
+  const best = {};
+  for (const c of cols){
+    let m = null;
+    for (const r of runs){
+      const v = valueFor(r, c.key);
+      if (v != null && !isAnswerError(c.key, v) && (m == null || v > m)) m = v;
+    }
+    best[c.key] = m;
+  }
+
+  const head = `
+    <thead><tr>
+      <th class="lt" scope="col">Run</th>
+      <th class="lt" scope="col">Config</th>
+      ${cols.map((c,i) => {
+        const sorted = state.sortKey===c.key;
+        const ariaSort = sorted ? (state.sortDir<0?'descending':'ascending') : 'none';
+        return `
+        <th data-key="${c.key}" scope="col" tabindex="0" role="button"
+            aria-sort="${ariaSort}" title="Sort by ${c.group} · ${c.label}"
+            class="${sorted?'sorted':''}">
+          <span class="grp">${(i===0||cols[i-1].group!==c.group)?c.group:'&nbsp;'}</span>
+          ${c.label} <span class="arrow">${sorted?(state.sortDir<0?'▼':'▲'):''}</span>
+        </th>`;
+      }).join("")}
+    </tr></thead>`;
+
+  const rows = runs.map(r => {
+    const cells = cols.map(c => {
+      const cell = cellFor(r, c);
+      const raw = valueFor(r, c.key);
+      const isBest = !cell.err && raw != null && best[c.key] != null && Math.abs(raw - best[c.key]) < 1e-9;
+      const titleAttr = cell.title ? ` title="${cell.title}"` : "";
+      const cls = cell.err ? "err" : (isBest ? "best-col" : "");
+      const styleAttr = cell.err ? "" : ` style="background:${cell.bg};color:${cell.color}"`;
+      return `<td><span class="heat ${cls}"${styleAttr}${titleAttr}>${cell.text}</span></td>`;
+    }).join("");
+    const open = state.open === r.id;
+    return `
+      <tr class="run-row ${open?'open':''}" data-id="${r.id}" tabindex="0" role="button"
+          aria-expanded="${open?'true':'false'}"
+          aria-label="Run ${r.name}, ${r.pipeline}, ${shortEmb(r.embedding_model)}, ${r.chat_model}. Toggle details.">
+        <td class="lt"><span class="runtag"><span class="dot ${r.pipeline}"></span>
+          <span><span class="run-id">#${r.name}</span> <span class="run-src">${r.source}</span></span></span></td>
+        <td class="lt">
+          <span class="pill ${r.pipeline}">${r.pipeline}</span>
+          <span class="pill">${shortEmb(r.embedding_model)}</span>
+          <span class="pill">${r.chat_model}</span>
+        </td>
+        ${cells}
+      </tr>
+      ${open ? detailRow(r, cols.length) : ""}`;
+  }).join("");
+
+  table.innerHTML = head + `<tbody>${rows}</tbody>`;
+
+  // Re-render rebuilds the table DOM; restore keyboard focus so the user keeps their place.
+  const refocus = (selector) => { const el = table.querySelector(selector); if (el) el.focus(); };
+  const sortBy = (k) => {
+    if (state.sortKey === k) state.sortDir *= -1;
+    else { state.sortKey = k; state.sortDir = -1; }
+    renderTable();
+    refocus(`thead th[data-key="${CSS.escape(k)}"]`);
+  };
+  table.querySelectorAll("thead th[data-key]").forEach(th => {
+    th.onclick = () => sortBy(th.dataset.key);
+    th.onkeydown = (e) => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); sortBy(th.dataset.key); } };
+  });
+  const toggleRow = (id) => {
+    state.open = (state.open === id) ? null : id;
+    renderTable();
+    refocus(`tr.run-row[data-id="${CSS.escape(id)}"]`);
+  };
+  table.querySelectorAll("tr.run-row").forEach(tr => {
+    tr.onclick = () => toggleRow(tr.dataset.id);
+    tr.onkeydown = (e) => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); toggleRow(tr.dataset.id); } };
+  });
+}
+
+function barBlock(title, buckets, metricDefs, orderHint){
+  const keys = Object.keys(buckets);
+  const order = orderHint.filter(k => keys.includes(k)).concat(keys.filter(k => !orderHint.includes(k)).sort());
+  let html = `<h4>${title}</h4>`;
+  for (const k of order){
+    const b = buckets[k];
+    html += `<div class="bk-row"><div class="lab">${k}${b.questions!=null?` · ${b.questions}q`:''}</div><div class="bars">`;
+    for (const m of metricDefs){
+      const v = b[m.key];
+      const err = isAnswerError(m.key, v);
+      const t = v==null ? 0 : (v - m.domain[0]) / (m.domain[1]-m.domain[0]);
+      const fill = err
+        ? `width:100%;background:var(--bad)`
+        : `width:${Math.max(0,Math.min(100,t*100)).toFixed(1)}%`;
+      const valText = v==null ? '—' : (err ? 'ERR' : v.toFixed(m.dec));
+      const valTitle = err ? ` title="Invalid answer score (expected 1–5): ${v}"` : "";
+      html += `<div class="bar-line">
+        <span class="mlab">${m.label}</span>
+        <span class="track"><span class="fill" style="${fill}"></span></span>
+        <span class="mval${err?' err':''}"${valTitle}>${valText}</span></div>`;
+    }
+    html += `</div></div>`;
+  }
+  return html;
+}
+
+function detailRow(r, colCount){
+  const diffOrder = ["easy","medium","hard"];
+  const ret = barBlock("Retrieval · by difficulty", r.retrieval.byDifficulty, RETRIEVAL, diffOrder);
+  const ans = barBlock("Answer · by difficulty", r.answer.byDifficulty, ANSWER.filter(c=>["accuracy","completeness","relevance","overall"].includes(c.key)), diffOrder);
+  const retCat = Object.keys(r.retrieval.byCategory||{}).length
+    ? barBlock("Retrieval · by category", r.retrieval.byCategory, [COLMAP.mrr, COLMAP.keyword_coverage], [])
+    : "";
+  const ansCat = Object.keys(r.answer.byCategory||{}).length
+    ? barBlock("Answer · by category", r.answer.byCategory, [COLMAP.overall, COLMAP.answer_keyword_coverage], [])
+    : "";
+  const v2 = r.viz && r.viz.d2;
+  const v3 = r.viz && r.viz.d3;
+  const meta = `
+    <div class="detail-meta">
+      <span>k = <b>${r.k ?? '—'}</b></span>
+      <span>questions = <b>${r.questions ?? '—'}</b></span>
+      <span>judge = <b>${r.judge_model}</b></span>
+      ${r.pipeline==='advanced' ? `<span>rerank = <b>${r.rerank_model}</b></span>` : ''}
+      <span class="viz-links">
+        <a class="${v2?'':'off'}" ${v2?`href="${v2}" target="_blank"`:''}>2D vectors ↗</a>
+        <a class="${v3?'':'off'}" ${v3?`href="${v3}" target="_blank"`:''}>3D vectors ↗</a>
+      </span>
+    </div>`;
+  return `<tr class="detail"><td colspan="${colCount+2}"><div class="detail-inner">
+    <div>${ret}${retCat}</div>
+    <div>${ans}${ansCat}</div>
+    ${meta}
+  </div></td></tr>`;
+}
+
+function renderCompare(){
+  const sel = document.getElementById("cmpMetric");
+  if (!sel.options.length){
+    sel.innerHTML = [...COMPUTED, ...COLS].map(c => `<option value="${c.key}">${c.group} · ${c.label}</option>`).join("");
+    sel.value = state.cmpMetric;
+    sel.onchange = () => { state.cmpMetric = sel.value; renderCompare(); };
+  }
+  const c = COMPMAP[state.cmpMetric] || COLMAP[state.cmpMetric];
+  const suffix = c.computed ? "%" : "";
+  // Errored answer runs sort to the bottom and don't count toward the scale max.
+  const runs = filteredRuns().filter(r => valueFor(r, c.key) != null).sort((a,b) => {
+    const ae = isAnswerError(c.key, valueFor(a,c.key)), be = isAnswerError(c.key, valueFor(b,c.key));
+    if (ae !== be) return ae ? 1 : -1;
+    return valueFor(b,c.key) - valueFor(a,c.key);
+  });
+  const box = document.getElementById("compare");
+  if (!runs.length){ box.innerHTML = `<div class="empty">No data.</div>`; return; }
+  const valid = runs.map(r => valueFor(r,c.key)).filter(v => !isAnswerError(c.key, v));
+  const max = valid.length ? Math.max(...valid) : 1;
+  const ext = colExtent(runs.filter(r => !isAnswerError(c.key, valueFor(r,c.key))), c.key);
+  box.innerHTML = runs.map(r => {
+    const v = valueFor(r, c.key);
+    if (isAnswerError(c.key, v)){
+      return `<div class="cmp-row">
+        <span class="cl"><span class="dot ${r.pipeline}" style="display:inline-block;margin-right:6px"></span>#${r.name} · ${shortEmb(r.embedding_model)} · ${r.chat_model}</span>
+        <span class="ct"><span class="cf" style="width:100%;background:var(--bad);opacity:.5"></span></span>
+        <span class="cv" style="color:var(--bad);font-weight:700" title="Invalid answer score (expected 1–5): ${v}">ERR</span>
+      </div>`;
+    }
+    const t = c.computed ? v/100 : (ext && ext[1]>ext[0] ? (v-ext[0])/(ext[1]-ext[0]) : 1);
+    const w = max>0 ? (v/max*100) : 0;
+    return `<div class="cmp-row">
+      <span class="cl"><span class="dot ${r.pipeline}" style="display:inline-block;margin-right:6px"></span>#${r.name} · ${shortEmb(r.embedding_model)} · ${r.chat_model}</span>
+      <span class="ct"><span class="cf" style="width:${w.toFixed(1)}%;background:${heatColor(t)}"></span></span>
+      <span class="cv">${v.toFixed(c.dec)}${suffix}</span>
+    </div>`;
+  }).join("");
+}
+
+function renderConstants(){
+  const box = document.getElementById("constants");
+  const sets = (DATA.runSets || []).filter(s => state.runSet === "all" || s.source === state.runSet);
+  if (!sets.length){ box.innerHTML = `<div class="none">No run sets found.</div>`; return; }
+  const ORDER = [["PREPROCESS_MODEL","Preprocess"],["REWRITE_MODEL","Rewrite"],["JUDGE_MODEL","Judge"],["RERANK_MODEL","Rerank"]];
+  box.innerHTML = sets.map(s => {
+    const c = s.constants;
+    const kvs = c
+      ? ORDER.filter(([k]) => c[k] != null).map(([k,lab]) =>
+          `<span class="kv"><span class="k">${lab}</span><span class="v">${c[k]}</span></span>`).join('<span class="sep"></span>')
+      : `<span class="none">constants not recorded for this set</span>`;
+    return `<div class="const-set">
+      <span class="set-name">${s.source} <span class="badge">${s.count} run${s.count===1?'':'s'}</span></span>
+      <span class="sep"></span>${kvs}</div>`;
+  }).join("");
+}
+
+function render(){
+  renderToolbar();
+  renderConstants();
+  renderKpis();
+  renderTable();
+  renderCompare();
+}
+
+function boot(){
+  document.getElementById("stamp").innerHTML =
+    DATA ? `${DATA.runs.length} runs · generated ${DATA.generatedAt}` : "";
+  document.getElementById("foot").innerHTML =
+    "Cells are shaded by score on each metric's own scale (red = low → green = high). " +
+    "Answer metrics are 1–5 (judge-scored); retrieval &amp; coverage are 0–1. " +
+    "<b>RAG Index</b> = 50% retrieval-% + 50% answer-%, where each metric is taken as a percent of its scale. " +
+    "Answer scores outside the 1–5 range are judge errors (shown as <span style='color:var(--bad);font-weight:700'>ERR</span>) " +
+    "and are excluded from every aggregate — the RAG Index, percentages, best-of KPIs, and rankings. " +
+    "Overall = question-weighted mean across difficulty buckets. " +
+    "Regenerate with <code>uv run python -m app.build_benchmark</code>.";
+  if (!DATA || !DATA.runs.length){
+    document.getElementById("toolbar").innerHTML = `<div class="empty">No evaluation runs found. Run the evaluator, then rebuild this page.</div>`;
+    return;
+  }
+  const toggle = document.getElementById("viewToggle");
+  toggle.querySelectorAll("button").forEach(btn => {
+    btn.onclick = () => {
+      state.view = btn.dataset.view;
+      toggle.querySelectorAll("button").forEach(b => b.classList.toggle("on", b === btn));
+      // Lead with the headline metric for each view so the table is sorted usefully.
+      state.sortKey = state.view === "percent" ? "ragIndex" : "overall";
+      state.sortDir = -1;
+      renderTable();
+    };
+  });
+  render();
+}
+boot();
+</script>
+</body>
+</html>
