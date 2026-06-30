@@ -318,17 +318,20 @@ def evaluate_pipeline(
     *,
     k: int = 10,
     include_answers: bool = True,
+    include_retrieval: bool = True,
     label: str | None = None,
 ) -> dict[str, pd.DataFrame]:
     implementation = implementation_for(pipeline)
-    retrieval_rows = [
-        evaluate_retrieval_question(question, implementation, k=k)
-        for question in tqdm(questions, desc=f"{pipeline} retrieval evals")
-    ]
-    retrieval = pd.DataFrame(retrieval_rows)
+    retrieval = pd.DataFrame()
+    if include_retrieval:
+        retrieval_rows = [
+            evaluate_retrieval_question(question, implementation, k=k)
+            for question in tqdm(questions, desc=f"{pipeline} retrieval evals")
+        ]
+        retrieval = pd.DataFrame(retrieval_rows)
 
-    # Show retrieval metrics immediately, before the slow answer judging runs.
-    print_retrieval_summary(label or pipeline, retrieval)
+        # Show retrieval metrics immediately, before the slow answer judging runs.
+        print_retrieval_summary(label or pipeline, retrieval)
 
     answer = pd.DataFrame()
     if include_answers:
@@ -369,11 +372,18 @@ def evaluate(
     limit: int | None = None,
     k: int = 10,
     include_answers: bool = True,
+    include_retrieval: bool = True,
 ) -> dict[str, dict[str, pd.DataFrame]]:
     questions = stratified_sample(load_eval_questions(), limit)
     pipelines = ["basic", "advanced"] if pipeline == "both" else [pipeline]
     return {
-        name: evaluate_pipeline(name, questions, k=k, include_answers=include_answers)
+        name: evaluate_pipeline(
+            name,
+            questions,
+            k=k,
+            include_answers=include_answers,
+            include_retrieval=include_retrieval,
+        )
         for name in pipelines
     }
 
@@ -453,7 +463,7 @@ def save_results(
         **selected_pipeline_models(pipeline),
         "k": k,
         "limit": limit,
-        "questions": int(retrieval.shape[0]),
+        "questions": int(max(retrieval.shape[0], answer.shape[0])),
         "db_dir": f"vector_db/{pipeline}",
     }
     (run_dir / "config.json").write_text(json.dumps(config, indent=2))
@@ -503,6 +513,7 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--k", type=int, default=10)
     parser.add_argument("--skip-answers", action="store_true")
+    parser.add_argument("--skip-retrieval", action="store_true")
     args = parser.parse_args(cli_args)
 
     set_model_overrides(args.pipeline, overrides)
@@ -512,6 +523,7 @@ def main() -> None:
         limit=args.limit,
         k=args.k,
         include_answers=not args.skip_answers,
+        include_retrieval=not args.skip_retrieval,
     )
     for pipeline_name, frames in results.items():
         # Retrieval summary was already printed by evaluate_pipeline (before the

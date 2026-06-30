@@ -1,0 +1,19 @@
+{
+  "name": "1",
+  "stages": [
+    "chunk",
+    "ingest",
+    "evaluate"
+  ],
+  "pipeline": "advanced",
+  "embedding_model": "all-minilm:l6-v2",
+  "chat_model": "deepseek-r1:1.5b",
+  "preprocess_model": "gpt-oss:20b",
+  "rewrite_model": "gemma4:e4b",
+  "rerank_model": "BAAI/bge-reranker-v2-m3",
+  "judge_model": "gemma4:e4b",
+  "k": 10,
+  "limit": null,
+  "questions": 30,
+  "db_dir": "vector_db/advanced"
+}

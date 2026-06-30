@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -14,7 +15,6 @@ from tqdm import tqdm
 from app.common.chat import chat_structured
 from app.common.chunking import build_documents
 from app.common.chunks import load_chunks as load_stored_documents
-from app.common.chunks import save_chunks as save_documents
 from app.common.models import (
     PREPROCESS_MODEL,
     parse_model_overrides,
@@ -23,7 +23,7 @@ from app.common.models import (
 from app.common.paths import DATASET_DIR
 
 # Enriched documents live next to this module (same folder), ready for chunking.
-ENRICHED_DOCS_PATH = Path(__file__).resolve().parent / "enriched_documents.jsonl"
+ENRICHED_DOCS_PATH = Path(__file__).resolve().parent / "enriched_documents1.jsonl"
 
 
 def document_enrichment_prompt(document: Document) -> str:
@@ -64,6 +64,26 @@ class DocumentEnrichment(BaseModel):
     )
 
 
+def fallback_enrichment(document: Document) -> dict[str, str]:
+    """Deterministic title/summary from metadata, used when the LLM call fails.
+
+    Keeps a long enrichment run alive: a document the model can't enrich (e.g.
+    it returns an empty completion) still gets usable, grounded retrieval text
+    instead of crashing the whole pass.
+    """
+    meta = document.metadata
+    doc_type = str(meta.get("doc_type", "document"))
+    name = meta.get("patient_name") or meta.get("record_id") or "unknown"
+    record_id = meta.get("record_id") or "n/a"
+    title = f"{doc_type.capitalize()} {name} ({record_id})"
+    summary = (
+        f"{doc_type.capitalize()} record for {name} (ID {record_id}), "
+        f"source {meta.get('source_csv_names', 'unknown')}. "
+        "Contains the fields shown in the document body."
+    )
+    return {"title": title, "summary": summary}
+
+
 def llm_document_enrichment(document: Document) -> dict[str, str]:
     messages = [
         {
@@ -75,9 +95,12 @@ def llm_document_enrichment(document: Document) -> dict[str, str]:
             "content": f"Document metadata: {document.metadata} \n\n Document: {document.page_content} \n\n Please enrich the document with a title and summary.",
         },
     ]
-    result = chat_structured(
-        messages, DocumentEnrichment, model=PREPROCESS_MODEL
-    )
+    try:
+        result = chat_structured(messages, DocumentEnrichment, model=PREPROCESS_MODEL)
+    except Exception as exc:
+        record_id = document.metadata.get("record_id", "?")
+        print(f"  ! enrichment failed for {record_id}, using fallback: {exc}")
+        return fallback_enrichment(document)
     return {
         "title": result.title,
         "summary": result.summary,
@@ -108,6 +131,43 @@ def load_enriched_documents(path: Path = ENRICHED_DOCS_PATH) -> list[Document]:
     )
 
 
+def _document_key(document: Document) -> tuple[str, str]:
+    """Stable identity for a built document, used to resume an interrupted run."""
+    meta = document.metadata
+    return (str(meta.get("doc_type", "")), str(meta.get("record_id", "")))
+
+
+def _load_checkpoint(path: Path) -> dict[tuple[str, str], Document]:
+    """Load already-enriched documents from a previous (possibly interrupted) run."""
+    if not path.exists():
+        return {}
+    done: dict[tuple[str, str], Document] = {}
+    with path.open("r", encoding="utf-8") as file:
+        for line in file:
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            document = Document(
+                page_content=str(record["page_content"]),
+                metadata=dict(record.get("metadata", {})),
+            )
+            done[_document_key(document)] = document
+    return done
+
+
+def _append_document(document: Document, path: Path) -> None:
+    """Append one enriched document to the checkpoint file as it completes."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as file:
+        file.write(
+            json.dumps(
+                {"page_content": document.page_content, "metadata": document.metadata},
+                ensure_ascii=False,
+            )
+            + "\n"
+        )
+
+
 def preprocess(
     *,
     csv_dir: Path = DATASET_DIR,
@@ -116,11 +176,24 @@ def preprocess(
 ) -> list[Document]:
     documents = build_documents(csv_dir)
     documents_to_process = documents if limit is None else documents[:limit]
-    enriched = [
-        enrich_document(document)
-        for document in tqdm(documents_to_process, desc="Enriching documents")
-    ]
-    save_documents(enriched, output_path)
+
+    # Resume: reuse documents enriched by a previous run, enriching only the rest.
+    # Each newly enriched document is appended immediately, so an interruption
+    # costs at most the in-flight document.
+    done = _load_checkpoint(output_path)
+    if done:
+        print(f"Resuming: {len(done)} documents already enriched in {output_path}")
+
+    enriched: list[Document] = []
+    for document in tqdm(documents_to_process, desc="Enriching documents"):
+        cached = done.get(_document_key(document))
+        if cached is not None:
+            enriched.append(cached)
+            continue
+        enriched_document = enrich_document(document)
+        _append_document(enriched_document, output_path)
+        enriched.append(enriched_document)
+
     print(f"Saved {len(enriched)} enriched documents to {output_path}")
     return enriched
 

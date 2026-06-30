@@ -13,6 +13,8 @@
 //   limit            max questions, stratified across difficulties (default: all)
 //   k                top-k documents retrieved (default: 10)
 //   include_answers  run answer generation + judging (default: true)
+//   include_retrieval  run retrieval (MRR/nDCG/coverage) evals (default: true);
+//                    set false to skip MRR evals and only run answer evals
 //
 // Only embedding_model and chat_model are overridable per run; preprocess/
 // rewrite/rerank/judge models are constants (see PREPROCESS_MODEL etc. in
@@ -26,12 +28,12 @@
 // {"name":"7","pipeline":"basic","embedding_model":"bge-large:latest","chat_model":"deepseek-r1:1.5b","stages":["ingest","evaluate"]}
 // {"name":"8","pipeline":"basic","embedding_model":"bge-large:latest","chat_model":"gemma4:e4b","stages":["evaluate"]}
 // {"name":"9","pipeline":"basic","embedding_model":"bge-large:latest","chat_model":"gpt-oss:20b","stages":["evaluate"]}
-// {"name":"10","pipeline":"advanced","embedding_model":"all-minilm:l6-v2","chat_model":"deepseek-r1:1.5b"}
-// {"name":"11","pipeline":"advanced","embedding_model":"all-minilm:l6-v2","chat_model":"gemma4:e4b","stages":["evaluate"]}
-// {"name":"12","pipeline":"advanced","embedding_model":"all-minilm:l6-v2","chat_model":"gpt-oss:20b","stages":["evaluate"]}
-// {"name":"13","pipeline":"advanced","embedding_model":"qwen3-embedding:latest","chat_model":"deepseek-r1:1.5b","stages":["ingest","evaluate"]}
-// {"name":"14","pipeline":"advanced","embedding_model":"qwen3-embedding:latest","chat_model":"gemma4:e4b","stages":["evaluate"]}
-// {"name":"15","pipeline":"advanced","embedding_model":"qwen3-embedding:latest","chat_model":"gpt-oss:20b","stages":["evaluate"]}
-// {"name":"16","pipeline":"advanced","embedding_model":"bge-large:latest","chat_model":"deepseek-r1:1.5b","stages":["ingest","evaluate"]}
-// {"name":"17","pipeline":"advanced","embedding_model":"bge-large:latest","chat_model":"gemma4:e4b","stages":["evaluate"]}
-// {"name":"18","pipeline":"advanced","embedding_model":"bge-large:latest","chat_model":"gpt-oss:20b","stages":["evaluate"]}
+// {"name":"1","pipeline":"advanced","embedding_model":"all-minilm:l6-v2","chat_model":"deepseek-r1:1.5b"}
+// {"name":"2","pipeline":"advanced","embedding_model":"all-minilm:l6-v2","chat_model":"gemma4:e4b","stages":["evaluate"]}
+// {"name":"3","pipeline":"advanced","embedding_model":"all-minilm:l6-v2","chat_model":"gpt-oss:20b","stages":["evaluate"]}
+// {"name":"4","pipeline":"advanced","embedding_model":"qwen3-embedding:latest","chat_model":"deepseek-r1:1.5b","stages":["ingest","evaluate"]}
+// {"name":"5","pipeline":"advanced","embedding_model":"qwen3-embedding:latest","chat_model":"gemma4:e4b","stages":["evaluate"]}
+// {"name":"6","pipeline":"advanced","embedding_model":"qwen3-embedding:latest","chat_model":"gpt-oss:20b","include_retrieval":false,"stages":["evaluate"]}
+// {"name":"7","pipeline":"advanced","embedding_model":"bge-large:latest","chat_model":"deepseek-r1:1.5b","stages":["ingest","evaluate"]}
+// {"name":"8","pipeline":"advanced","embedding_model":"bge-large:latest","chat_model":"gemma4:e4b","include_retrieval":false,"stages":["evaluate"]}
+// {"name":"9","pipeline":"advanced","embedding_model":"bge-large:latest","chat_model":"gpt-oss:20b","include_retrieval":false,"stages":["evaluate"]}

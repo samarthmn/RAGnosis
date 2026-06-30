@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import time
 from typing import Any, TypeVar
 
 from openai import OpenAI
@@ -103,15 +104,14 @@ def extract_json_object(text: str) -> dict[str, Any] | None:
     return None
 
 
-def chat_structured(
-    messages: list[dict[str, str]],
+def _chat_structured_once(
+    client: OpenAI,
+    json_messages: list[dict[str, str]],
     schema: type[TModel],
     *,
     model: str,
-    temperature: float = 0.0,
+    temperature: float,
 ) -> TModel:
-    client = chat_client(model)
-    json_messages = messages_with_json_instruction(messages, schema)
     try:
         completion = client.beta.chat.completions.parse(
             model=model,
@@ -148,3 +148,33 @@ def chat_structured(
             errors.append(str(exc))
 
     raise ValueError("Structured response failed: " + " | ".join(errors))
+
+
+def chat_structured(
+    messages: list[dict[str, str]],
+    schema: type[TModel],
+    *,
+    model: str,
+    temperature: float = 0.0,
+    max_attempts: int = 3,
+) -> TModel:
+    """Get a schema-validated response, retrying transient failures.
+
+    Local models (e.g. Ollama) occasionally return an empty completion. Each
+    attempt is a full request, so a fresh sample usually succeeds; we back off
+    briefly between tries.
+    """
+    client = chat_client(model)
+    json_messages = messages_with_json_instruction(messages, schema)
+    last_error: Exception | None = None
+    for attempt in range(max_attempts):
+        try:
+            return _chat_structured_once(
+                client, json_messages, schema, model=model, temperature=temperature
+            )
+        except Exception as exc:
+            last_error = exc
+            if attempt + 1 < max_attempts:
+                time.sleep(1.0 * (attempt + 1))
+    assert last_error is not None
+    raise last_error

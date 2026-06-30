@@ -1,12 +1,9 @@
 {
-  "name": "16",
-  "stages": [
-    "ingest",
-    "evaluate"
-  ],
+  "name": "2",
+  "stages": ["evaluate"],
   "pipeline": "advanced",
-  "embedding_model": "bge-large:latest",
-  "chat_model": "deepseek-r1:1.5b",
+  "embedding_model": "all-minilm:l6-v2",
+  "chat_model": "gemma4:e4b",
   "preprocess_model": "gemma4:e4b",
   "rewrite_model": "gemma4:e4b",
   "rerank_model": "BAAI/bge-reranker-v2-m3",

@@ -38,6 +38,7 @@ RUN_FIELDS = {
     "limit",
     "k",
     "include_answers",
+    "include_retrieval",
     *CHUNK_FIELDS,
     *MODEL_FIELDS,
 }
@@ -119,6 +120,7 @@ def run_one(record: dict[str, Any], index: int, total: int) -> Path | None:
     limit = None if limit in (None, "") else int(limit)
     k = int(record.get("k", 10))
     include_answers = bool(record.get("include_answers", True))
+    include_retrieval = bool(record.get("include_retrieval", True))
     overrides = model_overrides_from(record)
     name = record.get("name") or pipeline
 
@@ -130,7 +132,7 @@ def run_one(record: dict[str, Any], index: int, total: int) -> Path | None:
         f"\n{'=' * 70}\n"
         f"Run {index}/{total}: {name}  "
         f"(pipeline={pipeline}, stages={stages}, k={k}, limit={limit}, "
-        f"answers={include_answers})\n"
+        f"answers={include_answers}, retrieval={include_retrieval})\n"
         f"    overrides: {overrides or 'pipeline defaults'}\n"
         f"{'=' * 70}"
     )
@@ -154,7 +156,12 @@ def run_one(record: dict[str, Any], index: int, total: int) -> Path | None:
     # evaluate_pipeline prints the retrieval summary as soon as retrieval finishes,
     # before the slow answer judging — labelled with this run's name.
     frames = evaluator.evaluate_pipeline(
-        pipeline, questions, k=k, include_answers=include_answers, label=name
+        pipeline,
+        questions,
+        k=k,
+        include_answers=include_answers,
+        include_retrieval=include_retrieval,
+        label=name,
     )
 
     answers = evaluator.answer_summary(frames["answer"])
