@@ -1,0 +1,9 @@
+{
+  "constant_models": {
+    "PREPROCESS_MODEL": "gpt-oss:20b",
+    "REWRITE_MODEL": "gemma4:e4b",
+    "JUDGE_MODEL": "gemma4:e4b",
+    "RERANK_MODEL": "BAAI/bge-reranker-v2-m3",
+    "EMBEDDING_MODEL": "text-embedding-3-large"
+  }
+}

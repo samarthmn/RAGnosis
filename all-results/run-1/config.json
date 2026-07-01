@@ -1,8 +1,5 @@
 {
   "constant_models": {
-    "PREPROCESS_MODEL": "gemma4:e4b",
-    "REWRITE_MODEL": "gemma4:e4b",
-    "JUDGE_MODEL": "deepseek-r1:1.5b",
-    "RERANK_MODEL": "BAAI/bge-reranker-v2-m3"
+    "JUDGE_MODEL": "gemma4:e4b"
   }
 }

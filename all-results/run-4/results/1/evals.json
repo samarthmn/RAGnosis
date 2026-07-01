@@ -1,0 +1,150 @@
+{
+  "retrieval": {
+    "easy": {
+      "questions": 10,
+      "mrr": 0.571095,
+      "ndcg": 0.569648,
+      "keyword_coverage": 0.751667
+    },
+    "medium": {
+      "questions": 10,
+      "mrr": 0.28004,
+      "ndcg": 0.333192,
+      "keyword_coverage": 0.485
+    },
+    "hard": {
+      "questions": 10,
+      "mrr": 0.257758,
+      "ndcg": 0.309121,
+      "keyword_coverage": 0.492381
+    }
+  },
+  "answer": {
+    "easy": {
+      "questions": 10,
+      "accuracy": 2.6,
+      "completeness": 2.6,
+      "relevance": 3.5,
+      "answer_keyword_coverage": 0.297143,
+      "overall": 2.9
+    },
+    "medium": {
+      "questions": 10,
+      "accuracy": 2.6,
+      "completeness": 2.8,
+      "relevance": 3.8,
+      "answer_keyword_coverage": 0.338333,
+      "overall": 3.066667
+    },
+    "hard": {
+      "questions": 10,
+      "accuracy": 2.2,
+      "completeness": 2.1,
+      "relevance": 3.3,
+      "answer_keyword_coverage": 0.138095,
+      "overall": 2.533333
+    }
+  },
+  "retrieval_by_category": {
+    "comparative": {
+      "questions": 4,
+      "mrr": 0.333036,
+      "ndcg": 0.374199,
+      "keyword_coverage": 0.534524
+    },
+    "direct_fact": {
+      "questions": 4,
+      "mrr": 0.653571,
+      "ndcg": 0.672358,
+      "keyword_coverage": 0.916667
+    },
+    "holistic": {
+      "questions": 3,
+      "mrr": 0.151852,
+      "ndcg": 0.149667,
+      "keyword_coverage": 0.188889
+    },
+    "numerical": {
+      "questions": 5,
+      "mrr": 0.201413,
+      "ndcg": 0.264603,
+      "keyword_coverage": 0.433333
+    },
+    "relationship": {
+      "questions": 5,
+      "mrr": 0.576333,
+      "ndcg": 0.589943,
+      "keyword_coverage": 0.8
+    },
+    "spanning": {
+      "questions": 5,
+      "mrr": 0.292976,
+      "ndcg": 0.366742,
+      "keyword_coverage": 0.62381
+    },
+    "temporal": {
+      "questions": 4,
+      "mrr": 0.333333,
+      "ndcg": 0.344484,
+      "keyword_coverage": 0.408333
+    }
+  },
+  "answer_by_category": {
+    "comparative": {
+      "questions": 4,
+      "accuracy": 4.0,
+      "completeness": 3.75,
+      "relevance": 4.25,
+      "answer_keyword_coverage": 0.208333,
+      "overall": 4.0
+    },
+    "direct_fact": {
+      "questions": 4,
+      "accuracy": 4.0,
+      "completeness": 3.75,
+      "relevance": 4.0,
+      "answer_keyword_coverage": 0.47619,
+      "overall": 3.916667
+    },
+    "holistic": {
+      "questions": 3,
+      "accuracy": 1.0,
+      "completeness": 1.0,
+      "relevance": 2.333333,
+      "answer_keyword_coverage": 0.0,
+      "overall": 1.444444
+    },
+    "numerical": {
+      "questions": 5,
+      "accuracy": 1.0,
+      "completeness": 1.4,
+      "relevance": 3.8,
+      "answer_keyword_coverage": 0.266667,
+      "overall": 2.066667
+    },
+    "relationship": {
+      "questions": 5,
+      "accuracy": 3.4,
+      "completeness": 3.2,
+      "relevance": 3.6,
+      "answer_keyword_coverage": 0.443333,
+      "overall": 3.4
+    },
+    "spanning": {
+      "questions": 5,
+      "accuracy": 2.6,
+      "completeness": 2.6,
+      "relevance": 3.8,
+      "answer_keyword_coverage": 0.209524,
+      "overall": 3.0
+    },
+    "temporal": {
+      "questions": 4,
+      "accuracy": 1.0,
+      "completeness": 1.5,
+      "relevance": 2.5,
+      "answer_keyword_coverage": 0.1,
+      "overall": 1.666667
+    }
+  }
+}

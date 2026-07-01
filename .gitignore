@@ -3,6 +3,7 @@
 .venv
 __pycache__
 vector_db/
+vector_db*/
 graph_output/
 enriched_documents.jsonl
 enriched_documents.*.jsonl

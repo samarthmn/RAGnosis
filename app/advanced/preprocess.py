@@ -23,7 +23,7 @@ from app.common.models import (
 from app.common.paths import DATASET_DIR
 
 # Enriched documents live next to this module (same folder), ready for chunking.
-ENRICHED_DOCS_PATH = Path(__file__).resolve().parent / "enriched_documents1.jsonl"
+ENRICHED_DOCS_PATH = Path(__file__).resolve().parent / "enriched_documents.jsonl"
 
 
 def document_enrichment_prompt(document: Document) -> str:

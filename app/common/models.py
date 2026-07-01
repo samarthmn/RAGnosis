@@ -55,7 +55,8 @@ EmbeddingModelName = Literal[
     "all-minilm:l6-v2",
     "qwen3-embedding:latest",
     "bge-large:latest",
-    # "text-embedding-3-small",
+    "text-embedding-3-small",
+    "text-embedding-3-large",
 ]
 
 PipelineModelType = Literal[
@@ -107,6 +108,14 @@ EMBEDDING_MODELS: dict[EmbeddingModelName, EmbeddingModelConfig] = {
         "is_openai_model": True,
         "usd_per_1m_tokens": 0.02,
     },
+    "text-embedding-3-large": {
+        "model": "text-embedding-3-large",
+        "api_key": os.getenv("OPENAI_API_KEY"),
+        "base_url": "https://api.openai.com/v1",
+        "is_paid_model": True,
+        "is_openai_model": True,
+        "usd_per_1m_tokens": 0.13,
+    },
 }
 
 LLM_MODELS: dict[str, LlmModelConfig] = {
@@ -154,12 +163,12 @@ def is_local_reranker(model: str) -> bool:
 
 SELECTED_MODELS: dict[str, SelectedPipelineConfig] = {
     "basic": {
-        "embedding_model": EMBEDDING_MODELS["all-minilm:l6-v2"],
-        "chat_model": LLM_MODELS["gemma4:e4b"],
+        "embedding_model": EMBEDDING_MODELS["text-embedding-3-large"],
+        "chat_model": LLM_MODELS["gpt-oss:20b"],
     },
     "advanced": {
-        "embedding_model": EMBEDDING_MODELS["all-minilm:l6-v2"],
-        "chat_model": LLM_MODELS["deepseek-r1:1.5b"],
+        "embedding_model": EMBEDDING_MODELS["text-embedding-3-large"],
+        "chat_model": LLM_MODELS["gpt-oss:20b"],
     },
 }
 
