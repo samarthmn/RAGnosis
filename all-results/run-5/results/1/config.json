@@ -1,0 +1,17 @@
+{
+  "name": "1-without-document-enrichment",
+  "stages": [
+    "evaluate"
+  ],
+  "pipeline": "advanced",
+  "embedding_model": "text-embedding-3-small",
+  "chat_model": "gpt-oss:20b",
+  "preprocess_model": "gpt-oss:20b",
+  "rewrite_model": "gemma4:e4b",
+  "rerank_model": "BAAI/bge-reranker-v2-m3",
+  "judge_model": "gemma4:e4b",
+  "k": 10,
+  "limit": null,
+  "questions": 30,
+  "db_dir": "vector_db/advanced"
+}
