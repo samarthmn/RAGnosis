@@ -1,5 +1,9 @@
 {
   "constant_models": {
     "JUDGE_MODEL": "gemma4:e4b"
+  },
+  "description": {
+    "summary": "Baseline Basic RAG: plain vector search with no query rewriting or reranking, used to benchmark local embedding models against each other.",
+    "how_it_works": "During indexing we build one document per entity (patient, doctor, department), split each into fixed-size character chunks, and embed them. When a question comes in, we embed it, retrieve the top-k most similar chunks, and hand them to the chat model to answer. There is no query rewriting and no reranking — this is the simplest pipeline and the baseline every later run tries to improve on."
   }
 }

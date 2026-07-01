@@ -45,6 +45,49 @@ def save_chunks(chunks: list[Document], path: Path) -> Path:
     return path
 
 
+def save_parents(parents: list[Document], path: Path) -> Path:
+    """Persist parent documents to a sidecar JSONL for query-time expansion.
+
+    Parents are looked up by ``parent_id`` and never embedded, so this file lives
+    next to ``chunks.jsonl`` but is not read by ingest.
+    """
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as file:
+        for parent in parents:
+            file.write(
+                json.dumps(
+                    {
+                        "page_content": parent.page_content,
+                        "metadata": parent.metadata,
+                    },
+                    ensure_ascii=False,
+                )
+                + "\n"
+            )
+    print(f"Saved {len(parents)} parents to {path}")
+    return path
+
+
+def load_parents(path: Path) -> list[Document]:
+    """Load parent documents, or return ``[]`` if the sidecar does not exist yet
+    (so retrieval degrades gracefully to child chunks before a re-chunk)."""
+    if not path.exists():
+        return []
+    parents: list[Document] = []
+    with path.open("r", encoding="utf-8") as file:
+        for line in file:
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            parents.append(
+                Document(
+                    page_content=str(record["page_content"]),
+                    metadata=dict(record.get("metadata", {})),
+                )
+            )
+    return parents
+
+
 def load_chunks(path: Path, *, command_hint: str) -> list[Document]:
     if not path.exists():
         raise FileNotFoundError(

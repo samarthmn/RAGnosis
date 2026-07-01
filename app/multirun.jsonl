@@ -48,3 +48,6 @@
 // ------------------------------------------------------------------------------------------------
 // {"name":"1-without-document-enrichment","pipeline":"advanced","embedding_model":"text-embedding-3-small","chat_model":"gpt-oss:20b","stages":["evaluate"]}
 // {"name":"2-without-document-enrichment","pipeline":"advanced","embedding_model":"text-embedding-3-large","chat_model":"gpt-oss:20b","stages":["evaluate"]}
+// ------------------------------------------------------------------------------------------------
+// {"name":"1-with-small-to-big-retrieval","pipeline":"advanced","embedding_model":"text-embedding-3-small","chat_model":"gpt-oss:20b"}
+// {"name":"2-with-small-to-big-retrieval","pipeline":"advanced","embedding_model":"text-embedding-3-large","chat_model":"gpt-oss:20b"}

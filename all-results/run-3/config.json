@@ -7,5 +7,9 @@
     "EMBEDDING_MODEL": "text-embedding-3-small",
     "RUN_1": "With Document Enrichment",
     "RUN_2": "With Document Enrichment"
+  },
+  "description": {
+    "summary": "Advanced pipeline with LLM-enriched documents, testing whether enrichment helps OpenAI's text-embedding-3-small.",
+    "how_it_works": "Before chunking, each document is rewritten by an LLM that adds a title and a summary; the enriched documents are then split into character chunks and embedded with text-embedding-3-small. At query time the Advanced pipeline rewrites the question, retrieves chunks for both the original and rewritten query, and reranks them with the BGE reranker before the chat model answers."
   }
 }

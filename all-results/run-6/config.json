@@ -1,0 +1,15 @@
+{
+  "constant_models": {
+    "REWRITE_MODEL": "gemma4:e4b",
+    "JUDGE_MODEL": "gemma4:e4b",
+    "RERANK_MODEL": "BAAI/bge-reranker-v2-m3",
+    "EMBEDDING_MODEL_1": "text-embedding-3-small",
+    "RUN_1": "With Small to Big Retrieval enhancement",
+    "EMBEDDING_MODEL_2": "text-embedding-3-large",
+    "RUN_2": "With Small to Big Retrieval enhancement"
+  },
+  "description": {
+    "summary": "Small-to-Big retrieval: search small per-visit chunks, but answer from the full patient document.",
+    "how_it_works": "During indexing we build a small chunk per visit and a large parent document per patient (plus one per doctor and department), and embed only the small chunks — the parents are stored separately and never embedded. When a question comes in, we find the best matching child chunk and swap it for its full parent so the chat model answers from complete context; this fixes the old problem of a patient's visits being scattered across chunks that lost the patient's identity. The Advanced pipeline first rewrites the query and reranks the child chunks before this swap. Embedded with OpenAI's text-embedding-3-small and text-embedding-3-large."
+  }
+}

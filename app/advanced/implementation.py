@@ -12,7 +12,12 @@ from app.common.models import (
     selected_chat_model,
     selected_rerank_model,
 )
-from app.common.rag import SYSTEM_PROMPT, format_context, history_to_messages
+from app.common.rag import (
+    SYSTEM_PROMPT,
+    format_context,
+    history_to_messages,
+    expand_to_parents,
+)
 from app.common.rag import load_vectorstore as load_common_vectorstore
 
 RETRIEVAL_K = 20
@@ -107,7 +112,10 @@ def fetch_context(question: str, k: int = FINAL_K) -> list[Document]:
     rewritten = rewrite_query(question)
     primary = vectorstore.similarity_search(question, k=RETRIEVAL_K)
     expanded = vectorstore.similarity_search(rewritten, k=RETRIEVAL_K)
-    return rerank(question, merge_chunks(primary, expanded))[:k]
+    # Rerank the precise visit children, then expand the winners to their parent
+    # patient documents (small-to-big): precision from children, context from parents.
+    ranked = rerank(question, merge_chunks(primary, expanded))
+    return expand_to_parents(ranked, "advanced", k=k)
 
 
 def answer_question(

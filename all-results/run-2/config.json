@@ -4,5 +4,9 @@
     "REWRITE_MODEL": "gemma4:e4b",
     "JUDGE_MODEL": "gemma4:e4b",
     "RERANK_MODEL": "BAAI/bge-reranker-v2-m3"
+  },
+  "description": {
+    "summary": "Advanced RAG: adds LLM query rewriting and a cross-encoder reranker on top of the Basic baseline, benchmarking local embedding models.",
+    "how_it_works": "Indexing is the same as the baseline — one document per entity, split into character chunks and embedded. When a question comes in, an LLM first rewrites it into a search query; we retrieve chunks for both the original and rewritten query, merge them, and rerank with the BGE reranker to keep the best top-k, which the chat model then answers from."
   }
 }

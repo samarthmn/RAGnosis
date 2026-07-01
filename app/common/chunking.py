@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -36,7 +37,7 @@ from langchain_core.documents import Document
 
 from app.common.chunks import create_chunks
 from app.common.chunks import load_chunks as load_stored_chunks
-from app.common.chunks import save_chunks
+from app.common.chunks import save_chunks, save_parents
 from app.common.documents import clean_value, load_csv_tables
 from app.common.models import parse_model_overrides, set_model_overrides
 from app.common.paths import APP_ROOT, DATASET_DIR
@@ -196,79 +197,128 @@ def _section(title: str, lines: list[str]) -> str:
     return f"\n## {title} ({len(lines)})\n" + "\n".join(lines)
 
 
+def _patient_header(patient: dict) -> str:
+    """Compact identity line prepended to every visit child.
+
+    The old whole-patient char-splitting lost the patient's name after the first
+    chunk, so later visit chunks were unmatchable. Anchoring identity into each
+    child fixes both the embedding and the keyword-substring retrieval metric.
+    """
+    patient_id = _val(patient, "patient_id")
+    name = _val(patient, "full_name") or patient_id
+    bits = [f"Patient: {name} ({patient_id})"]
+    for column in ("gender", "date_of_birth", "city", "blood_type", "insurance_provider"):
+        value = _val(patient, column)
+        if value:
+            bits.append(value)
+    return " | ".join(bits)
+
+
+def _patient_row_indices(tables: dict[str, pd.DataFrame]) -> dict[str, Any]:
+    """Pre-group every table once so per-patient assembly is O(1) lookups."""
+    return {
+        "doctors": _index_by(tables.get("doctors", pd.DataFrame()), "doctor_id"),
+        "departments": _index_by(
+            tables.get("departments", pd.DataFrame()), "department_id"
+        ),
+        "appointments": _records_by(
+            tables.get("appointments", pd.DataFrame()), "patient_id"
+        ),
+        "records": _records_by(
+            tables.get("medical_records", pd.DataFrame()), "patient_id"
+        ),
+        "prescriptions": _records_by(
+            tables.get("prescriptions", pd.DataFrame()), "patient_id"
+        ),
+        "billing": _records_by(tables.get("billing", pd.DataFrame()), "patient_id"),
+    }
+
+
+def _patient_encounters(
+    patient_id: str, idx: dict[str, Any]
+) -> tuple[list[tuple[str, dict]], list[str]]:
+    """One patient's encounters as ``(visit_text, visit_meta)`` pairs, plus any
+    orphan prescription/bill lines.
+
+    Shared by :func:`build_patient_documents` (which joins the blocks into one
+    parent blob) and :func:`build_visit_documents` (one child Document each), so
+    parent and child text stay perfectly consistent.
+    """
+    doctors, departments = idx["doctors"], idx["departments"]
+    appt_rows = idx["appointments"].get(patient_id, [])
+    record_rows = idx["records"].get(patient_id, [])
+    rx_rows = idx["prescriptions"].get(patient_id, [])
+    bill_rows = idx["billing"].get(patient_id, [])
+
+    record_by_appt = {_val(r, "appointment_id"): r for r in record_rows}
+    rx_by_record: dict[str, list[dict]] = {}
+    for rx in rx_rows:
+        rx_by_record.setdefault(_val(rx, "record_id"), []).append(rx)
+    bill_by_appt = {_val(b, "appointment_id"): b for b in bill_rows}
+
+    used_records: set[str] = set()
+    used_rx: set[str] = set()
+    used_bills: set[str] = set()
+
+    blocks: list[tuple[str, dict]] = []
+    for appt in sorted(appt_rows, key=lambda a: _val(a, "appointment_datetime")):
+        appt_id = _val(appt, "appointment_id")
+        record = record_by_appt.get(appt_id)
+        rec_id = _val(record, "record_id") if record else ""
+        rxs = rx_by_record.get(rec_id, []) if rec_id else []
+        bill = bill_by_appt.get(appt_id)
+
+        if record:
+            used_records.add(rec_id)
+        used_rx.update(_val(rx, "prescription_id") for rx in rxs)
+        if bill:
+            used_bills.add(_val(bill, "bill_id"))
+
+        meta = {
+            "visit_date": _val(appt, "appointment_datetime"),
+            "appointment_id": appt_id,
+            "record_id": rec_id or appt_id,
+            "doctor_id": _val(appt, "doctor_id"),
+        }
+        blocks.append((_visit_block(appt, record, rxs, bill, doctors, departments), meta))
+
+    # Safety net: medical records not reachable from any appointment.
+    for record in record_rows:
+        rec_id = _val(record, "record_id")
+        if rec_id in used_records:
+            continue
+        used_records.add(rec_id)
+        rxs = rx_by_record.get(rec_id, [])
+        used_rx.update(_val(rx, "prescription_id") for rx in rxs)
+        meta = {
+            "visit_date": _val(record, "visit_date"),
+            "appointment_id": "",
+            "record_id": rec_id,
+            "doctor_id": _val(record, "doctor_id"),
+        }
+        blocks.append((_visit_block(None, record, rxs, None, doctors, departments), meta))
+
+    orphan_lines = [
+        f"- Prescription: {_prescription_phrase(rx)}"
+        for rx in rx_rows
+        if _val(rx, "prescription_id") not in used_rx
+    ] + [
+        f"- Bill: {_billing_phrase(bill)}"
+        for bill in bill_rows
+        if _val(bill, "bill_id") not in used_bills
+    ]
+    return blocks, orphan_lines
+
+
 def build_patient_documents(tables: dict[str, pd.DataFrame]) -> list[Document]:
-    patients = tables["patients"]
-    doctors = _index_by(tables.get("doctors", pd.DataFrame()), "doctor_id")
-    departments = _index_by(tables.get("departments", pd.DataFrame()), "department_id")
-
-    appointments = _records_by(tables.get("appointments", pd.DataFrame()), "patient_id")
-    records = _records_by(tables.get("medical_records", pd.DataFrame()), "patient_id")
-    prescriptions = _records_by(
-        tables.get("prescriptions", pd.DataFrame()), "patient_id"
-    )
-    billing = _records_by(tables.get("billing", pd.DataFrame()), "patient_id")
-
+    """One large blob per patient (all visits). Used as the retrieval *parent*."""
+    idx = _patient_row_indices(tables)
     documents: list[Document] = []
-    for patient in patients.to_dict("records"):
+    for patient in tables["patients"].to_dict("records"):
         patient_id = _val(patient, "patient_id")
         name = _val(patient, "full_name") or patient_id
-
-        appt_rows = appointments.get(patient_id, [])
-        record_rows = records.get(patient_id, [])
-        rx_rows = prescriptions.get(patient_id, [])
-        bill_rows = billing.get(patient_id, [])
-
-        # Index this patient's rows so each appointment can pull in its own
-        # medical record, that record's prescriptions, and its bill.
-        record_by_appt = {_val(r, "appointment_id"): r for r in record_rows}
-        rx_by_record: dict[str, list[dict]] = {}
-        for rx in rx_rows:
-            rx_by_record.setdefault(_val(rx, "record_id"), []).append(rx)
-        bill_by_appt = {_val(b, "appointment_id"): b for b in bill_rows}
-
-        used_records: set[str] = set()
-        used_rx: set[str] = set()
-        used_bills: set[str] = set()
-
-        visit_blocks: list[str] = []
-        for appt in sorted(appt_rows, key=lambda a: _val(a, "appointment_datetime")):
-            record = record_by_appt.get(_val(appt, "appointment_id"))
-            rec_id = _val(record, "record_id") if record else ""
-            rxs = rx_by_record.get(rec_id, []) if rec_id else []
-            bill = bill_by_appt.get(_val(appt, "appointment_id"))
-
-            if record:
-                used_records.add(rec_id)
-            used_rx.update(_val(rx, "prescription_id") for rx in rxs)
-            if bill:
-                used_bills.add(_val(bill, "bill_id"))
-
-            visit_blocks.append(
-                _visit_block(appt, record, rxs, bill, doctors, departments)
-            )
-
-        # Safety net: surface anything not reachable from an appointment so no
-        # row is silently dropped (the current dataset has no such orphans).
-        for record in record_rows:
-            rec_id = _val(record, "record_id")
-            if rec_id in used_records:
-                continue
-            used_records.add(rec_id)
-            rxs = rx_by_record.get(rec_id, [])
-            used_rx.update(_val(rx, "prescription_id") for rx in rxs)
-            visit_blocks.append(
-                _visit_block(None, record, rxs, None, doctors, departments)
-            )
-
-        orphan_lines = [
-            f"- Prescription: {_prescription_phrase(rx)}"
-            for rx in rx_rows
-            if _val(rx, "prescription_id") not in used_rx
-        ] + [
-            f"- Bill: {_billing_phrase(bill)}"
-            for bill in bill_rows
-            if _val(bill, "bill_id") not in used_bills
-        ]
+        blocks, orphan_lines = _patient_encounters(patient_id, idx)
+        visit_blocks = [text for text, _ in blocks]
 
         body = "\n".join(
             part
@@ -280,6 +330,10 @@ def build_patient_documents(tables: dict[str, pd.DataFrame]) -> list[Document]:
             ]
             if part
         )
+        row_count = sum(
+            len(idx[key].get(patient_id, []))
+            for key in ("appointments", "records", "prescriptions", "billing")
+        )
         documents.append(
             Document(
                 page_content=body,
@@ -290,13 +344,65 @@ def build_patient_documents(tables: dict[str, pd.DataFrame]) -> list[Document]:
                     "record_id": patient_id,
                     "source_csv_names": "patients.csv",
                     "visit_count": len(visit_blocks),
-                    "row_count": len(appt_rows)
-                    + len(record_rows)
-                    + len(rx_rows)
-                    + len(bill_rows),
+                    "row_count": row_count,
                 },
             )
         )
+    return documents
+
+
+def build_visit_documents(tables: dict[str, pd.DataFrame]) -> list[Document]:
+    """One document per encounter, identity-anchored and linked to its patient
+    parent via ``parent_id``. This is the small, precise unit we embed."""
+    idx = _patient_row_indices(tables)
+    documents: list[Document] = []
+    for patient in tables["patients"].to_dict("records"):
+        patient_id = _val(patient, "patient_id")
+        name = _val(patient, "full_name") or patient_id
+        header = _patient_header(patient)
+        blocks, orphan_lines = _patient_encounters(patient_id, idx)
+
+        for position, (text, meta) in enumerate(blocks, start=1):
+            documents.append(
+                Document(
+                    page_content=f"{header}\n\n{text}",
+                    metadata={
+                        "doc_type": "visit",
+                        "patient_id": patient_id,
+                        "patient_name": name,
+                        "parent_id": patient_id,
+                        "record_id": meta["record_id"] or f"{patient_id}#v{position}",
+                        "visit_date": meta["visit_date"],
+                        "doctor_id": meta["doctor_id"],
+                        "source_csv_names": (
+                            "appointments.csv,medical_records.csv,"
+                            "prescriptions.csv,billing.csv"
+                        ),
+                        "row_count": 1,
+                    },
+                )
+            )
+
+        # Keep orphan rows retrievable as their own (identity-anchored) child.
+        if orphan_lines:
+            documents.append(
+                Document(
+                    page_content=(
+                        f"{header}\n\n## Unlinked records\n" + "\n".join(orphan_lines)
+                    ),
+                    metadata={
+                        "doc_type": "visit",
+                        "patient_id": patient_id,
+                        "patient_name": name,
+                        "parent_id": patient_id,
+                        "record_id": f"{patient_id}#unlinked",
+                        "visit_date": "",
+                        "doctor_id": "",
+                        "source_csv_names": "prescriptions.csv,billing.csv",
+                        "row_count": 1,
+                    },
+                )
+            )
     return documents
 
 
@@ -379,15 +485,44 @@ def build_department_documents(tables: dict[str, pd.DataFrame]) -> list[Document
     return documents
 
 
-def build_documents(csv_dir: Path = DATASET_DIR) -> list[Document]:
-    tables = load_csv_tables(csv_dir)
-    if "patients" not in tables:
-        raise KeyError("patients.csv is required to build documents")
+def _as_own_parent(documents: list[Document]) -> list[Document]:
+    """Small, self-contained docs (doctor/department, enriched blobs) are their
+    own parent: point ``parent_id`` at ``record_id`` if not already set."""
+    for document in documents:
+        document.metadata.setdefault(
+            "parent_id", document.metadata.get("record_id", "")
+        )
+    return documents
+
+
+def build_parent_documents(tables: dict[str, pd.DataFrame]) -> list[Document]:
+    """The large, context-rich docs returned to the generator: one blob per
+    patient plus one per doctor/department. Stored in ``parents.jsonl`` and
+    looked up at query time — never embedded directly."""
     documents = (
         build_patient_documents(tables)
         + build_doctor_documents(tables)
         + build_department_documents(tables)
     )
+    return _as_own_parent(documents)
+
+
+def build_child_documents(tables: dict[str, pd.DataFrame]) -> list[Document]:
+    """The small units we embed: per-visit patient children plus the (already
+    small) doctor/department docs, which act as their own parents."""
+    return (
+        build_visit_documents(tables)
+        + _as_own_parent(build_doctor_documents(tables))
+        + _as_own_parent(build_department_documents(tables))
+    )
+
+
+def build_documents(csv_dir: Path = DATASET_DIR) -> list[Document]:
+    """Parent documents for the dataset (kept for enrichment / back-compat)."""
+    tables = load_csv_tables(csv_dir)
+    if "patients" not in tables:
+        raise KeyError("patients.csv is required to build documents")
+    documents = build_parent_documents(tables)
     print(f"Built {len(documents)} documents from {Path(csv_dir).resolve()}")
     return documents
 
@@ -398,20 +533,33 @@ def build_documents(csv_dir: Path = DATASET_DIR) -> list[Document]:
 
 
 def chunks_path_for(pipeline: str) -> Path:
-    """Where a pipeline's stored chunks live: ``app/<pipeline>/chunks.jsonl``."""
+    """Where a pipeline's stored (child) chunks live: ``app/<pipeline>/chunks.jsonl``."""
     return APP_ROOT / pipeline / "chunks.jsonl"
 
 
-def source_documents(pipeline: str, csv_dir: Path = DATASET_DIR) -> list[Document]:
-    """Raw documents, except ``advanced`` prefers LLM-enriched docs when present."""
+def parents_path_for(pipeline: str) -> Path:
+    """Where a pipeline's parent documents live: ``app/<pipeline>/parents.jsonl``."""
+    return APP_ROOT / pipeline / "parents.jsonl"
+
+
+def source_parent_documents(
+    pipeline: str,
+    tables: dict[str, pd.DataFrame],
+    csv_dir: Path = DATASET_DIR,
+) -> list[Document]:
+    """Parent docs returned as context. ``advanced`` prefers LLM-enriched docs.
+
+    Enriched docs carry through their original ``record_id``/``patient_id``
+    metadata, so ``parent_id`` still lines up with the visit children.
+    """
     if pipeline == "advanced":
         from app.advanced.preprocess import ENRICHED_DOCS_PATH, load_enriched_documents
 
         if ENRICHED_DOCS_PATH.exists():
-            print(f"Using enriched documents from {ENRICHED_DOCS_PATH}")
-            return load_enriched_documents()
-        print("No enriched documents found; using raw documents")
-    return build_documents(csv_dir)
+            print(f"Using enriched parents from {ENRICHED_DOCS_PATH}")
+            return _as_own_parent(load_enriched_documents())
+        print("No enriched documents found; using raw parents")
+    return build_parent_documents(tables)
 
 
 def load_chunks(pipeline: str, path: Path | None = None) -> list[Document]:
@@ -429,13 +577,24 @@ def chunk(
     chunk_overlap: int = 200,
     chunks_path: Path | None = None,
 ) -> list[Document]:
-    documents = source_documents(pipeline, csv_dir)
+    """Embed small per-visit *children*; persist large *parents* for query-time
+    expansion. Children keep ``parent_id`` through the splitter, so a child that
+    overflows ``chunk_size`` still resolves back to its patient parent.
+    """
+    tables = load_csv_tables(csv_dir)
+    if "patients" not in tables:
+        raise KeyError("patients.csv is required to build documents")
+
+    children = build_child_documents(tables)
+    parents = source_parent_documents(pipeline, tables, csv_dir)
+
     chunks = create_chunks(
-        documents,
+        children,
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap,
     )
     save_chunks(chunks, chunks_path or chunks_path_for(pipeline))
+    save_parents(parents, parents_path_for(pipeline))
     return chunks
 
 

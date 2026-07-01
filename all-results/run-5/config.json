@@ -6,6 +6,10 @@
     "EMBEDDING_MODEL_1": "text-embedding-3-small",
     "RUN_1": "Without Document Enrichment",
     "EMBEDDING_MODEL_2": "text-embedding-3-large",
-    "RUN_2": "With Document Enrichment"
+    "RUN_2": "Without Document Enrichment"
+  },
+  "description": {
+    "summary": "The control for the enrichment experiment: the same Advanced pipeline and OpenAI embedders as run-3/run-4 but with plain, un-enriched documents.",
+    "how_it_works": "Documents are built and split into character chunks without any LLM enrichment, then embedded with text-embedding-3-small and text-embedding-3-large. At query time the Advanced pipeline rewrites the question, retrieves chunks for both the original and rewritten query, and reranks them with the BGE reranker before the chat model answers. Comparing this run against run-3/run-4 isolates how much document enrichment actually helped."
   }
 }

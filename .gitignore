@@ -8,4 +8,5 @@ graph_output/
 enriched_documents.jsonl
 enriched_documents.*.jsonl
 chunks.jsonl
+parents.jsonl
 multirun.log

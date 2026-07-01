@@ -1,8 +1,12 @@
 {
-  "name": "1",
-  "stages": ["evaluate"],
+  "name": "2-with-small-to-big-retrieval",
+  "stages": [
+    "chunk",
+    "ingest",
+    "evaluate"
+  ],
   "pipeline": "advanced",
-  "embedding_model": "text-embedding-3-small",
+  "embedding_model": "text-embedding-3-large",
   "chat_model": "gpt-oss:20b",
   "preprocess_model": "gpt-oss:20b",
   "rewrite_model": "gemma4:e4b",
