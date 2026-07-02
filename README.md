@@ -1,4 +1,8 @@
-# RAGnosis
+<p align="center">
+  <img src="assets/logo.png" alt="RAGnosis logo" width="140" height="140" />
+</p>
+
+<h1 align="center">RAGnosis</h1>
 
 RAGnosis is a self-contained applied research project for studying how
 retrieval-augmented generation behaves over a synthetic **clinic** database
