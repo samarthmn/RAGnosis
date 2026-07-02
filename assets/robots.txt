@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rag-nosis.vercel.app/sitemap.xml

@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "mkdir -p dist && cp rag-benchmark.html dist/index.html",
+  "buildCommand": "mkdir -p dist && cp rag-benchmark.html dist/index.html && cp assets/logo.png dist/logo.png && cp assets/robots.txt dist/robots.txt && cp assets/sitemap.xml dist/sitemap.xml",
   "outputDirectory": "dist",
   "framework": null,
   "cleanUrls": true,
