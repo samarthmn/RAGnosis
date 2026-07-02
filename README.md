@@ -1,14 +1,34 @@
 # RAGnosis
 
-A self-contained RAG project over a synthetic **clinic** dataset (patients, doctors,
-departments, appointments, medical records, prescriptions and billing). Two pipelines
-are provided and can be compared head-to-head with built-in retrieval and answer evals:
+RAGnosis is a self-contained applied research project for studying how
+retrieval-augmented generation behaves over a synthetic **clinic** database
+(patients, doctors, departments, appointments, medical records, prescriptions and
+billing). It was built to answer a practical question: which retrieval and
+context-building techniques make a healthcare-style database easier for an LLM to
+answer from?
 
-- **basic** — recursive character chunking → embed → similarity search → answer.
-- **advanced** — recursive chunking → embed → query rewrite + dual retrieval + cross-encoder re-rank → answer.
+The project starts from a plain vector-search baseline and evolves through query
+rewriting, reranking, document enrichment, Small-to-Big retrieval, aggregate rollup
+documents, and a final reranker ablation. The archived runs in `all-results/` record
+each experiment with its config, metadata, visualizations, and evaluation scores. The
+work was run mostly on local resources, so the results reflect a practical,
+resource-constrained RAG study rather than an exhaustive search over every possible
+model and setting.
 
-The pipeline code lives under `app/`. The raw CSV dataset and the evaluation question
-bank live under `data/`. Vector stores and eval results are generated under `app/`.
+Two pipelines are provided and can be compared head-to-head with built-in retrieval and
+answer evals:
+
+- **basic** — the baseline retrieval path used for controlled vector-search comparisons.
+- **advanced** — query rewriting, dual retrieval, reranking, Small-to-Big parent
+  expansion, optional document enrichment, and aggregate rollup documents.
+
+Read [RESEARCH.md](RESEARCH.md) for the run-by-run research summary and the main
+findings, or open [rag-benchmark.html](rag-benchmark.html) directly in a browser for
+the interactive report — an overview of the experiment's progression with charts, a
+sortable leaderboard of every configuration, and the research paper rendered inline
+(regenerate it with `uv run python -m app.build_benchmark`). The pipeline code lives
+under `app/`. The raw CSV dataset and the evaluation question bank live under `data/`.
+Vector stores and eval results are generated under `app/`.
 
 ---
 
@@ -27,7 +47,7 @@ A real shell environment variable overrides the file:
 export OLLAMA_HOST=http://localhost:11434
 ```
 
-OpenAI-hosted models (`gpt-*`, `o*`, `text-embedding-3-small`) route to the OpenAI API
+OpenAI-hosted models (`gpt-*`, `o*`, `text-embedding-3-*`) route to the OpenAI API
 using `OPENAI_API_KEY`. Run everything with `uv` from the repo root:
 
 ```bash
@@ -48,10 +68,11 @@ chunking  →  ingest  →  evaluator
 (chunk)      (embed)     (score)
 ```
 
-1. **chunking** — turns the dataset CSVs into documents, then chunks
-   (`app/<pipeline>/chunks.jsonl`). Documents aggregate each patient's visits
-   (appointment + medical record + prescriptions + billing, with doctor/department
-   names resolved), plus one reference document per doctor and per department.
+1. **chunking** — turns the dataset CSVs into retrievable child chunks
+   (`app/<pipeline>/chunks.jsonl`) and answer-context parents
+   (`app/<pipeline>/parents.jsonl`). Patient children are visit-level records with
+   patient identity attached; parents hold complete patient records. Doctor,
+   department, and aggregate rollup documents are also created.
 2. **ingest** — embeds the stored chunks into a Chroma vector DB (`app/vector_db/<pipeline>`).
 3. **evaluator** — runs retrieval + answer evals against the bundled question bank.
 
@@ -85,21 +106,22 @@ Unknown keys raise an error on ingest/chunking.
 
 ### Re-ranking (advanced)
 
-The advanced pipeline re-ranks the merged retrieval results before answering. The
-re-ranker is chosen purely by its name (`RERANK_MODEL`, default
-`BAAI/bge-reranker-v2-m3`), and can be one of two kinds:
+The advanced pipeline re-ranks the merged retrieval results before expanding child
+chunks to parent context. The re-ranker is selected with `RERANK_MODEL` or
+`rerank=<repo-id>` and currently supports two local Hugging Face paths:
 
-- **`BAAI/bge-reranker-v2-m3`** (default) — a cross-encoder that scores each
-  (query, chunk) pair directly. It runs **locally / in-process** via
-  [FlagEmbedding](https://huggingface.co/BAAI/bge-reranker-v2-m3) (not over Ollama). The
-  ~600MB weights download from the Hugging Face Hub on first use and cache under
-  `~/.cache/huggingface`; `use_fp16` is enabled only on CUDA. See `app/advanced/reranker.py`.
-- **any `LLM_MODELS` tag** (e.g. `gemma4:e4b`) — prompts that chat model over Ollama to
-  order the chunk ids.
+- **`jinaai/jina-reranker-v3`** (default) — a Qwen3-based listwise reranker that ranks
+  all candidate chunks together via its `trust_remote_code` `.rerank()` API.
+- **`BAAI/bge-reranker-v2-m3`** — a cross-encoder that scores each `(query, chunk)` pair
+  directly via [FlagEmbedding](https://huggingface.co/BAAI/bge-reranker-v2-m3).
+
+Weights download from the Hugging Face Hub on first use and cache under
+`~/.cache/huggingface`. See `app/advanced/reranker.py` for model loading and device
+selection.
 
 ```bash
-uv run python -m app.evaluator advanced                  # local bge cross-encoder (default)
-uv run python -m app.evaluator advanced rerank=gemma4:e4b  # LLM-based re-rank over Ollama
+uv run python -m app.evaluator advanced                                  # Jina reranker (default)
+uv run python -m app.evaluator advanced rerank=BAAI/bge-reranker-v2-m3    # BGE cross-encoder
 ```
 
 The resolved reranker is recorded in each run's `config.json` (`rerank_model`).
@@ -133,9 +155,10 @@ enrich each document with an LLM-generated title + summary, written to
 uv run python -m app.advanced.preprocess
 ```
 
-If that file exists, advanced `chunking` chunks the enriched documents instead of
-the raw ones; otherwise it falls back to raw documents. It is a manual, standalone
-step (not part of multirun). Delete `enriched_documents.jsonl` to go back to raw.
+If that file exists, advanced `chunking` uses the enriched documents as parent
+context; the visit-level child chunks are still built from the raw tables for precise
+retrieval. It is a manual, standalone step (not part of multirun). Delete
+`enriched_documents.jsonl` to go back to raw parent context.
 
 ### 2. Ingest
 
@@ -222,7 +245,7 @@ Each run is saved to an auto-incremented folder under `app/results/<n>/`:
 Local Ollama models are referenced by their Ollama tag; any tag pulled on the server works.
 Named OpenAI models (`gpt-*`, `o*`) route to the OpenAI API using `OPENAI_API_KEY`.
 
-- **Embeddings:** `all-minilm:l6-v2`, `bge-large:latest`, `qwen3-embedding:latest`, `text-embedding-3-small`
+- **Embeddings:** `all-minilm:l6-v2`, `bge-large:latest`, `qwen3-embedding:latest`, `text-embedding-3-small`, `text-embedding-3-large`
 - **LLMs:** `deepseek-r1:1.5b`, `gpt-oss:20b`, `gemma4:e4b`, or any other tag on the server
 
 Inspect the current defaults at any time:
@@ -250,7 +273,7 @@ Defaults live in `SELECTED_MODELS` in `app/common/models.py`.
     ├── multirun.jsonl       # batch run definitions
     ├── common/              # shared: models, chat, embeddings, rag, paths, documents, chunks, chunking, ingest
     ├── basic/               # basic implementation (retrieval + answer)
-    ├── advanced/            # advanced preprocess + implementation (rewrite + rerank); reranker.py = local bge cross-encoder
+    ├── advanced/            # advanced preprocess + implementation (rewrite + rerank); reranker.py = BGE/Jina local rerankers
     ├── vector_db/           # Chroma stores (created by ingest)
     └── results/             # numbered eval runs (created by evaluator)
 ```

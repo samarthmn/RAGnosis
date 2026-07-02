@@ -46,7 +46,7 @@ appointments ─< billing >─ patients
 
 ## How RAGnosis uses it
 
-At chunking time (`app/common/chunking_v2.py`) these tables are flattened into
+At chunking time (`app/common/chunking.py`) these tables are flattened into
 retrieval-friendly documents:
 
 - one **patient** document per patient — demographics plus every visit (appointment +
