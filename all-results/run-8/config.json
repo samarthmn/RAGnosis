@@ -1,0 +1,15 @@
+{
+  "constant_models": {
+    "REWRITE_MODEL": "gemma4:e4b",
+    "JUDGE_MODEL": "gemma4:e4b",
+    "RERANK_MODEL": "jinaai/jina-reranker-v3",
+    "EMBEDDING_MODEL_1": "text-embedding-3-small",
+    "RUN_1": "Updated Reranker to `jinaai/jina-reranker-v3`",
+    "EMBEDDING_MODEL_2": "text-embedding-3-large",
+    "RUN_2": "Updated Reranker to `jinaai/jina-reranker-v3`"
+  },
+  "description": {
+    "summary": "Swaps the reranker from the BGE cross-encoder to jinaai/jina-reranker-v3 (a Qwen3-based listwise reranker), keeping the run-7 pipeline otherwise identical to isolate how much reranker quality alone moves retrieval.",
+    "how_it_works": "The indexing and retrieval setup is unchanged from run-7: rollup/aggregate documents alongside Small-to-Big visit chunks and patient parents, embedded with OpenAI's text-embedding-3-small and text-embedding-3-large. The only change is the reranking step. Where BGE is a cross-encoder that scores each (query, chunk) pair independently, jina-reranker-v3 is listwise: it takes the query and all candidate chunks together in a single pass and ranks them jointly via late-interaction embeddings, which can weigh candidates against one another instead of in isolation. As before, the Advanced pipeline rewrites the query and reranks the child chunks before swapping in their full parents for the chat model. Comparing this run against run-7 isolates the reranker's contribution."
+  }
+}

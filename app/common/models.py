@@ -151,7 +151,7 @@ JUDGE_MODEL = LLM_MODELS["gemma4:e4b"]["model"]
 # The advanced pipeline's re-ranker: a local cross-encoder, run in-process via
 # FlagEmbedding (downloaded from the Hugging Face Hub on first use; see
 # app/advanced/reranker.py). Override per run with rerank=<repo-id>.
-RERANK_MODEL = "BAAI/bge-reranker-v2-m3"
+RERANK_MODEL = "jinaai/jina-reranker-v3"
 
 
 SELECTED_MODELS: dict[str, SelectedPipelineConfig] = {
@@ -180,7 +180,8 @@ CLI_MODEL_KEYS: dict[str, PipelineModelType] = {
     "embedding_model": "embedding_model",
     "chat": "chat_model",
     "chat_model": "chat_model",
-    # Advanced-only: the re-ranker (the bge cross-encoder id, or an LLM_MODELS tag).
+    # Advanced-only: the re-ranker. Cross-encoder ("BAAI/bge-reranker-v2-m3") or the
+    # Jina listwise reranker ("jinaai/jina-reranker-v3"); see reranker.py.
     "rerank": "rerank_model",
     "rerank_model": "rerank_model",
 }
