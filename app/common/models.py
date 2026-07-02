@@ -148,17 +148,10 @@ PREPROCESS_MODEL = LLM_MODELS["gpt-oss:20b"]["model"]
 REWRITE_MODEL = LLM_MODELS["gemma4:e4b"]["model"]
 JUDGE_MODEL = LLM_MODELS["gemma4:e4b"]["model"]
 
-# The advanced pipeline's re-ranker. Two kinds are accepted, picked purely by the name:
-#   - "BAAI/bge-reranker-v2-m3" — a local cross-encoder, run in-process via FlagEmbedding
-#     (downloaded from the Hugging Face Hub on first use; see app/advanced/reranker.py).
-#   - any LLM_MODELS tag (e.g. "gemma4:e4b") — prompt-based ranking served over Ollama.
-# Override per run with rerank=<model>. Default is the local cross-encoder.
+# The advanced pipeline's re-ranker: a local cross-encoder, run in-process via
+# FlagEmbedding (downloaded from the Hugging Face Hub on first use; see
+# app/advanced/reranker.py). Override per run with rerank=<repo-id>.
 RERANK_MODEL = "BAAI/bge-reranker-v2-m3"
-
-
-def is_local_reranker(model: str) -> bool:
-    """True for a local cross-encoder reranker (a HF repo id), False for an LLM tag."""
-    return model.startswith("BAAI/bge-reranker")
 
 
 SELECTED_MODELS: dict[str, SelectedPipelineConfig] = {
