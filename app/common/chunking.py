@@ -485,6 +485,209 @@ def build_department_documents(tables: dict[str, pd.DataFrame]) -> list[Document
     return documents
 
 
+# --------------------------------------------------------------------------------------
+# Rollup (aggregate) documents
+#
+# Questions like "how many patients are in Kolkata" or "which doctor has the largest
+# appointment load" are answered by counts/totals that appear in NO single visit — they
+# are computed over many rows. RAG can only retrieve text that exists, so we pre-compute
+# those aggregates at build time and embed them as ordinary documents. Each rollup is its
+# own parent, so retrieval returns it verbatim to the chat model.
+# --------------------------------------------------------------------------------------
+
+
+def _counts(values: list) -> list[tuple[str, int]]:
+    """Non-empty value counts, ordered by frequency then label."""
+    counter: dict[str, int] = {}
+    for raw in values:
+        value = clean_value(raw)
+        if value:
+            counter[value] = counter.get(value, 0) + 1
+    return sorted(counter.items(), key=lambda kv: (-kv[1], kv[0]))
+
+
+def _status_phrase(status_counts: list[tuple[str, int]]) -> str:
+    return ", ".join(f"{count} {status.lower()}" for status, count in status_counts)
+
+
+def _rollup_doc(
+    record_id: str,
+    title: str,
+    lines: list[str],
+    source_csv_names: str,
+    *,
+    patient_id: str = "",
+    patient_name: str = "",
+) -> Document:
+    body = "\n".join([f"# {title}", *lines])
+    return Document(
+        page_content=body,
+        metadata={
+            "doc_type": "rollup",
+            "patient_id": patient_id,
+            "patient_name": patient_name,
+            "record_id": record_id,
+            "parent_id": record_id,
+            "source_csv_names": source_csv_names,
+            "row_count": len(lines),
+        },
+    )
+
+
+def _distribution_doc(
+    record_id: str,
+    title: str,
+    table: pd.DataFrame,
+    column: str,
+    source_csv_names: str,
+) -> Document | None:
+    """A single 'count by <column>' rollup (e.g. patients per city)."""
+    if table.empty or column not in table.columns:
+        return None
+    pairs = _counts(table[column].tolist())
+    if not pairs:
+        return None
+    lines = [f"- {label}: {count}" for label, count in pairs]
+    lines.append(f"- Total: {sum(count for _, count in pairs)}")
+    return _rollup_doc(record_id, title, lines, source_csv_names)
+
+
+def _to_float(value: object) -> float:
+    try:
+        return float(clean_value(value) or 0)
+    except ValueError:
+        return 0.0
+
+
+def build_rollup_documents(tables: dict[str, pd.DataFrame]) -> list[Document]:
+    """Pre-computed aggregate documents: global distributions, rankings, and short
+    per-doctor / per-patient summaries. Each is a self-contained, self-parent doc."""
+    empty = pd.DataFrame()
+    patients = tables.get("patients", empty)
+    appointments = tables.get("appointments", empty)
+    billing = tables.get("billing", empty)
+    doctors = tables.get("doctors", empty)
+    doctor_index = _index_by(doctors, "doctor_id")
+    departments = _index_by(tables.get("departments", empty), "department_id")
+
+    docs: list[Document] = []
+
+    # --- global "count by X" distributions ------------------------------------
+    distributions = [
+        ("rollup:patients_by_city", "Patient count by city", patients, "city", "patients.csv"),
+        ("rollup:patients_by_insurance", "Patient count by insurance provider", patients, "insurance_provider", "patients.csv"),
+        ("rollup:patients_by_blood_type", "Patient count by blood type", patients, "blood_type", "patients.csv"),
+        ("rollup:patients_by_gender", "Patient count by gender", patients, "gender", "patients.csv"),
+        ("rollup:appointments_by_status", "Appointment count by status", appointments, "status", "appointments.csv"),
+        ("rollup:appointments_by_type", "Appointment count by type", appointments, "appointment_type", "appointments.csv"),
+        ("rollup:bills_by_status", "Bill count by payment status", billing, "payment_status", "billing.csv"),
+        ("rollup:bills_by_method", "Bill count by payment method", billing, "payment_method", "billing.csv"),
+        ("rollup:doctors_by_specialization", "Doctor count by specialization", doctors, "specialization", "doctors.csv"),
+    ]
+    for record_id, title, table, column, source in distributions:
+        doc = _distribution_doc(record_id, title, table, column, source)
+        if doc is not None:
+            docs.append(doc)
+
+    # Doctor count by department, with department names resolved.
+    if not doctors.empty and "department_id" in doctors.columns:
+        pairs = _counts(doctors["department_id"].tolist())
+        if pairs:
+            lines = []
+            for department_id, count in pairs:
+                name = clean_value(departments.get(department_id, {}).get("department_name")) or department_id
+                lines.append(f"- {name} ({department_id}): {count} doctors")
+            lines.append(f"- Total: {sum(count for _, count in pairs)}")
+            docs.append(
+                _rollup_doc(
+                    "rollup:doctors_by_department",
+                    "Doctor count by department",
+                    lines,
+                    "doctors.csv,departments.csv",
+                )
+            )
+
+    # --- per-doctor appointment load + busiest-doctors ranking ----------------
+    doctor_loads: list[tuple[str, str, int, list[tuple[str, int]]]] = []
+    for doctor_id, rows in _records_by(appointments, "doctor_id").items():
+        if not doctor_id:
+            continue
+        name = clean_value(doctor_index.get(doctor_id, {}).get("full_name")) or doctor_id
+        doctor_loads.append((doctor_id, name, len(rows), _counts([r.get("status", "") for r in rows])))
+    doctor_loads.sort(key=lambda item: -item[2])
+    for doctor_id, name, total, status_counts in doctor_loads:
+        docs.append(
+            _rollup_doc(
+                f"rollup:doctor_load:{doctor_id}",
+                f"Appointment load — {name}",
+                [f"- {name} ({doctor_id}): {total} appointments — {_status_phrase(status_counts)}"],
+                "appointments.csv,doctors.csv",
+            )
+        )
+    if doctor_loads:
+        lines = [
+            f"- {name} ({doctor_id}): {total} appointments — {_status_phrase(status_counts)}"
+            for doctor_id, name, total, status_counts in doctor_loads[:15]
+        ]
+        docs.append(
+            _rollup_doc(
+                "rollup:doctors_by_appointment_load",
+                "Doctors ranked by appointment load (busiest first)",
+                lines,
+                "appointments.csv,doctors.csv",
+            )
+        )
+
+    # --- per-patient summary (appointment counts + billing totals) ------------
+    appts_by_patient = _records_by(appointments, "patient_id")
+    bills_by_patient = _records_by(billing, "patient_id")
+    patient_bill_totals: list[tuple[str, str, int, float]] = []
+    for patient in patients.to_dict("records"):
+        patient_id = clean_value(patient.get("patient_id"))
+        if not patient_id:
+            continue
+        name = clean_value(patient.get("full_name")) or patient_id
+        city = clean_value(patient.get("city"))
+        appts = appts_by_patient.get(patient_id, [])
+        bills = bills_by_patient.get(patient_id, [])
+        lines: list[str] = []
+        if appts:
+            status_counts = _counts([r.get("status", "") for r in appts])
+            lines.append(f"- Appointments: {len(appts)} total — {_status_phrase(status_counts)}")
+        if bills:
+            total_billed = sum(_to_float(b.get("total_amount_inr")) for b in bills)
+            city_suffix = f" from {city}" if city else ""
+            lines.append(f"- Bills: {len(bills)} totaling INR {total_billed:,.0f}")
+            patient_bill_totals.append((patient_id, f"{name}{city_suffix}", len(bills), total_billed))
+        if lines:
+            docs.append(
+                _rollup_doc(
+                    f"rollup:patient_summary:{patient_id}",
+                    f"Summary — {name} ({patient_id})",
+                    lines,
+                    "appointments.csv,billing.csv",
+                    patient_id=patient_id,
+                    patient_name=name,
+                )
+            )
+    if patient_bill_totals:
+        patient_bill_totals.sort(key=lambda item: -item[3])
+        lines = [
+            f"- {label}: {bill_count} bills totaling INR {total:,.0f}"
+            for _, label, bill_count, total in patient_bill_totals[:15]
+        ]
+        docs.append(
+            _rollup_doc(
+                "rollup:patients_by_total_billed",
+                "Patients ranked by total billed amount (highest first)",
+                lines,
+                "billing.csv,patients.csv",
+            )
+        )
+
+    return docs
+
+
 def _as_own_parent(documents: list[Document]) -> list[Document]:
     """Small, self-contained docs (doctor/department, enriched blobs) are their
     own parent: point ``parent_id`` at ``record_id`` if not already set."""
@@ -585,8 +788,11 @@ def chunk(
     if "patients" not in tables:
         raise KeyError("patients.csv is required to build documents")
 
-    children = build_child_documents(tables)
-    parents = source_parent_documents(pipeline, tables, csv_dir)
+    # Rollups are self-parent: embedded as children AND stored as parents so a
+    # retrieved rollup is returned to the model verbatim (with its exact numbers).
+    rollups = build_rollup_documents(tables)
+    children = build_child_documents(tables) + rollups
+    parents = source_parent_documents(pipeline, tables, csv_dir) + rollups
 
     chunks = create_chunks(
         children,

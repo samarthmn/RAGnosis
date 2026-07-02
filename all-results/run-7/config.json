@@ -1,0 +1,15 @@
+{
+  "constant_models": {
+    "REWRITE_MODEL": "gemma4:e4b",
+    "JUDGE_MODEL": "gemma4:e4b",
+    "RERANK_MODEL": "BAAI/bge-reranker-v2-m3",
+    "EMBEDDING_MODEL_1": "text-embedding-3-small",
+    "RUN_1": "With Rollup / Aggregate Documents",
+    "EMBEDDING_MODEL_2": "text-embedding-3-large",
+    "RUN_2": "With Rollup / Aggregate Documents"
+  },
+  "description": {
+    "summary": "Adds pre-computed rollup (aggregate) documents so 'how many / most / highest / total' questions become answerable — their answers are counts and totals that appear in no single visit.",
+    "how_it_works": "On top of the Small-to-Big setup, during indexing we also pre-compute aggregate documents straight from the raw tables and embed them alongside the visit chunks: counts by group (patients per city, bills per payment status, appointments per type), rankings (busiest doctors, highest-billed patients), and a short per-doctor and per-patient summary. Because a question like 'how many patients are in Kolkata' or 'which doctor has the largest appointment load' now matches a document that literally states the number, retrieval can find the answer instead of asking the chat model to compute it from scattered records. Each rollup is its own parent, so it is returned to the model verbatim. Retrieval, query rewriting and reranking are otherwise unchanged from run-6."
+  }
+}

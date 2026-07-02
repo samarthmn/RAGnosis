@@ -51,3 +51,6 @@
 // ------------------------------------------------------------------------------------------------
 // {"name":"1-with-small-to-big-retrieval","pipeline":"advanced","embedding_model":"text-embedding-3-small","chat_model":"gpt-oss:20b"}
 // {"name":"2-with-small-to-big-retrieval","pipeline":"advanced","embedding_model":"text-embedding-3-large","chat_model":"gpt-oss:20b"}
+// ------------------------------------------------------------------------------------------------
+// {"name":"1-with-rollup-documents","pipeline":"advanced","embedding_model":"text-embedding-3-small","chat_model":"gpt-oss:20b"}
+// {"name":"2-with-rollup-documents","pipeline":"advanced","embedding_model":"text-embedding-3-large","chat_model":"gpt-oss:20b"}

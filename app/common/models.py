@@ -163,11 +163,11 @@ def is_local_reranker(model: str) -> bool:
 
 SELECTED_MODELS: dict[str, SelectedPipelineConfig] = {
     "basic": {
-        "embedding_model": EMBEDDING_MODELS["text-embedding-3-large"],
+        "embedding_model": EMBEDDING_MODELS["bge-large:latest"],
         "chat_model": LLM_MODELS["gpt-oss:20b"],
     },
     "advanced": {
-        "embedding_model": EMBEDDING_MODELS["text-embedding-3-large"],
+        "embedding_model": EMBEDDING_MODELS["bge-large:latest"],
         "chat_model": LLM_MODELS["gpt-oss:20b"],
     },
 }
