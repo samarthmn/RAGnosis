@@ -1,0 +1,22 @@
+# Only rag-benchmark.html is needed to build the static deploy.
+# Exclude everything heavy / irrelevant to the deployed report.
+.venv
+__pycache__
+.ruff_cache
+.python-version
+uv.lock
+pyproject.toml
+env.example
+
+# Python pipeline + data (not served)
+app
+data
+all-results
+
+# Vector stores / build artifacts
+vector_db
+vector_db*
+graph_output
+*.jsonl
+
+.DS_Store

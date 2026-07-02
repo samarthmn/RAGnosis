@@ -10,3 +10,7 @@ enriched_documents.*.jsonl
 chunks.jsonl
 parents.jsonl
 multirun.log
+
+# Vercel
+dist/
+.vercel
