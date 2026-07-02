@@ -1,5 +1,5 @@
 {
-  "constant_models": {
+  "metadata": {
     "REWRITE_MODEL": "gemma4:e4b",
     "JUDGE_MODEL": "gemma4:e4b",
     "RERANK_MODEL": "jinaai/jina-reranker-v3",

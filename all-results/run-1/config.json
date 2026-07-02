@@ -1,5 +1,5 @@
 {
-  "constant_models": {
+  "metadata": {
     "JUDGE_MODEL": "gemma4:e4b"
   },
   "description": {
